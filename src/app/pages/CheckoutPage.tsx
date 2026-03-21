@@ -1,9 +1,11 @@
 import * as React from "react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { PageLayout } from "./PageLayout";
 import { formatPrice, getProductBySlug } from "../data/products";
 import { useShop } from "../store/useShop";
 import { toast } from "sonner";
+import {createOrder} from "../../lib/api/orders.ts";
+
 
 export function CheckoutPage() {
     const { cart, clearCart } = useShop();
@@ -17,15 +19,29 @@ export function CheckoutPage() {
         comment: "",
     });
 
-    const cartItems = cart
-        .map((item) => {
-            const product = getProductBySlug(item.slug);
-            if (!product) return null;
-            return { ...item, product, total: product.price * item.quantity };
-        })
-        .filter(Boolean);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const totalPrice = cartItems.reduce((sum, item) => sum + (item?.total ?? 0), 0);
+    const cartItems = useMemo(
+        () =>
+            cart
+                .map((item) => {
+                    const product = getProductBySlug(item.slug);
+                    if (!product) return null;
+
+                    return {
+                        ...item,
+                        product,
+                        total: product.price * item.quantity,
+                    };
+                })
+                .filter(Boolean),
+        [cart]
+    );
+
+    const totalPrice = cartItems.reduce(
+        (sum, item) => sum + (item?.total ?? 0),
+        0
+    );
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -33,10 +49,10 @@ export function CheckoutPage() {
         setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!form.name || !form.phone || !form.city || !form.branch) {
+        if (!form.name.trim() || !form.phone.trim() || !form.city.trim() || !form.branch.trim()) {
             toast.error("Заповни обов’язкові поля");
             return;
         }
@@ -46,13 +62,45 @@ export function CheckoutPage() {
             return;
         }
 
-        clearCart();
-        toast.success("Замовлення оформлено");
-        window.location.hash = "#order-success";
+        try {
+            setIsSubmitting(true);
+
+            const order = await createOrder({
+                customer: {
+                    customerName: form.name.trim(),
+                    phone: form.phone.trim(),
+                    email: form.email.trim() || undefined,
+                    city: form.city.trim(),
+                    branch: form.branch.trim(),
+                    comment: form.comment.trim() || undefined,
+                },
+                items: cartItems.map((item) => ({
+                    productId: item!.product.id,
+                    productSlug: item!.product.slug,
+                    productName: item!.product.name,
+                    price: item!.product.price,
+                    selectedSize: item!.size,
+                    selectedColor: undefined,
+                    quantity: item!.quantity,
+                })),
+            });
+
+            clearCart();
+            toast.success(`Замовлення оформлено: ${order.order_number}`);
+            window.location.hash = "#order-success";
+        } catch (error) {
+            console.error(error);
+            toast.error("Не вдалося оформити замовлення");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
-        <PageLayout title="Оформлення замовлення" subtitle="Введи дані для доставки та підтвердження.">
+        <PageLayout
+            title="Оформлення замовлення"
+            subtitle="Введи дані для доставки та підтвердження."
+        >
             <section className="grid gap-8 lg:grid-cols-[1fr_360px]">
                 <form onSubmit={handleSubmit} className="space-y-5">
                     <div className="grid gap-4 md:grid-cols-2">
@@ -91,6 +139,7 @@ export function CheckoutPage() {
 
                     <input
                         name="email"
+                        type="email"
                         value={form.email}
                         onChange={handleChange}
                         placeholder="Email"
@@ -108,9 +157,10 @@ export function CheckoutPage() {
 
                     <button
                         type="submit"
-                        className="inline-flex items-center justify-center bg-red-600 px-6 py-4 text-sm font-black uppercase tracking-[0.2em] text-white transition hover:bg-red-500"
+                        disabled={isSubmitting}
+                        className="inline-flex items-center justify-center bg-red-600 px-6 py-4 text-sm font-black uppercase tracking-[0.2em] text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-60"
                     >
-                        Підтвердити замовлення
+                        {isSubmitting ? "Оформлення..." : "Підтвердити замовлення"}
                     </button>
                 </form>
 
@@ -120,20 +170,25 @@ export function CheckoutPage() {
                     </p>
 
                     <div className="space-y-3">
-                        {cartItems.map((item) => {
-                            if (!item) return null;
-                            return (
-                                <div
-                                    key={`${item.slug}-${item.size}`}
-                                    className="border-b border-white/10 pb-3 text-sm text-gray-300"
-                                >
-                                    <p className="font-bold text-white">{item.product.name}</p>
-                                    <p>Розмір: {item.size}</p>
-                                    <p>Кількість: {item.quantity}</p>
-                                    <p>{formatPrice(item.total)}</p>
-                                </div>
-                            );
-                        })}
+                        {cartItems.length === 0 ? (
+                            <p className="text-sm text-gray-400">Кошик порожній</p>
+                        ) : (
+                            cartItems.map((item) => {
+                                if (!item) return null;
+
+                                return (
+                                    <div
+                                        key={`${item.slug}-${item.size}`}
+                                        className="border-b border-white/10 pb-3 text-sm text-gray-300"
+                                    >
+                                        <p className="font-bold text-white">{item.product.name}</p>
+                                        <p>Розмір: {item.size}</p>
+                                        <p>Кількість: {item.quantity}</p>
+                                        <p>{formatPrice(item.total)}</p>
+                                    </div>
+                                );
+                            })
+                        )}
                     </div>
 
                     <div className="mt-6 flex items-center justify-between text-white">
