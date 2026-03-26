@@ -58,7 +58,7 @@ export function SubcategoryCatalogPage({ category, subcategory }: Props) {
                         Товарів у добірці: {filteredItems.length}
                     </p>
 
-                    <div className="flex gap-4 text-sm font-bold uppercase tracking-[0.2em]">
+                    <div className="flex flex-wrap gap-3 text-sm font-bold uppercase tracking-[0.14em] sm:gap-4 sm:tracking-[0.2em]">
                         <a href={`#page/${category}`} className="text-white">
                             Увесь розділ
                         </a>
@@ -84,7 +84,7 @@ export function SubcategoryCatalogPage({ category, subcategory }: Props) {
                         <p>У цій добірці поки немає товарів. Напишіть нам, якщо потрібна допомога з вибором.</p>
                     </div>
                 ) : (
-                    <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                    <div className="grid gap-5 sm:grid-cols-2 sm:gap-6 xl:grid-cols-3">
                         {filteredItems.map((product) => (
                             <ProductCard
                                 key={product.slug}

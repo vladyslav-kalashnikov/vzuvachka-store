@@ -52,18 +52,18 @@ export function Categories() {
     const title2 = settings.categories_title_line_2 || "ТОВАРІВ";
 
     return (
-        <section id="categories" className="mesh-light relative overflow-hidden py-24 text-black">
+        <section id="categories" className="mesh-light relative overflow-hidden py-16 text-black sm:py-24">
             <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(15,15,15,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(15,15,15,0.06)_1px,transparent_1px)] bg-[size:56px_56px] opacity-40" />
-            <div className="mx-auto max-w-[1600px] px-6">
+            <div className="mx-auto max-w-[1600px] px-4 sm:px-6">
                 <div className="mb-10 flex flex-col gap-5 border-b border-black/10 pb-6 md:flex-row md:items-end md:justify-between">
-                    <h2 className="text-4xl font-black uppercase tracking-tighter text-black md:text-6xl">
+                    <h2 className="text-3xl font-black uppercase tracking-tight text-black sm:text-4xl md:text-6xl">
                         {title1}
                         <br />
                         <span className="text-red-600">{title2}</span>
                     </h2>
-                        <span className="text-[10px] font-mono uppercase tracking-widest text-black/45">
-                            Оберіть потрібний розділ
-                        </span>
+                    <span className="text-[10px] font-mono uppercase tracking-[0.16em] text-black/45 sm:tracking-widest">
+                        Оберіть потрібний розділ
+                    </span>
                 </div>
 
                 <div className="mb-8 grid gap-4 md:grid-cols-3">
@@ -73,7 +73,7 @@ export function Categories() {
                             className="premium-panel-light tech-clip fade-up px-6 py-5"
                             style={{ animationDelay: `${index * 0.08}s` }}
                         >
-                            <p className="mb-2 text-3xl font-black uppercase text-black md:text-4xl">{card.value}</p>
+                            <p className="mb-2 text-2xl font-black uppercase text-black sm:text-3xl md:text-4xl">{card.value}</p>
                             <p className="text-[11px] uppercase tracking-[0.2em] text-black/65">{card.label}</p>
                         </div>
                     ))}
@@ -84,7 +84,7 @@ export function Categories() {
                         <a
                             key={section.key}
                             href={section.href}
-                            className={`tech-clip group relative min-h-[380px] overflow-hidden border border-black/10 bg-zinc-900 fade-up shadow-[0_26px_60px_rgba(20,12,5,0.12)] ${section.colSpan}`}
+                            className={`tech-clip group relative min-h-[320px] overflow-hidden border border-black/10 bg-zinc-900 fade-up shadow-[0_26px_60px_rgba(20,12,5,0.12)] sm:min-h-[380px] ${section.colSpan}`}
                             style={{ animationDelay: `${index * 0.08}s` }}
                         >
                             <img
@@ -95,18 +95,18 @@ export function Categories() {
 
                             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
 
-                            <div className="absolute inset-0 flex flex-col justify-between p-8">
+                            <div className="absolute inset-0 flex flex-col justify-between p-5 sm:p-8">
                                 <div className="space-y-3">
                                     <div className="tech-clip inline-flex self-start border border-white/10 bg-black/80 px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-white backdrop-blur-md">
                                         {section.badge}
                                     </div>
-                                    <p className="max-w-xs text-xs uppercase tracking-[0.18em] text-white/70">
+                                    <p className="max-w-full text-xs uppercase tracking-[0.14em] text-white/70 sm:max-w-xs sm:tracking-[0.18em]">
                                         {section.description}
                                     </p>
                                 </div>
 
                                 <div>
-                                    <h3 className="translate-y-4 text-3xl font-black uppercase tracking-tighter text-white transition-transform duration-300 group-hover:translate-y-0 md:text-5xl">
+                                    <h3 className="translate-y-0 text-2xl font-black uppercase tracking-tight text-white transition-transform duration-300 group-hover:translate-y-0 sm:translate-y-4 sm:text-3xl sm:tracking-tighter md:text-5xl">
                                         {section.label}
                                     </h3>
                                     <div className="mt-4 flex flex-wrap gap-2">

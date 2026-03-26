@@ -27,8 +27,8 @@ export function WholesaleBenefits() {
     ];
 
     return (
-        <section className="border-t border-white/5 bg-[#0a0a0a] py-24">
-            <div className="mx-auto max-w-[1600px] px-6">
+        <section className="border-t border-white/5 bg-[#0a0a0a] py-16 sm:py-24">
+            <div className="mx-auto max-w-[1600px] px-4 sm:px-6">
                 <div className="mb-16 text-center fade-up">
                     <span className="mb-4 block text-[10px] font-bold uppercase tracking-[0.4em] text-red-600">
                         Чому це зручно
@@ -59,7 +59,7 @@ export function WholesaleBenefits() {
                         return (
                             <div
                                 key={benefit.title}
-                                className="tech-clip premium-panel group p-8 transition-all hover:-translate-y-1 hover:border-red-600 fade-up"
+                                className="tech-clip premium-panel group p-6 transition-all hover:-translate-y-1 hover:border-red-600 fade-up sm:p-8"
                                 style={{ animationDelay: `${i * 0.15}s` }}
                             >
                                 <div className="tech-clip mb-6 flex h-14 w-14 items-center justify-center bg-white/5 transition-colors group-hover:bg-red-600">

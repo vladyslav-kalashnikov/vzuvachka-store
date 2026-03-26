@@ -24,12 +24,12 @@ export function CollabSection() {
         "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=1200&auto=format&fit=crop";
 
     return (
-        <section id="collab" className="relative overflow-hidden bg-[#120d0b] py-24 text-white">
+        <section id="collab" className="relative overflow-hidden bg-[#120d0b] py-16 text-white sm:py-24">
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_10%_20%,rgba(249,115,22,0.2),transparent_24%),radial-gradient(circle_at_80%_30%,rgba(239,68,68,0.15),transparent_18%)]" />
-            <div className="mx-auto max-w-[1600px] px-6">
-                <div className="grid grid-cols-1 items-center gap-16 md:grid-cols-2">
+            <div className="mx-auto max-w-[1600px] px-4 sm:px-6">
+                <div className="grid grid-cols-1 items-center gap-10 sm:gap-16 md:grid-cols-2">
                     <div className="order-2 fade-up md:order-1">
-                        <p className="mb-6 text-[10px] font-bold uppercase tracking-[0.4em] text-red-600">
+                        <p className="mb-6 text-[10px] font-bold uppercase tracking-[0.24em] text-red-600 sm:tracking-[0.4em]">
                             {badge}
                         </p>
                         <div className="mb-5 flex flex-wrap gap-2">
@@ -42,7 +42,7 @@ export function CollabSection() {
                                 </span>
                             ))}
                         </div>
-                        <h2 className="mb-8 text-5xl font-black uppercase leading-[0.9] tracking-tighter md:text-7xl">
+                        <h2 className="mb-8 text-[clamp(2.75rem,13vw,4.5rem)] font-black uppercase leading-[0.92] tracking-tight sm:tracking-tighter md:text-7xl">
                             {title1}
                             <br />
                             <span
@@ -59,9 +59,9 @@ export function CollabSection() {
                             {onboardingSteps.map((item, index) => (
                                 <div
                                     key={item}
-                                    className="premium-panel tech-clip grid grid-cols-[44px_1fr] items-start gap-4 px-4 py-4 text-sm text-gray-300"
+                                    className="premium-panel tech-clip grid grid-cols-[40px_1fr] items-start gap-4 px-4 py-4 text-sm text-gray-300 sm:grid-cols-[44px_1fr]"
                                 >
-                                    <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-sm font-black text-white">
+                                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-sm font-black text-white sm:h-11 sm:w-11">
                                         0{index + 1}
                                     </div>
                                     <div className="pt-1">{item}</div>
@@ -71,28 +71,28 @@ export function CollabSection() {
 
                         <a
                             href={buttonLink}
-                            className="tech-clip inline-block bg-white px-10 py-5 text-xs font-extrabold uppercase tracking-widest text-black transition-colors hover:bg-red-600 hover:text-white"
+                            className="tech-clip inline-flex w-full items-center justify-center bg-white px-6 py-4 text-[11px] font-extrabold uppercase tracking-[0.14em] text-black transition-colors hover:bg-red-600 hover:text-white sm:w-auto sm:px-10 sm:py-5 sm:text-xs sm:tracking-widest"
                         >
                             {buttonText}
                         </a>
                     </div>
 
                     <div className="order-1 fade-up md:order-2" style={{ animationDelay: "0.2s" }}>
-                        <div className="relative">
+                        <div className="relative space-y-4 md:space-y-0">
                             <img
                                 src={image}
                                 alt="Співпраця з клієнтами"
-                                className="tech-clip aspect-[4/5] w-full object-cover grayscale transition-all duration-[2s] hover:grayscale-0"
+                                className="tech-clip aspect-[4/4.9] w-full object-cover grayscale transition-all duration-[2s] hover:grayscale-0 sm:aspect-[4/5]"
                             />
-                            <div className="tech-clip premium-panel float-slow absolute -bottom-6 left-0 max-w-[270px] px-5 py-5">
+                            <div className="tech-clip premium-panel relative max-w-full px-5 py-5 md:absolute md:-bottom-6 md:left-0 md:max-w-[270px]">
                                 <p className="text-[10px] font-black uppercase tracking-[0.3em] text-red-400">
                                     Простий старт
                                 </p>
-                                <p className="mt-3 text-lg font-black uppercase text-white">
+                                <p className="mt-3 text-base font-black uppercase text-white sm:text-lg">
                                     Від першого повідомлення до першого замовлення без зайвих кроків.
                                 </p>
                             </div>
-                            <div className="tech-clip border border-white/10 bg-[#f4ece2] px-5 py-4 text-black shadow-[0_24px_70px_rgba(0,0,0,0.28)] float-soft absolute -right-2 top-10 w-[220px]">
+                            <div className="tech-clip border border-white/10 bg-[#f4ece2] px-5 py-4 text-black shadow-[0_24px_70px_rgba(0,0,0,0.28)] md:absolute md:-right-2 md:top-10 md:w-[220px]">
                                 <p className="text-[10px] font-black uppercase tracking-[0.24em] text-red-600">
                                     Зрозуміло
                                 </p>

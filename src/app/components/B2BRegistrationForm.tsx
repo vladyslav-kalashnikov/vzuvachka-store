@@ -16,11 +16,11 @@ export function B2BRegistrationForm() {
     return (
         <section
             id="b2b-register"
-            className="mesh-light relative overflow-hidden py-24 text-[#161616]"
+            className="mesh-light relative overflow-hidden py-16 text-[#161616] sm:py-24"
         >
             <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(15,15,15,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(15,15,15,0.06)_1px,transparent_1px)] bg-[size:56px_56px] opacity-30" />
-            <div className="mx-auto max-w-[1200px] px-6">
-                <div className="premium-panel-light tech-clip grid gap-10 border border-black/10 bg-[rgba(255,252,247,0.95)] p-8 md:grid-cols-[0.88fr_1.12fr] md:p-12">
+            <div className="mx-auto max-w-[1200px] px-4 sm:px-6">
+                <div className="premium-panel-light tech-clip grid gap-8 border border-black/10 bg-[rgba(255,252,247,0.95)] p-6 sm:gap-10 sm:p-8 md:grid-cols-[0.88fr_1.12fr] md:p-12">
                     <div>
                         <p className="mb-3 text-[10px] font-black uppercase tracking-[0.3em] text-[#7b818c]">
                             Форма зв'язку
@@ -48,7 +48,7 @@ export function B2BRegistrationForm() {
                         </div>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="tech-clip bg-[#0b0b0b] p-6 text-white md:p-8">
+                    <form onSubmit={handleSubmit} className="tech-clip bg-[#0b0b0b] p-5 text-white sm:p-6 md:p-8">
                         <div className="mb-6">
                             <p className="text-[10px] font-black uppercase tracking-[0.28em] text-[#d5d8df]">
                                 Fast qualification

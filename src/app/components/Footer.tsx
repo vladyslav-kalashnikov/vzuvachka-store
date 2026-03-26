@@ -8,7 +8,7 @@ function cx(...cls: Array<string | false | null | undefined>) {
 export function Footer() {
     return (
         <footer className="mt-20 border-t border-white/10 bg-[#0a0a0a] font-sans text-white">
-            <div className="mx-auto max-w-[1600px] px-6 py-16 sm:py-24">
+            <div className="mx-auto max-w-[1600px] px-4 py-16 sm:px-6 sm:py-24">
                 <div className="grid gap-16 lg:grid-cols-12">
                     <div className="lg:col-span-4">
                         <div className="mb-8 flex items-center gap-3">
@@ -16,10 +16,10 @@ export function Footer() {
                                 В/Ч
                             </div>
                             <div>
-                                <div className="text-2xl font-black uppercase tracking-tighter text-white">
+                                <div className="text-xl font-black uppercase tracking-tight text-white sm:text-2xl sm:tracking-tighter">
                                     ВЗУВАЧКА
                                 </div>
-                                <div className="mt-0.5 text-[10px] font-bold uppercase tracking-[0.3em] text-gray-500">
+                                <div className="mt-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-gray-500 sm:tracking-[0.3em]">
                                     взуття для магазинів і замовлень
                                 </div>
                             </div>
@@ -44,7 +44,7 @@ export function Footer() {
                             <div>
                                 Email:
                                 <a
-                                    className="ml-2 text-white transition-colors hover:text-red-500"
+                                    className="ml-2 break-all text-white transition-colors hover:text-red-500"
                                     href={partnerContact.emailHref}
                                 >
                                     {partnerContact.email}
@@ -62,7 +62,7 @@ export function Footer() {
                     </div>
 
                     <div className="lg:col-span-5">
-                        <div className="grid grid-cols-2 gap-8 md:grid-cols-3">
+                        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
                             <FooterCol title="Каталоги">
                                 {categorySections.map((section) => (
                                     <FooterLink key={section.key} to={section.href}>
@@ -93,14 +93,14 @@ export function Footer() {
                     </div>
 
                     <div className="lg:col-span-3">
-                        <div className="tech-clip border border-white/10 bg-[#111] p-8">
+                        <div className="tech-clip border border-white/10 bg-[#111] p-6 sm:p-8">
                             <p className="mb-3 text-[10px] font-black uppercase tracking-[0.3em] text-red-500">
                                 Допомога
                             </p>
                             <h3 className="mb-4 text-2xl font-black uppercase tracking-tight text-white">
                                 Маєте питання?
                             </h3>
-                            <p className="mb-8 text-[12px] font-medium uppercase leading-relaxed tracking-[0.16em] text-gray-400">
+                            <p className="mb-8 text-[12px] font-medium uppercase leading-relaxed tracking-[0.1em] text-gray-400 sm:tracking-[0.16em]">
                                 Пояснимо умови, підкажемо по товарах і допоможемо з першим
                                 замовленням.
                             </p>
@@ -123,7 +123,7 @@ export function Footer() {
                     </div>
                 </div>
 
-                <div className="mt-20 flex flex-col gap-6 border-t border-white/10 pt-8 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 sm:flex-row sm:items-center sm:justify-between">
+                <div className="mt-16 flex flex-col gap-6 border-t border-white/10 pt-8 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-500 sm:mt-20 sm:flex-row sm:items-center sm:justify-between sm:tracking-[0.2em]">
                     <div>© 2026 ВЗУВАЧКА. Всі права захищено.</div>
 
                     <div className="flex flex-wrap gap-x-8 gap-y-4">
@@ -175,7 +175,7 @@ function FooterLink({
         <a
             href={to}
             className={cx(
-                "block text-[11px] font-bold uppercase tracking-widest text-gray-400 transition-colors hover:text-white",
+                "block text-[11px] font-bold uppercase tracking-[0.14em] text-gray-400 transition-colors hover:text-white sm:tracking-widest",
                 className
             )}
         >

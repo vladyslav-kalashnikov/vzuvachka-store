@@ -32,9 +32,9 @@ export function Bestsellers() {
     };
 
     return (
-        <section id="bestsellers" className="relative overflow-hidden bg-[#0a0a0a] py-24">
+        <section id="bestsellers" className="relative overflow-hidden bg-[#0a0a0a] py-16 sm:py-24">
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(239,68,68,0.12),transparent_22%),radial-gradient(circle_at_bottom_right,rgba(249,115,22,0.08),transparent_24%)]" />
-            <div className="mx-auto max-w-[1600px] px-6">
+            <div className="mx-auto max-w-[1600px] px-4 sm:px-6">
                 <div className="mb-12 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
                     <div>
                         <p className="mb-3 text-[10px] font-black uppercase tracking-[0.4em] text-red-600">
@@ -55,7 +55,7 @@ export function Bestsellers() {
                         </p>
                     </div>
 
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 self-start md:self-auto">
                         <button
                             type="button"
                             onClick={() => sliderRef.current?.slickPrev()}
@@ -143,14 +143,14 @@ export function Bestsellers() {
                                         <p className="mt-1">{pack.label} • {pack.unitsPerPack} {pack.unitLabel}/уп.</p>
                                     </div>
 
-                                    <div className="flex items-center justify-between border-t border-white/10 pt-4">
+                                    <div className="flex flex-col items-start gap-3 border-t border-white/10 pt-4 sm:flex-row sm:items-center sm:justify-between">
                                         <span className="font-mono font-bold text-white">
                                             від {formatPrice(profile.priceTiers[0].unitPrice)} / {profile.unitLabel}
                                         </span>
 
                                         <a
                                             href={`#product/${product.slug}`}
-                                            className="border border-white/10 px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-white transition hover:border-red-500 hover:text-red-500"
+                                            className="border border-white/10 px-4 py-2 text-[10px] font-black uppercase tracking-[0.16em] text-white transition hover:border-red-500 hover:text-red-500"
                                         >
                                             В заявку
                                         </a>

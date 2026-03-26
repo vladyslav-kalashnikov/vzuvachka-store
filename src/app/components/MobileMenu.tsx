@@ -49,10 +49,10 @@ export function MobileMenu() {
 
             <SheetContent
                 side="left"
-                className="w-[88%] border-r border-black/10 bg-white p-0 text-black sm:max-w-sm"
+                className="w-[92%] max-w-full border-r border-black/10 bg-white p-0 text-black sm:max-w-sm"
             >
                 <SheetHeader className="border-b border-black/10 px-5 py-5">
-                    <SheetTitle className="flex items-center gap-2 text-2xl font-black uppercase tracking-tight text-black">
+                    <SheetTitle className="flex items-center gap-2 text-xl font-black uppercase tracking-tight text-black sm:text-2xl">
                         <span
                             className="flex h-8 w-8 items-center justify-center bg-red-600 text-sm text-white"
                             style={{
@@ -78,7 +78,7 @@ export function MobileMenu() {
                     </div>
 
                     <div className="border-b border-black/10 px-5 py-4">
-                        <div className="grid grid-cols-3 gap-3">
+                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                             <QuickLink href="#search" icon={<Search className="h-4 w-4" />} label="Пошук" />
                             <QuickLink
                                 href="#wishlist"
@@ -218,7 +218,7 @@ function QuickLink({
     return (
         <a
             href={href}
-            className="flex min-h-[84px] flex-col justify-between border border-black/10 px-4 py-3 text-xs font-black uppercase tracking-[0.16em] text-black transition hover:border-red-600 hover:text-red-600"
+            className="flex min-h-[72px] flex-col justify-between border border-black/10 px-4 py-3 text-left text-[11px] font-black uppercase tracking-[0.12em] text-black transition hover:border-red-600 hover:text-red-600 sm:min-h-[84px] sm:text-xs sm:tracking-[0.16em]"
         >
             {icon}
             <span>{label}</span>
@@ -238,11 +238,11 @@ function QuickAction({
     return (
         <a
             href={href}
-            className="flex items-center justify-between border border-black/10 px-4 py-3 text-xs font-black uppercase tracking-[0.18em] text-black transition hover:border-red-600 hover:text-red-600"
+            className="flex items-center justify-between gap-3 border border-black/10 px-4 py-3 text-left text-[11px] font-black uppercase tracking-[0.12em] text-black transition hover:border-red-600 hover:text-red-600 sm:text-xs sm:tracking-[0.18em]"
         >
-            <span className="inline-flex items-center gap-2">
+            <span className="inline-flex min-w-0 items-center gap-2">
                 {icon}
-                {label}
+                <span className="min-w-0">{label}</span>
             </span>
             <ChevronRight className="h-4 w-4" />
         </a>

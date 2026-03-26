@@ -40,7 +40,7 @@ export function CartPage() {
                     <p>У заявці поки немає товарів. Додайте їх із каталогу або зі сторінки товару.</p>
                     <a
                         href="#page/wholesale"
-                        className="inline-flex border border-white/10 px-5 py-3 text-xs font-black uppercase tracking-[0.2em] text-white hover:border-red-500 hover:text-red-500"
+                        className="inline-flex w-full justify-center border border-white/10 px-5 py-3 text-xs font-black uppercase tracking-[0.2em] text-white hover:border-red-500 hover:text-red-500 sm:w-auto"
                     >
                         Перейти до умов
                     </a>
@@ -62,7 +62,7 @@ export function CartPage() {
 
                                     <div className="flex flex-col justify-between gap-4">
                                         <div className="flex items-start justify-between gap-4">
-                                            <div>
+                                            <div className="min-w-0">
                                                 <a href={`#product/${item.product.slug}`}>
                                                     <h3 className="text-xl font-black uppercase text-white hover:text-red-500">
                                                         {item.product.name}
@@ -133,7 +133,7 @@ export function CartPage() {
                                                 </button>
                                             </div>
 
-                                            <div className="text-right">
+                                            <div className="text-left sm:text-right">
                                                 <p className="text-sm text-gray-400">
                                                     {formatPrice(item.packPrice)} / уп. x {item.quantity}
                                                 </p>
@@ -171,7 +171,7 @@ export function CartPage() {
                             </div>
                         </div>
 
-                        <div className="mb-4 mt-4 flex items-center justify-between text-white">
+                        <div className="mb-4 mt-4 flex flex-col gap-2 text-white sm:flex-row sm:items-center sm:justify-between">
                             <span>Орієнтовна сума</span>
                             <span className="text-2xl font-black">{formatPrice(totalPrice)}</span>
                         </div>

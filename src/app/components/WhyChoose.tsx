@@ -35,15 +35,15 @@ export function WhyChoose() {
     ];
 
     return (
-        <section className="mesh-light relative overflow-hidden py-24 text-black">
+        <section className="mesh-light relative overflow-hidden py-16 text-black sm:py-24">
             <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(15,15,15,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(15,15,15,0.06)_1px,transparent_1px)] bg-[size:44px_44px] opacity-35" />
 
-            <div className="relative z-10 mx-auto max-w-[1600px] px-6">
+            <div className="relative z-10 mx-auto max-w-[1600px] px-4 sm:px-6">
                 <div className="mb-10 text-center fade-up">
-                    <span className="mb-4 block text-[10px] font-bold uppercase tracking-[0.4em] text-red-600">
+                    <span className="mb-4 block text-[10px] font-bold uppercase tracking-[0.24em] text-red-600 sm:tracking-[0.4em]">
                         {settings.whychoose_badge || "Чому з нами зручно"}
                     </span>
-                    <h2 className="text-3xl font-black uppercase tracking-tighter text-black md:text-5xl">
+                    <h2 className="text-3xl font-black uppercase tracking-tight text-black md:text-5xl">
                         {settings.whychoose_title || "Проста"}{" "}
                         <span
                             className="text-transparent"
@@ -72,8 +72,8 @@ export function WhyChoose() {
                         const Icon = feature.icon;
                         return (
                             <div
-                                key={feature.title}
-                                className="premium-panel-light tech-clip group fade-up p-8 transition-all hover:-translate-y-1 hover:border-red-600/40"
+                            key={feature.title}
+                                className="premium-panel-light tech-clip group fade-up p-6 transition-all hover:-translate-y-1 hover:border-red-600/40 sm:p-8"
                                 style={{ animationDelay: `${i * 0.15}s` }}
                             >
                                 <div className="tech-clip mb-6 flex h-12 w-12 items-center justify-center bg-black text-white transition-colors group-hover:bg-red-600">

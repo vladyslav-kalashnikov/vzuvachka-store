@@ -27,13 +27,13 @@ export function ProductCard({
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 z-10 opacity-60 transition-opacity group-hover:opacity-40" />
 
                 {product.badge && (
-                    <span className="absolute left-4 top-4 z-20 tech-clip bg-red-600 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-white shadow-lg shadow-red-600/20">
+                    <span className="absolute left-3 top-3 z-20 tech-clip bg-red-600 px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.16em] text-white shadow-lg shadow-red-600/20 sm:left-4 sm:top-4 sm:px-3 sm:py-1.5 sm:text-[10px] sm:tracking-[0.2em]">
                         {product.badge}
                     </span>
                 )}
 
                 {!product.inStock && (
-                    <span className="absolute bottom-4 left-4 z-20 tech-clip border border-white/20 bg-black/80 backdrop-blur-md px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-white">
+                    <span className="absolute bottom-3 left-3 z-20 tech-clip border border-white/20 bg-black/80 backdrop-blur-md px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.16em] text-white sm:bottom-4 sm:left-4 sm:px-3 sm:py-1.5 sm:text-[10px] sm:tracking-[0.2em]">
                         Під запит
                     </span>
                 )}
@@ -41,7 +41,7 @@ export function ProductCard({
                 <button
                     type="button"
                     onClick={(e) => { e.preventDefault(); onToggleWishlist(product.slug); }}
-                    className={`absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 ${
+                    className={`absolute right-3 top-3 z-20 flex h-9 w-9 items-center justify-center rounded-full border transition-all duration-300 sm:right-4 sm:top-4 sm:h-10 sm:w-10 ${
                         isInWishlist
                             ? "border-red-500 bg-red-500 text-white scale-110 shadow-lg shadow-red-500/30"
                             : "border-white/10 bg-black/40 backdrop-blur-md text-white hover:border-red-500 hover:bg-red-500 hover:text-white"
@@ -59,7 +59,7 @@ export function ProductCard({
                 </a>
 
                 {/* Розміри (З'являються при наведенні) */}
-                <div className="absolute bottom-0 left-0 right-0 z-20 p-4 translate-y-full opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                <div className="absolute bottom-0 left-0 right-0 z-20 hidden p-4 translate-y-full opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 sm:block">
                     <div className="flex flex-wrap gap-1.5 justify-center">
                         {product.sizes.map((size) => (
                             <span key={size} className="bg-black/60 backdrop-blur-md border border-white/20 px-2 py-1 text-[10px] font-bold text-white uppercase">
@@ -71,7 +71,7 @@ export function ProductCard({
             </div>
 
             {/* Інформаційний блок */}
-            <div className="relative p-5 z-20 bg-[#111]">
+            <div className="relative z-20 bg-[#111] p-4 sm:p-5">
                 <div className="flex items-start justify-between gap-4 mb-3">
                     <div>
                         <p className="mb-1 text-[9px] font-black uppercase tracking-[0.25em] text-red-500">
@@ -90,7 +90,7 @@ export function ProductCard({
                     {defaultPack.unitsPerPack} {defaultPack.unitLabel}/уп.
                 </div>
 
-                <div className="flex items-end justify-between border-t border-white/10 pt-4">
+                <div className="flex items-end justify-between gap-3 border-t border-white/10 pt-4">
                     <div className="flex flex-col">
                         <span className="text-[10px] uppercase tracking-widest text-gray-500 mb-1">Опт від:</span>
                         <span className="font-mono text-xl font-black text-white copper-text">

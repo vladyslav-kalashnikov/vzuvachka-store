@@ -40,7 +40,7 @@ export function SearchPage() {
                     Знайдено товарів: {filteredItems.length}
                 </p>
 
-                <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                <div className="grid gap-5 sm:grid-cols-2 sm:gap-6 xl:grid-cols-3">
                     {filteredItems.map((product) => (
                         <ProductCard
                             key={product.slug}

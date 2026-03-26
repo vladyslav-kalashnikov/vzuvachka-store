@@ -35,25 +35,25 @@ export function Header() {
 
     return (
         <>
-            <div className="bg-[#111] px-4 py-2 text-center text-white">
-                <span className="text-[11px] font-bold uppercase tracking-[0.22em]">
+            <div className="bg-[#111] px-3 py-2 text-center text-white sm:px-4">
+                <span className="text-[10px] font-bold uppercase tracking-[0.14em] sm:text-[11px] sm:tracking-[0.22em]">
                     <span className="mr-2 text-red-500">VZUVACHKA</span>
                     зрозумілі умови, актуальна наявність і швидке замовлення
                 </span>
             </div>
 
             <header className="sticky top-0 z-50 border-b border-black/10 bg-white/95 backdrop-blur">
-                <div className="mx-auto max-w-[1600px] px-6">
-                    <div className="flex h-20 items-center justify-between gap-4">
-                        <div className="flex items-center gap-3">
+                <div className="mx-auto max-w-[1600px] px-4 sm:px-6">
+                    <div className="flex h-16 items-center justify-between gap-2 sm:h-20 sm:gap-4">
+                        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
                             <MobileMenu />
 
                             <a
                                 href="#home"
-                                className="flex shrink-0 items-center gap-2 text-2xl font-black uppercase tracking-tighter text-black sm:text-3xl"
+                                className="flex min-w-0 shrink items-center gap-2 text-xl font-black uppercase tracking-tight text-black sm:shrink-0 sm:text-3xl"
                             >
                                 <span
-                                    className="flex h-8 w-8 items-center justify-center bg-red-600 text-sm text-white"
+                                    className="flex h-8 w-8 shrink-0 items-center justify-center bg-red-600 text-sm text-white"
                                     style={{
                                         clipPath:
                                             "polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%)",
@@ -61,7 +61,7 @@ export function Header() {
                                 >
                                     В/Ч
                                 </span>
-                                ВЗУВАЧКА
+                                <span className="truncate">ВЗУВАЧКА</span>
                             </a>
                         </div>
 
@@ -145,7 +145,7 @@ export function Header() {
                             </a>
                         </nav>
 
-                        <div className="flex items-center gap-3 text-black">
+                        <div className="flex shrink-0 items-center gap-2 text-black sm:gap-3">
                             {isAdmin && (
                                 <div className="group relative hidden lg:flex">
                                     <button
@@ -218,7 +218,7 @@ export function Header() {
 
                             <a
                                 href="#search"
-                                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-black/10 transition hover:border-red-600 hover:text-red-600"
+                                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-black/10 transition hover:border-red-600 hover:text-red-600 sm:h-11 sm:w-11"
                                 title="Пошук товарів"
                             >
                                 <Search className="h-5 w-5" />
@@ -226,7 +226,7 @@ export function Header() {
 
                             <a
                                 href="#wishlist"
-                                className="relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-black/10 transition hover:border-red-600 hover:text-red-600"
+                                className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-black/10 transition hover:border-red-600 hover:text-red-600 sm:h-11 sm:w-11"
                                 title="Обране"
                             >
                                 <Heart className="h-5 w-5" />
@@ -239,7 +239,7 @@ export function Header() {
 
                             <a
                                 href="#cart"
-                                className="relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-black/10 transition hover:border-red-600 hover:text-red-600"
+                                className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-black/10 transition hover:border-red-600 hover:text-red-600 sm:h-11 sm:w-11"
                                 title="Заявка"
                             >
                                 <ShoppingBag className="h-5 w-5" />

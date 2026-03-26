@@ -16,10 +16,10 @@ export function SubscribeSection() {
     };
 
     return (
-        <section id="subscribe" className="mesh-light relative overflow-hidden py-24 text-black">
+        <section id="subscribe" className="mesh-light relative overflow-hidden py-16 text-black sm:py-24">
             <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(15,15,15,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(15,15,15,0.06)_1px,transparent_1px)] bg-[size:52px_52px] opacity-30" />
-            <div className="mx-auto max-w-[1200px] px-6">
-                <div className="premium-panel-light tech-clip grid gap-10 p-8 md:grid-cols-[1fr_0.92fr] md:p-10">
+            <div className="mx-auto max-w-[1200px] px-4 sm:px-6">
+                <div className="premium-panel-light tech-clip grid gap-8 p-6 sm:gap-10 sm:p-8 md:grid-cols-[1fr_0.92fr] md:p-10">
                     <div>
                         <p className="mb-3 text-xs font-bold uppercase tracking-[0.3em] text-red-500">
                             {settings.subscribe_badge || "Швидкий запит"}
@@ -44,7 +44,7 @@ export function SubscribeSection() {
                         </div>
                     </div>
 
-                    <div className="tech-clip bg-[#101010] p-6 text-white">
+                    <div className="tech-clip bg-[#101010] p-5 text-white sm:p-6">
                         <p className="mb-5 text-[10px] font-black uppercase tracking-[0.28em] text-red-400">
                             Швидко і просто
                         </p>
@@ -61,7 +61,7 @@ export function SubscribeSection() {
                             />
                             <button
                                 type="submit"
-                                className="bg-red-600 px-6 py-3 text-sm font-black uppercase tracking-[0.2em] text-white transition hover:bg-red-500"
+                                className="w-full bg-red-600 px-6 py-3 text-sm font-black uppercase tracking-[0.2em] text-white transition hover:bg-red-500"
                             >
                                 {settings.subscribe_button_text || "Надіслати"}
                             </button>

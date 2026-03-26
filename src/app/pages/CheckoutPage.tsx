@@ -218,7 +218,7 @@ export function CheckoutPage() {
                     <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="inline-flex items-center justify-center bg-red-600 px-6 py-4 text-sm font-black uppercase tracking-[0.2em] text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-60"
+                        className="inline-flex w-full items-center justify-center bg-red-600 px-6 py-4 text-sm font-black uppercase tracking-[0.2em] text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
                     >
                         {isSubmitting ? "Відправка..." : "Надіслати B2B-запит"}
                     </button>
@@ -253,7 +253,7 @@ export function CheckoutPage() {
                         )}
                     </div>
 
-                    <div className="mt-6 flex items-center justify-between text-white">
+                    <div className="mt-6 flex flex-col gap-2 text-white sm:flex-row sm:items-center sm:justify-between">
                         <span>Орієнтовна база</span>
                         <span className="text-xl font-black">{formatPrice(totalPrice)}</span>
                     </div>

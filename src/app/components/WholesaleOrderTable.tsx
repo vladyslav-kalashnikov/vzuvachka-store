@@ -16,9 +16,9 @@ export function WholesaleOrderTable() {
     ];
 
     return (
-        <section id="b2b-matrix" className="relative overflow-hidden bg-[#111] py-24 text-white">
+        <section id="b2b-matrix" className="relative overflow-hidden bg-[#111] py-16 text-white sm:py-24">
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.06),transparent_18%),radial-gradient(circle_at_bottom_right,rgba(249,115,22,0.12),transparent_24%)]" />
-            <div className="mx-auto max-w-[1600px] px-6">
+            <div className="mx-auto max-w-[1600px] px-4 sm:px-6">
                 <div className="mb-12 flex flex-col gap-4 border-b border-white/10 pb-6 md:flex-row md:items-end md:justify-between">
                     <div>
                         <h2 className="text-3xl font-black uppercase tracking-tighter text-white md:text-5xl">
@@ -32,7 +32,7 @@ export function WholesaleOrderTable() {
 
                     <a
                         href="#cart"
-                        className="tech-clip inline-flex items-center justify-center gap-2 bg-red-600 px-8 py-4 text-[11px] font-black uppercase tracking-widest text-white transition hover:bg-red-500"
+                        className="tech-clip inline-flex w-full items-center justify-center gap-2 bg-red-600 px-6 py-4 text-[11px] font-black uppercase tracking-[0.16em] text-white transition hover:bg-red-500 md:w-auto md:px-8 md:tracking-widest"
                     >
                         Залишити запит
                         <ArrowRight className="h-4 w-4" />
@@ -55,7 +55,7 @@ export function WholesaleOrderTable() {
                 </div>
 
                 <div className="tech-clip premium-panel overflow-x-auto border border-white/10 p-2">
-                    <table className="w-full text-left text-sm text-gray-400">
+                    <table className="min-w-[900px] w-full text-left text-sm text-gray-400">
                         <thead className="border-b border-white/10 bg-black/50 text-[10px] font-black uppercase tracking-widest text-white">
                             <tr>
                                 <th className="p-4">Товар</th>

@@ -121,20 +121,20 @@ export function ProductPage({ slug }: ProductPageProps) {
                     <button
                         type="button"
                         onClick={() => window.history.back()}
-                        className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md px-5 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-white transition hover:border-red-500 hover:bg-red-500/20"
+                        className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-3 text-[9px] font-black uppercase tracking-[0.14em] text-white transition hover:border-red-500 hover:bg-red-500/20 sm:px-5 sm:text-[10px] sm:tracking-[0.2em]"
                     >
                         <ArrowLeft className="h-3 w-3" />
                         Назад
                     </button>
                     <a
                         href={`#page/${product.category[0] ?? "men"}`}
-                        className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md px-5 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-white transition hover:border-red-500 hover:bg-red-500/20"
+                        className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-3 text-[9px] font-black uppercase tracking-[0.14em] text-white transition hover:border-red-500 hover:bg-red-500/20 sm:px-5 sm:text-[10px] sm:tracking-[0.2em]"
                     >
                         Увесь сегмент
                     </a>
                     <a
                         href={`#page/size-guide?from=${product.slug}`}
-                        className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md px-5 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-white transition hover:border-red-500 hover:bg-red-500/20"
+                        className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-3 text-[9px] font-black uppercase tracking-[0.14em] text-white transition hover:border-red-500 hover:bg-red-500/20 sm:px-5 sm:text-[10px] sm:tracking-[0.2em]"
                     >
                         <Ruler className="h-3 w-3" />
                         Розмірні матриці
@@ -159,7 +159,7 @@ export function ProductPage({ slug }: ProductPageProps) {
                                             onClick={() =>
                                                 setActiveImageIndex((prev) => (prev === 0 ? gallery.length - 1 : prev - 1))
                                             }
-                                            className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full border border-white/20 bg-black/60 backdrop-blur-md p-3 text-white transition hover:border-red-500 hover:bg-red-600"
+                                            className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full border border-white/20 bg-black/60 p-2.5 text-white transition hover:border-red-500 hover:bg-red-600 sm:left-4 sm:p-3"
                                         >
                                             <ChevronLeft className="h-5 w-5" />
                                         </button>
@@ -168,7 +168,7 @@ export function ProductPage({ slug }: ProductPageProps) {
                                             onClick={() =>
                                                 setActiveImageIndex((prev) => (prev === gallery.length - 1 ? 0 : prev + 1))
                                             }
-                                            className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full border border-white/20 bg-black/60 backdrop-blur-md p-3 text-white transition hover:border-red-500 hover:bg-red-600"
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full border border-white/20 bg-black/60 p-2.5 text-white transition hover:border-red-500 hover:bg-red-600 sm:right-4 sm:p-3"
                                         >
                                             <ChevronRight className="h-5 w-5" />
                                         </button>
@@ -202,8 +202,8 @@ export function ProductPage({ slug }: ProductPageProps) {
 
                         {/* ОПИС */}
                         <div className="premium-panel p-6 sm:p-8 fade-up" style={{ animationDelay: '0.2s' }}>
-                            <div className="mb-6 flex items-center justify-between gap-4 border-b border-white/10 pb-4">
-                                <h2 className="text-2xl font-black uppercase text-white tracking-tight">Опис товару</h2>
+                            <div className="mb-6 flex flex-col items-start gap-3 border-b border-white/10 pb-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                                <h2 className="text-2xl font-black uppercase tracking-tight text-white">Опис товару</h2>
                                 <span className="text-[10px] font-black uppercase tracking-[0.22em] text-red-600 bg-red-600/10 px-3 py-1 rounded-full">
                                     Деталі
                                 </span>
@@ -231,7 +231,7 @@ export function ProductPage({ slug }: ProductPageProps) {
                                 <p className="mb-2 text-[10px] font-black uppercase tracking-[0.3em] text-red-500">
                                     VZUVACHKA
                                 </p>
-                                <h1 className="text-3xl font-black uppercase tracking-tighter text-white leading-none">
+                                <h1 className="text-2xl font-black uppercase leading-tight tracking-tight text-white sm:text-3xl sm:leading-none sm:tracking-tighter">
                                     {product.name}
                                 </h1>
                                 <p className="mt-3 text-[11px] font-bold uppercase tracking-[0.22em] text-gray-500">
@@ -253,7 +253,7 @@ export function ProductPage({ slug }: ProductPageProps) {
                             </button>
                         </div>
 
-                        <div className="mb-8 flex items-end gap-4">
+                        <div className="mb-8 flex flex-col items-start gap-2 sm:flex-row sm:items-end sm:gap-4">
                             <span className="font-mono text-4xl font-black copper-text">
                                 від {formatPrice(product.price)}
                             </span>
@@ -307,7 +307,7 @@ export function ProductPage({ slug }: ProductPageProps) {
                                             }`}
                                         >
                                             {isActive && <div className="absolute top-0 left-0 w-1 h-full bg-red-500" />}
-                                            <div className="flex items-start justify-between gap-4">
+                                            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                                                 <div>
                                                     <p className={`text-sm font-black uppercase tracking-[0.14em] ${isActive ? 'text-white' : ''}`}>
                                                         {pack.label}
@@ -327,9 +327,9 @@ export function ProductPage({ slug }: ProductPageProps) {
                                                 {pack.description}
                                             </p>
 
-                                            <div className="mt-4 grid grid-cols-2 gap-2 border-t border-white/10 pt-3 text-[10px] font-bold uppercase tracking-[0.16em] opacity-90">
+                                            <div className="mt-4 grid gap-2 border-t border-white/10 pt-3 text-[10px] font-bold uppercase tracking-[0.16em] opacity-90 sm:grid-cols-2">
                                                 <span>Вміст: {pack.unitsPerPack} {pack.unitLabel}/уп.</span>
-                                                <span className="text-right">від {formatPrice(preview.unitPrice)} / {pack.unitLabel}</span>
+                                                <span className="sm:text-right">від {formatPrice(preview.unitPrice)} / {pack.unitLabel}</span>
                                             </div>
                                         </button>
                                     );
@@ -397,7 +397,7 @@ export function ProductPage({ slug }: ProductPageProps) {
 
                         {/* ПІДСУМОК (КАЛЬКУЛЯТОР) */}
                         <div className="mb-8 rounded-[24px] border border-red-500/20 bg-gradient-to-br from-red-950/20 to-black p-5 shadow-inner">
-                            <div className="flex items-end justify-between gap-4 border-b border-white/10 pb-4 mb-4">
+                            <div className="mb-4 flex flex-col gap-3 border-b border-white/10 pb-4 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
                                 <div>
                                     <p className="text-[10px] font-black uppercase tracking-[0.28em] text-red-500 mb-1">
                                         Поточний розрахунок
@@ -406,7 +406,7 @@ export function ProductPage({ slug }: ProductPageProps) {
                                         {formatPrice(quote.unitPrice)} <span className="text-sm font-sans text-gray-500">/ {quote.pack.unitLabel}</span>
                                     </p>
                                 </div>
-                                <div className="text-right text-[10px] font-bold uppercase tracking-widest text-gray-400">
+                                <div className="text-[10px] font-bold uppercase tracking-widest text-gray-400 sm:text-right">
                                     <p className="text-white mb-1 text-sm">{quote.packs} уп.</p>
                                     <p>{formatUnits(quote.totalUnits, quote.pack.unitLabel)}</p>
                                 </div>
@@ -429,7 +429,7 @@ export function ProductPage({ slug }: ProductPageProps) {
                                     return (
                                         <div
                                             key={tier.id}
-                                            className={`flex items-center justify-between rounded-xl border p-3 transition-colors ${
+                                            className={`flex flex-col gap-3 rounded-xl border p-3 transition-colors sm:flex-row sm:items-center sm:justify-between ${
                                                 isActive
                                                     ? "border-red-500/50 bg-red-600/10"
                                                     : "border-white/5 bg-white/5"

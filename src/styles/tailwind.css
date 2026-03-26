@@ -34,6 +34,13 @@
         @apply border-border outline-ring/50;
     }
 
+    html,
+    body,
+    #root {
+        min-height: 100%;
+        overflow-x: clip;
+    }
+
     body {
         @apply bg-background text-foreground;
     }
@@ -46,6 +53,24 @@
         font-size: var(--text-2xl);
         font-weight: var(--font-weight-medium);
         line-height: 1.5;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    p,
+    li,
+    a,
+    button,
+    label {
+        overflow-wrap: anywhere;
+    }
+
+    input,
+    textarea,
+    select {
+        min-width: 0;
     }
 }
 
@@ -213,5 +238,16 @@
     .marquee-track {
         width: max-content;
         animation: marquee-x 22s linear infinite;
+    }
+
+    @media (max-width: 640px) {
+        .tech-clip {
+            clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+            border-radius: 1rem;
+        }
+
+        .marquee-track {
+            animation-duration: 28s;
+        }
     }
 }
