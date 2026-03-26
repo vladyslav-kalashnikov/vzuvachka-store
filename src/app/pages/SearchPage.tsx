@@ -1,9 +1,9 @@
 import * as React from "react";
 import { useMemo, useState } from "react";
-import { PageLayout } from "./PageLayout";
-import { products } from "../data/products";
 import { ProductCard } from "../components/ProductCard";
+import { products } from "../data/products";
 import { useShop } from "../store/useShop";
+import { PageLayout } from "./PageLayout";
 
 export function SearchPage() {
     const { isInWishlist, toggleWishlist } = useShop();
@@ -15,7 +15,7 @@ export function SearchPage() {
         if (!q) return products;
 
         return products.filter((product) =>
-            [product.name, product.type, product.description]
+            [product.name, product.type, product.description, product.details.join(" ")]
                 .join(" ")
                 .toLowerCase()
                 .includes(q)
@@ -23,18 +23,21 @@ export function SearchPage() {
     }, [query]);
 
     return (
-        <PageLayout title="Пошук" subtitle="Знайди потрібну модель, тип або категорію.">
+        <PageLayout
+            title="Пошук товарів"
+            subtitle="Шукайте товари за назвою, типом або описом."
+        >
             <section>
                 <input
                     type="text"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Пошук товарів..."
+                    placeholder="Наприклад: калоші, дитячі, робочі..."
                     className="mb-8 w-full border border-white/10 bg-[#111] px-5 py-4 text-white outline-none placeholder:text-gray-500"
                 />
 
                 <p className="mb-6 text-sm uppercase tracking-[0.2em] text-gray-500">
-                    Знайдено: {filteredItems.length}
+                    Знайдено товарів: {filteredItems.length}
                 </p>
 
                 <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">

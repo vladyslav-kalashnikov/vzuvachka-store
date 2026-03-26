@@ -12,20 +12,20 @@ type Props = {
 };
 
 export function CatalogFilters({
-                                   selectedSize,
-                                   selectedColor,
-                                   sortBy,
-                                   onSizeChange,
-                                   onColorChange,
-                                   onSortChange,
-                                   sizes,
-                                   colors,
-                               }: Props) {
+    selectedSize,
+    selectedColor,
+    sortBy,
+    onSizeChange,
+    onColorChange,
+    onSortChange,
+    sizes,
+    colors,
+}: Props) {
     return (
         <div className="mb-8 grid gap-4 rounded-2xl border border-white/10 bg-black/20 p-5 lg:grid-cols-3">
             <div>
                 <label className="mb-2 block text-xs font-bold uppercase tracking-[0.2em] text-gray-400">
-                    Розмір
+                    Розмірна група
                 </label>
                 <select
                     value={selectedSize}
@@ -68,9 +68,9 @@ export function CatalogFilters({
                     onChange={(e) => onSortChange(e.target.value)}
                     className="w-full border border-white/10 bg-[#111] px-4 py-3 text-white outline-none"
                 >
-                    <option value="default">За замовчуванням</option>
-                    <option value="price-asc">Ціна: від дешевших</option>
-                    <option value="price-desc">Ціна: від дорожчих</option>
+                    <option value="default">За популярністю</option>
+                    <option value="price-asc">Базова ціна: зростання</option>
+                    <option value="price-desc">Базова ціна: спадання</option>
                     <option value="name-asc">Назва: A-Z</option>
                 </select>
             </div>

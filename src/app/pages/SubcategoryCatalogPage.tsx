@@ -1,33 +1,12 @@
 import * as React from "react";
 import { useMemo, useState } from "react";
-import { PageLayout } from "./PageLayout";
+import { CatalogFilters } from "../components/CatalogFilters";
+import { ProductCard } from "../components/ProductCard";
+import { categoryMeta, subcategoryTitles } from "../data/b2bContent";
 import { getProductsByCategoryAndSubcategory } from "../data/products";
 import type { ProductCategory, ProductSubcategory } from "../data/products";
-import { ProductCard } from "../components/ProductCard";
 import { useShop } from "../store/useShop";
-import { CatalogFilters } from "../components/CatalogFilters";
-
-const subcategoryTitles: Record<ProductSubcategory, string> = {
-    "miski-kaloshi": "Міські калоші",
-    "sabo-ta-kroksy": "Сабо та крокси",
-    "domashni-tapochky": "Домашні тапочки",
-    "plazhni-shlopantsi": "Пляжні шльопанці",
-    "utepleni-modeli": "Утеплені моделі",
-    "rybalski-choboty": "Рибальські чоботи",
-    "taktychni-kaloshi": "Тактичні калоші",
-    "vietnamky": "В'єтнамки",
-    "dytiachi-cherevyky": "Дитячі черевики",
-    "dytiachi-tapochky": "Дитячі тапочки",
-    "doshchovi-modeli": "Дощові моделі",
-    "ustilky": "Устілки",
-    "shkarpetky": "Шкарпетки",
-    "zasoby-dohliadu": "Засоби догляду",
-    "sumky-ta-chokhly": "Сумки та чохли",
-    "robochi-kaloshi": "Робочі калоші",
-    "robochi-sabo": "Робочі сабо",
-    "antykovzki-modeli": "Антиковзкі моделі",
-    "dlia-vyrobnytstva": "Для виробництва",
-};
+import { PageLayout } from "./PageLayout";
 
 type Props = {
     category: ProductCategory;
@@ -37,6 +16,7 @@ type Props = {
 export function SubcategoryCatalogPage({ category, subcategory }: Props) {
     const { isInWishlist, toggleWishlist } = useShop();
     const items = getProductsByCategoryAndSubcategory(category, subcategory);
+    const categoryInfo = categoryMeta[category];
 
     const [selectedSize, setSelectedSize] = useState("");
     const [selectedColor, setSelectedColor] = useState("");
@@ -70,26 +50,20 @@ export function SubcategoryCatalogPage({ category, subcategory }: Props) {
     return (
         <PageLayout
             title={subcategoryTitles[subcategory]}
-            subtitle={`Каталог: ${category.toUpperCase()} // відібрані товари по підкатегорії`}
+            subtitle={`${categoryInfo.title} - окрема добірка товарів у цій категорії`}
         >
-            <section>
-                <div className="mb-8 flex items-center justify-between">
+            <section className="space-y-6">
+                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                     <p className="text-sm uppercase tracking-[0.25em] text-gray-500">
-                        Товарів: {filteredItems.length}
+                        Товарів у добірці: {filteredItems.length}
                     </p>
 
-                    <div className="flex gap-4">
-                        <a
-                            href={`#page/${category}`}
-                            className="text-sm font-bold uppercase tracking-[0.2em] text-white"
-                        >
-                            Вся категорія
+                    <div className="flex gap-4 text-sm font-bold uppercase tracking-[0.2em]">
+                        <a href={`#page/${category}`} className="text-white">
+                            Увесь розділ
                         </a>
-                        <a
-                            href="#wishlist"
-                            className="text-sm font-bold uppercase tracking-[0.2em] text-red-500"
-                        >
-                            Wishlist
+                        <a href="#wishlist" className="text-red-500">
+                            Обране
                         </a>
                     </div>
                 </div>
@@ -107,7 +81,7 @@ export function SubcategoryCatalogPage({ category, subcategory }: Props) {
 
                 {filteredItems.length === 0 ? (
                     <div className="rounded-2xl border border-white/10 bg-black/20 p-8">
-                        <p>У цій підкатегорії поки немає товарів.</p>
+                        <p>У цій добірці поки немає товарів. Напишіть нам, якщо потрібна допомога з вибором.</p>
                     </div>
                 ) : (
                     <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">

@@ -1,53 +1,6 @@
 import * as React from "react";
-import { PageLayout } from "./PageLayout";
-
-const highlights = [
-    "Легка вага для активного руху",
-    "Захист від вологи та бруду",
-    "Надійна посадка та комфорт",
-    "Сценарій: місто, двір, подорожі, негода",
-];
+import { CatalogPage } from "./CatalogPage";
 
 export function Kids() {
-    return (
-        <PageLayout
-            title="Дитяче взуття"
-            subtitle="Максимальний захист для маленьких дослідників."
-        >
-            <section>
-                <p>
-                    Дитяча лінійка ВЗУВАЧКИ створюється для руху без обмежень. Ми робимо
-                    ставку на легкість, захист від вологи, простоту догляду та комфорт
-                    протягом усього дня.
-                </p>
-                <p>
-                    Це моделі для прогулянок, шкільного ритму, дощової погоди, поїздок та
-                    активного дозвілля — коли взуття повинне витримувати більше, ніж
-                    звичайна пара на щодень.
-                </p>
-            </section>
-
-            <section>
-                <h2>Ключові переваги</h2>
-                <div className="grid gap-4 md:grid-cols-2">
-                    {highlights.map((item) => (
-                        <div
-                            key={item}
-                            className="rounded-2xl border border-white/10 bg-black/20 p-5"
-                        >
-                            <p>{item}</p>
-                        </div>
-                    ))}
-                </div>
-            </section>
-
-            <section>
-                <h2>Статус каталогу</h2>
-                <p>
-                    Каталог дитячих моделей завантажується. Скоро тут з’являться позиції з
-                    описами, розмірами, варіантами кольорів та характеристиками.
-                </p>
-            </section>
-        </PageLayout>
-    );
+    return <CatalogPage category="kids" />;
 }

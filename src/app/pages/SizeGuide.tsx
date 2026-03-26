@@ -39,8 +39,8 @@ export function SizeGuide() {
 
     return (
         <PageLayout
-            title="Розмірна сітка"
-            subtitle="Орієнтовна таблиця відповідності розмірів і довжини стопи."
+            title="Розмірні матриці"
+            subtitle="Орієнтир для закупівель і формування стартових розмірних груп."
         >
             <section className="flex flex-wrap gap-3">
                 <a
@@ -57,20 +57,16 @@ export function SizeGuide() {
                         className="inline-flex items-center gap-2 bg-red-600 px-5 py-3 text-xs font-black uppercase tracking-[0.2em] text-white transition hover:bg-red-500"
                     >
                         <ShoppingBag className="h-4 w-4" />
-                        Повернутись до товару
+                        Повернутись до SKU
                     </a>
                 )}
             </section>
 
             <section>
                 <p>
-                    Щоб правильно підібрати розмір, поставте стопу на аркуш паперу,
-                    відмітьте край п’яти та найдовший палець, а потім виміряйте відстань
-                    між цими точками.
-                </p>
-                <p>
-                    Якщо ви знаходитесь між двома розмірами, для утеплених моделей краще
-                    обирати більший варіант.
+                    Ця таблиця допомагає менеджеру та партнеру узгодити стартову матрицю по
+                    розмірах. Якщо ви формуєте мікс або плануєте кілька сегментів одразу,
+                    уточнюйте бажаний розподіл під час заявки.
                 </p>
             </section>
 
@@ -88,15 +84,6 @@ export function SizeGuide() {
                 <h2>Дитяча лінійка</h2>
                 <SizeTable items={kidsSizes} />
             </section>
-
-            <section>
-                <h2>Поради</h2>
-                <ul>
-                    <li>Міряйте стопу ввечері, коли нога трохи більша після дня.</li>
-                    <li>Для товстої шкарпетки або утепленої моделі додавайте запас 0.5 см.</li>
-                    <li>Якщо сумніваєтесь — напишіть нам у підтримку.</li>
-                </ul>
-            </section>
         </PageLayout>
     );
 }
@@ -106,22 +93,22 @@ function SizeTable({ items }: { items: { eu: string; cm: string }[] }) {
         <div className="overflow-hidden rounded-2xl border border-white/10">
             <table className="w-full border-collapse bg-black/20 text-left">
                 <thead>
-                <tr className="border-b border-white/10 bg-white/5">
-                    <th className="px-4 py-3 text-xs font-black uppercase tracking-[0.2em] text-white">
-                        EU
-                    </th>
-                    <th className="px-4 py-3 text-xs font-black uppercase tracking-[0.2em] text-white">
-                        Довжина стопи (см)
-                    </th>
-                </tr>
+                    <tr className="border-b border-white/10 bg-white/5">
+                        <th className="px-4 py-3 text-xs font-black uppercase tracking-[0.2em] text-white">
+                            EU
+                        </th>
+                        <th className="px-4 py-3 text-xs font-black uppercase tracking-[0.2em] text-white">
+                            Довжина стопи (см)
+                        </th>
+                    </tr>
                 </thead>
                 <tbody>
-                {items.map((item) => (
-                    <tr key={item.eu} className="border-b border-white/10 last:border-b-0">
-                        <td className="px-4 py-3 text-sm text-gray-300">{item.eu}</td>
-                        <td className="px-4 py-3 text-sm text-gray-300">{item.cm}</td>
-                    </tr>
-                ))}
+                    {items.map((item) => (
+                        <tr key={item.eu} className="border-b border-white/10 last:border-b-0">
+                            <td className="px-4 py-3 text-sm text-gray-300">{item.eu}</td>
+                            <td className="px-4 py-3 text-sm text-gray-300">{item.cm}</td>
+                        </tr>
+                    ))}
                 </tbody>
             </table>
         </div>

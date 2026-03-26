@@ -22,7 +22,7 @@ export async function createOrder(payload: CreateOrderPayload) {
             comment: payload.customer.comment ?? null,
             total,
         })
-        .select()
+        .select("id, order_number")
         .single();
 
     if (orderError) {
@@ -31,7 +31,7 @@ export async function createOrder(payload: CreateOrderPayload) {
 
     const orderItems = payload.items.map((item) => ({
         order_id: orderRow.id,
-        product_id: item.productId,
+        product_id: null,
         product_name: item.productName,
         product_slug: item.productSlug,
         selected_size: item.selectedSize ?? null,

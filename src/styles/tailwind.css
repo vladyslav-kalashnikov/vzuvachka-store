@@ -50,6 +50,29 @@
 }
 
 @layer utilities {
+    .tech-clip {
+        clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+        border-radius: 1.5rem;
+        position: relative;
+        isolation: isolate;
+    }
+
+    .mesh-dark {
+        background:
+            radial-gradient(circle at 10% 10%, rgba(234, 88, 12, 0.22), transparent 28%),
+            radial-gradient(circle at 80% 18%, rgba(255, 255, 255, 0.08), transparent 18%),
+            radial-gradient(circle at 50% 120%, rgba(239, 68, 68, 0.18), transparent 34%),
+            linear-gradient(180deg, #060606 0%, #0b0b0b 45%, #090909 100%);
+    }
+
+    .mesh-light {
+        background:
+            radial-gradient(circle at 10% 10%, rgba(249, 115, 22, 0.14), transparent 24%),
+            radial-gradient(circle at 85% 0%, rgba(15, 15, 15, 0.06), transparent 18%),
+            radial-gradient(circle at 65% 90%, rgba(220, 38, 38, 0.08), transparent 22%),
+            linear-gradient(180deg, #f7f1e8 0%, #efe6db 100%);
+    }
+
     .footer-glow {
         background:
             radial-gradient(circle at 15% 15%, rgba(120, 85, 55, 0.28), transparent 55%),
@@ -155,5 +178,40 @@
         background: rgba(255, 255, 255, 0.8);
         border: 1px solid rgba(0, 0, 0, 0.06);
         backdrop-filter: blur(12px);
+    }
+
+    .premium-panel {
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03));
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 28px 90px rgba(0, 0, 0, 0.35);
+    }
+
+    .premium-panel-light {
+        background: rgba(255, 255, 255, 0.82);
+        border: 1px solid rgba(15, 15, 15, 0.09);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 28px 80px rgba(20, 12, 5, 0.12);
+    }
+
+    .copper-text {
+        background: linear-gradient(135deg, #ffffff 0%, #f8dcc2 46%, #cd7a54 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    @keyframes marquee-x {
+        0% {
+            transform: translate3d(0, 0, 0);
+        }
+        100% {
+            transform: translate3d(-50%, 0, 0);
+        }
+    }
+
+    .marquee-track {
+        width: max-content;
+        animation: marquee-x 22s linear infinite;
     }
 }

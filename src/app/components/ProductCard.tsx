@@ -1,5 +1,6 @@
 import * as React from "react";
-import { Heart, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Heart, ShoppingBag } from "lucide-react";
+import { getB2BProductProfile, getDefaultPackOption } from "../lib/b2b";
 import { Product, formatPrice } from "../data/products";
 
 type ProductCardProps = {
@@ -13,95 +14,95 @@ export function ProductCard({
                                 isInWishlist,
                                 onToggleWishlist,
                             }: ProductCardProps) {
+    const profile = getB2BProductProfile(product);
+    const defaultPack = getDefaultPackOption(product);
+    const volumeTier = profile.priceTiers[profile.priceTiers.length - 1];
+
     return (
-        <article className="group overflow-hidden rounded-[24px] border border-white/10 bg-[#111] transition-all hover:border-white/20 hover:shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
-            <div className="relative aspect-[4/4.3] overflow-hidden bg-black">
+        <article className="group tech-clip relative overflow-hidden bg-[#111] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_30px_60px_rgba(220,38,38,0.15)] border border-white/5 hover:border-red-500/30">
+
+            {/* Блок із фото */}
+            <div className="relative aspect-[4/5] overflow-hidden bg-black">
+                {/* Градієнт для читабельності бейджів */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 z-10 opacity-60 transition-opacity group-hover:opacity-40" />
+
                 {product.badge && (
-                    <span className="absolute left-4 top-4 z-10 bg-red-600 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-white">
-            {product.badge}
-          </span>
+                    <span className="absolute left-4 top-4 z-20 tech-clip bg-red-600 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-white shadow-lg shadow-red-600/20">
+                        {product.badge}
+                    </span>
                 )}
 
                 {!product.inStock && (
-                    <span className="absolute bottom-4 left-4 z-10 border border-white/10 bg-black/70 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-white">
-            Немає в наявності
-          </span>
+                    <span className="absolute bottom-4 left-4 z-20 tech-clip border border-white/20 bg-black/80 backdrop-blur-md px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-white">
+                        Під запит
+                    </span>
                 )}
 
                 <button
                     type="button"
-                    onClick={() => onToggleWishlist(product.slug)}
-                    className={`absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full border transition ${
+                    onClick={(e) => { e.preventDefault(); onToggleWishlist(product.slug); }}
+                    className={`absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 ${
                         isInWishlist
-                            ? "border-red-500 bg-red-500 text-white"
-                            : "border-white/10 bg-black/60 text-white hover:border-red-500 hover:text-red-400"
+                            ? "border-red-500 bg-red-500 text-white scale-110 shadow-lg shadow-red-500/30"
+                            : "border-white/10 bg-black/40 backdrop-blur-md text-white hover:border-red-500 hover:bg-red-500 hover:text-white"
                     }`}
-                    aria-label="Додати в wishlist"
                 >
-                    <Heart className="h-4 w-4" />
+                    <Heart className={`h-4 w-4 ${isInWishlist ? "fill-white" : ""}`} />
                 </button>
 
-                <a href={`#product/${product.slug}`} className="block h-full">
+                <a href={`#product/${product.slug}`} className="block h-full w-full">
                     <img
                         src={product.image}
                         alt={product.name}
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1"
                     />
                 </a>
+
+                {/* Розміри (З'являються при наведенні) */}
+                <div className="absolute bottom-0 left-0 right-0 z-20 p-4 translate-y-full opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                    <div className="flex flex-wrap gap-1.5 justify-center">
+                        {product.sizes.map((size) => (
+                            <span key={size} className="bg-black/60 backdrop-blur-md border border-white/20 px-2 py-1 text-[10px] font-bold text-white uppercase">
+                                {size}
+                            </span>
+                        ))}
+                    </div>
+                </div>
             </div>
 
-            <div className="space-y-4 p-5">
-                <div>
-                    <p className="mb-2 text-[10px] font-black uppercase tracking-[0.22em] text-gray-500">
-                        {product.type}
-                    </p>
-
-                    <a href={`#product/${product.slug}`}>
-                        <h3 className="line-clamp-2 text-xl font-black uppercase tracking-[-0.03em] text-white transition-colors hover:text-red-500">
-                            {product.name}
-                        </h3>
-                    </a>
+            {/* Інформаційний блок */}
+            <div className="relative p-5 z-20 bg-[#111]">
+                <div className="flex items-start justify-between gap-4 mb-3">
+                    <div>
+                        <p className="mb-1 text-[9px] font-black uppercase tracking-[0.25em] text-red-500">
+                            {product.type}
+                        </p>
+                        <a href={`#product/${product.slug}`}>
+                            <h3 className="line-clamp-2 text-lg font-black uppercase tracking-tight text-white transition-colors hover:text-red-500">
+                                {product.name}
+                            </h3>
+                        </a>
+                    </div>
                 </div>
 
-                <p className="line-clamp-2 text-sm leading-6 text-gray-400">
-                    {product.description}
-                </p>
-
-                <div className="flex flex-wrap gap-2">
-                    {product.sizes.slice(0, 5).map((size) => (
-                        <span
-                            key={size}
-                            className="border border-white/10 bg-black/20 px-2.5 py-1 text-[11px] font-bold text-gray-300"
-                        >
-              {size}
-            </span>
-                    ))}
-                    {product.sizes.length > 5 && (
-                        <span className="border border-white/10 bg-black/20 px-2.5 py-1 text-[11px] font-bold text-gray-500">
-              +{product.sizes.length - 5}
-            </span>
-                    )}
+                <div className="mb-5 rounded-xl border border-white/5 bg-white/5 p-3 text-[10px] uppercase tracking-[0.18em] text-gray-400">
+                    <span className="text-white font-bold block mb-1">MOQ: {defaultPack.minPacks} уп.</span>
+                    {defaultPack.unitsPerPack} {defaultPack.unitLabel}/уп.
                 </div>
 
-                <div className="flex items-end justify-between gap-4 border-t border-white/10 pt-4">
-                    <div className="flex items-end gap-3">
-            <span className="font-mono text-lg font-bold text-white">
-              {formatPrice(product.price)}
-            </span>
-
-                        {product.oldPrice && (
-                            <span className="text-sm text-gray-500 line-through">
-                {formatPrice(product.oldPrice)}
-              </span>
-                        )}
+                <div className="flex items-end justify-between border-t border-white/10 pt-4">
+                    <div className="flex flex-col">
+                        <span className="text-[10px] uppercase tracking-widest text-gray-500 mb-1">Опт від:</span>
+                        <span className="font-mono text-xl font-black text-white copper-text">
+                            {formatPrice(profile.priceTiers[0].unitPrice)}
+                        </span>
                     </div>
 
                     <a
                         href={`#product/${product.slug}`}
-                        className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] text-white transition hover:text-red-500"
+                        className="flex h-10 w-10 items-center justify-center bg-white text-black transition-all hover:bg-red-600 hover:text-white rounded-full group/btn"
                     >
-                        Деталі
-                        <ArrowUpRight className="h-4 w-4" />
+                        <ArrowUpRight className="h-5 w-5 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
                     </a>
                 </div>
             </div>

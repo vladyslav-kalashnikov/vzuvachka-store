@@ -1,5 +1,6 @@
 import * as React from "react";
-import { ArrowLeft, Mail, ShieldCheck } from "lucide-react";
+import { ArrowLeft, BriefcaseBusiness, Mail, Phone } from "lucide-react";
+import { partnerContact } from "../data/b2bContent";
 
 type PageLayoutProps = {
     title: string;
@@ -8,10 +9,10 @@ type PageLayoutProps = {
 };
 
 export function PageLayout({
-                               title,
-                               subtitle,
-                               children,
-                           }: PageLayoutProps) {
+    title,
+    subtitle,
+    children,
+}: PageLayoutProps) {
     return (
         <section className="relative min-h-screen overflow-hidden border-t border-white/5 bg-[#0a0a0a] pb-24 pt-24 font-sans">
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(220,38,38,0.12),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(220,38,38,0.08),transparent_24%)]" />
@@ -24,13 +25,13 @@ export function PageLayout({
                         className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.28em] text-gray-500 transition-colors hover:text-red-500"
                     >
                         <ArrowLeft className="h-4 w-4" />
-                        На базу
+                        На головну
                     </a>
                 </div>
 
                 <header className="mb-10 rounded-[28px] border border-white/10 bg-white/[0.02] px-6 py-8 shadow-[0_0_0_1px_rgba(255,255,255,0.02)] backdrop-blur-sm md:px-8 md:py-10">
                     <p className="mb-4 text-[10px] font-black uppercase tracking-[0.42em] text-red-600">
-                        ВЗУВАЧКА // DATA NODE
+                        ВЗУВАЧКА
                     </p>
 
                     <h1 className="max-w-4xl text-4xl font-black uppercase tracking-[-0.04em] text-white md:text-6xl">
@@ -44,7 +45,7 @@ export function PageLayout({
                     )}
                 </header>
 
-                <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px]">
+                <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_300px]">
                     <div className="rounded-[28px] border border-white/10 bg-white/[0.03] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.35)] backdrop-blur-sm md:p-8">
                         <div className="space-y-8 text-sm leading-7 text-gray-300 md:text-base [&_a]:border-b [&_a]:border-red-500/30 [&_a]:text-red-500 [&_a]:transition-colors hover:[&_a]:border-red-500 hover:[&_a]:text-red-400 [&_h2]:text-2xl [&_h2]:font-black [&_h2]:uppercase [&_h2]:tracking-[-0.03em] [&_h2]:text-white [&_h3]:text-lg [&_h3]:font-bold [&_h3]:text-white [&_li]:text-gray-300 [&_p]:text-gray-300 [&_section]:space-y-4 [&_ul]:space-y-3 [&_ul]:pl-5 [&_ul]:marker:text-red-600">
                             {children}
@@ -53,7 +54,7 @@ export function PageLayout({
 
                     <aside className="h-fit rounded-[28px] border border-white/10 bg-white/[0.03] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.35)] backdrop-blur-sm">
                         <p className="mb-4 text-[10px] font-black uppercase tracking-[0.35em] text-gray-500">
-                            SUPPORT / INFO
+                            B2B DESK
                         </p>
 
                         <div className="space-y-5">
@@ -61,40 +62,45 @@ export function PageLayout({
                                 <div className="mb-2 flex items-center gap-2 text-white">
                                     <Mail className="h-4 w-4 text-red-500" />
                                     <span className="text-sm font-bold uppercase tracking-wide">
-                    Контакт
-                  </span>
+                                        Email
+                                    </span>
                                 </div>
                                 <a
-                                    href="mailto:hello@vzuvachka.ua"
+                                    href={partnerContact.emailHref}
                                     className="text-sm font-medium text-gray-300 transition-colors hover:text-red-400"
                                 >
-                                    hello@vzuvachka.ua
+                                    {partnerContact.email}
                                 </a>
                             </div>
 
                             <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
                                 <div className="mb-2 flex items-center gap-2 text-white">
-                                    <ShieldCheck className="h-4 w-4 text-red-500" />
+                                    <Phone className="h-4 w-4 text-red-500" />
                                     <span className="text-sm font-bold uppercase tracking-wide">
-                    Режим
-                  </span>
+                                        Швидкий контакт
+                                    </span>
                                 </div>
-                                <p className="text-sm text-gray-400">
-                                    Підтримка 24/7.
-                                    <br />
-                                    Обробка замовлень щодня.
-                                </p>
+                                <a
+                                    href={partnerContact.phoneHref}
+                                    className="text-sm font-medium text-gray-300 transition-colors hover:text-red-400"
+                                >
+                                    {partnerContact.phone}
+                                </a>
+                                <p className="mt-2 text-xs text-gray-500">{partnerContact.hours}</p>
                             </div>
 
                             <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
-                                <p className="mb-2 text-sm font-bold uppercase tracking-wide text-white">
-                                    Навігація
-                                </p>
+                                <div className="mb-2 flex items-center gap-2 text-white">
+                                    <BriefcaseBusiness className="h-4 w-4 text-red-500" />
+                                    <span className="text-sm font-bold uppercase tracking-wide">
+                                        Корисні переходи
+                                    </span>
+                                </div>
                                 <div className="flex flex-col gap-2 text-sm">
-                                    <a href="#page/shipping">Доставка</a>
-                                    <a href="#page/returns">Повернення</a>
-                                    <a href="#page/faq">FAQ</a>
-                                    <a href="#page/contact">Контакти</a>
+                                    <a href="#page/wholesale">Умови співпраці</a>
+                                    <a href="#page/shipping">Умови поставки</a>
+                                    <a href="#page/faq">Поширені питання</a>
+                                    <a href="#page/contact">Зв'язатися з менеджером</a>
                                 </div>
                             </div>
                         </div>

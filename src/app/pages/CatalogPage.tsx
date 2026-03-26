@@ -1,40 +1,11 @@
 import * as React from "react";
 import { useMemo, useState } from "react";
-import { PageLayout } from "./PageLayout";
 import { ProductCategory, getProductsByCategory } from "../data/products";
-import { ProductCard } from "../components/ProductCard";
-import { useShop } from "../store/useShop";
+import { categoryMeta } from "../data/b2bContent";
 import { CatalogFilters } from "../components/CatalogFilters";
-
-const pageMeta: Record<
-    ProductCategory,
-    { title: string; subtitle: string }
-> = {
-    women: {
-        title: "Жіноча колекція",
-        subtitle: "Безкомпромісний стиль та захист від стихії.",
-    },
-    men: {
-        title: "Чоловіча колекція",
-        subtitle: "Утилітарність, витривалість і сильний характер.",
-    },
-    kids: {
-        title: "Дитяче взуття",
-        subtitle: "Максимальний захист для маленьких дослідників.",
-    },
-    work: {
-        title: "ВЗУВАЧКА PRO™",
-        subtitle: "Професійне екіпірування для складних умов.",
-    },
-    sale: {
-        title: "Архів / Розпродаж",
-        subtitle: "Лімітовані пропозиції та останні розміри.",
-    },
-    accessories: {
-        title: "Устілки & Аксесуари",
-        subtitle: "Додаткові елементи комфорту, догляду та щоденного використання.",
-    },
-};
+import { ProductCard } from "../components/ProductCard";
+import { PageLayout } from "./PageLayout";
+import { useShop } from "../store/useShop";
 
 type CatalogPageProps = {
     category: ProductCategory;
@@ -42,7 +13,7 @@ type CatalogPageProps = {
 
 export function CatalogPage({ category }: CatalogPageProps) {
     const { isInWishlist, toggleWishlist } = useShop();
-    const meta = pageMeta[category];
+    const meta = categoryMeta[category];
     const items = getProductsByCategory(category);
 
     const [selectedSize, setSelectedSize] = useState("");
@@ -76,17 +47,23 @@ export function CatalogPage({ category }: CatalogPageProps) {
 
     return (
         <PageLayout title={meta.title} subtitle={meta.subtitle}>
-            <section>
-                <div className="mb-8 flex items-center justify-between">
+            <section className="space-y-6">
+                <div className="rounded-2xl border border-white/10 bg-black/20 p-5">
+                    <p className="text-sm leading-7 text-gray-300">{meta.tagline}</p>
+                </div>
+
+                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                     <p className="text-sm uppercase tracking-[0.25em] text-gray-500">
-                        Товарів: {filteredItems.length}
+                        Товарів у розділі: {filteredItems.length}
                     </p>
-                    <a
-                        href="#wishlist"
-                        className="text-sm font-bold uppercase tracking-[0.2em] text-red-500"
-                    >
-                        Wishlist
-                    </a>
+                    <div className="flex flex-wrap gap-4 text-sm font-bold uppercase tracking-[0.2em]">
+                        <a href="#wishlist" className="text-white">
+                            Обране
+                        </a>
+                        <a href="#cart" className="text-red-500">
+                            Заявка
+                        </a>
+                    </div>
                 </div>
 
                 <CatalogFilters

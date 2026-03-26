@@ -1,29 +1,50 @@
+import * as React from "react";
 import {
-    Search,
-    ShoppingBag,
-    MapPin,
+    ArrowRight,
+    BriefcaseBusiness,
     ChevronDown,
     Heart,
+    LogIn,
+    LogOut,
+    Search,
+    Shield,
+    ShoppingBag,
+    UserPlus,
 } from "lucide-react";
-import * as React from "react";
+import { toast } from "sonner";
+import { signOut } from "../../lib/api/auth";
+import { adminLinks, categorySections, infoLinks } from "../data/b2bContent";
+import { useAuthUser } from "../hooks/useAuthUser";
 import { useShop } from "../store/useShop";
 import { MobileMenu } from "./MobileMenu";
 
 export function Header() {
     const { cartCount, wishlistCount } = useShop();
+    const { user, isAdmin } = useAuthUser();
+
+    const handleLogout = async () => {
+        try {
+            await signOut();
+            toast.success("Ви вийшли з акаунта");
+            window.location.hash = "#home";
+        } catch (error) {
+            console.error(error);
+            toast.error("Не вдалося завершити сесію");
+        }
+    };
 
     return (
         <>
-            <div className="bg-[#222222] px-4 py-2 text-center text-white">
-        <span className="text-[11px] font-bold uppercase tracking-[0.2em]">
-          <span className="mr-2 text-red-500">PROMO</span>
-          Безкоштовна доставка замовлень від 2500 ₴
-        </span>
+            <div className="bg-[#111] px-4 py-2 text-center text-white">
+                <span className="text-[11px] font-bold uppercase tracking-[0.22em]">
+                    <span className="mr-2 text-red-500">VZUVACHKA</span>
+                    зрозумілі умови, актуальна наявність і швидке замовлення
+                </span>
             </div>
 
-            <header className="sticky top-0 z-50 border-b border-gray-200 bg-white shadow-sm">
+            <header className="sticky top-0 z-50 border-b border-black/10 bg-white/95 backdrop-blur">
                 <div className="mx-auto max-w-[1600px] px-6">
-                    <div className="flex h-20 items-center justify-between">
+                    <div className="flex h-20 items-center justify-between gap-4">
                         <div className="flex items-center gap-3">
                             <MobileMenu />
 
@@ -31,7 +52,7 @@ export function Header() {
                                 href="#home"
                                 className="flex shrink-0 items-center gap-2 text-2xl font-black uppercase tracking-tighter text-black sm:text-3xl"
                             >
-                                <div
+                                <span
                                     className="flex h-8 w-8 items-center justify-center bg-red-600 text-sm text-white"
                                     style={{
                                         clipPath:
@@ -39,326 +60,202 @@ export function Header() {
                                     }}
                                 >
                                     В/Ч
-                                </div>
+                                </span>
                                 ВЗУВАЧКА
                             </a>
                         </div>
 
-                        <nav className="hidden h-full items-center gap-8 text-[14px] font-extrabold uppercase tracking-wide text-gray-900 lg:flex">
-                            <a
-                                href="#page/sale"
-                                className="text-red-600 transition hover:text-red-800"
-                            >
-                                Розпродаж
-                            </a>
+                        <nav className="hidden h-full items-center gap-8 text-[13px] font-extrabold uppercase tracking-[0.18em] text-gray-900 lg:flex">
+                            <div className="group relative flex h-full items-center">
+                                <button
+                                    type="button"
+                                    className="inline-flex items-center gap-1 transition hover:text-red-600"
+                                >
+                                    Каталоги
+                                    <ChevronDown className="h-4 w-4 transition-transform group-hover:rotate-180" />
+                                </button>
 
-                            <div className="group flex h-full cursor-pointer items-center">
-                <span className="flex items-center gap-1 transition hover:text-gray-500">
-                  Жінкам
-                  <ChevronDown className="h-4 w-4 transition-transform group-hover:rotate-180" />
-                </span>
-
-                                <div className="invisible absolute left-0 top-20 z-50 w-full translate-y-2 border-t border-gray-100 bg-white opacity-0 shadow-2xl transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
-                                    <div className="mx-auto flex max-w-[1600px] gap-16 px-6 py-10">
-                                        <div className="grid flex-1 grid-cols-3 gap-8">
-                                            <div>
-                                                <p className="mb-4 text-[10px] tracking-widest text-gray-400">
-                                                    ТИП ВЗУТТЯ
-                                                </p>
-                                                <ul className="space-y-3 text-sm font-medium tracking-normal text-gray-800 normal-case">
-                                                    <li>
-                                                        <a
-                                                            href="#catalog/women/miski-kaloshi"
-                                                            className="transition hover:text-red-600"
-                                                        >
-                                                            Міські калоші
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a
-                                                            href="#catalog/women/sabo-ta-kroksy"
-                                                            className="transition hover:text-red-600"
-                                                        >
-                                                            Сабо та крокси
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a
-                                                            href="#catalog/women/domashni-tapochky"
-                                                            className="transition hover:text-red-600"
-                                                        >
-                                                            Домашні тапочки
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a
-                                                            href="#catalog/women/plazhni-shlopantsi"
-                                                            className="transition hover:text-red-600"
-                                                        >
-                                                            Пляжні шльопанці
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a
-                                                            href="#catalog/women/utepleni-modeli"
-                                                            className="transition hover:text-red-600"
-                                                        >
-                                                            Утеплені моделі
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-
-                                            <div>
-                                                <p className="mb-4 text-[10px] tracking-widest text-gray-400">
-                                                    КОЛЕКЦІЇ
-                                                </p>
-                                                <ul className="space-y-3 text-sm font-medium tracking-normal text-gray-800 normal-case">
-                                                    <li>
-                                                        <a
-                                                            href="#page/women"
-                                                            className="transition hover:text-red-600"
-                                                        >
-                                                            Літо 2026
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a
-                                                            href="#catalog/women/utepleni-modeli"
-                                                            className="transition hover:text-red-600"
-                                                        >
-                                                            Утеплені моделі (Зима)
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a
-                                                            href="#page/women"
-                                                            className="transition hover:text-red-600"
-                                                        >
-                                                            Еко-лінійка (Recycled)
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a
-                                                            href="#page/women"
-                                                            className="transition hover:text-red-600"
-                                                        >
-                                                            Для саду та дачі
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-
-                                            <div>
-                                                <p className="mb-4 text-[10px] tracking-widest text-gray-400">
-                                                    ПОПУЛЯРНЕ
-                                                </p>
-                                                <div className="border border-gray-100 bg-gray-50 p-4">
-                                                    <p className="mb-2 text-xs font-bold">
-                                                        Бестселер сезону
+                                <div className="invisible absolute left-1/2 top-20 z-50 w-[980px] -translate-x-1/2 translate-y-2 border border-black/10 bg-white opacity-0 shadow-2xl transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+                                    <div className="grid gap-6 p-6 md:grid-cols-2 xl:grid-cols-3">
+                                        {categorySections.map((section) => (
+                                            <div
+                                                key={section.key}
+                                                className="rounded-3xl border border-black/10 bg-[#fafafa] p-5"
+                                            >
+                                                <a href={section.href} className="block">
+                                                    <p className="mb-2 text-[10px] font-black uppercase tracking-[0.28em] text-red-600">
+                                                        {section.badge}
                                                     </p>
-                                                    <p className="mb-3 text-xs font-normal text-gray-500">
-                                                        Калоші Urban Armor у кольорі "Графіт"
-                                                    </p>
-                                                    <a
-                                                        href="#product/urban-armor"
-                                                        className="border-b border-red-600 pb-0.5 text-[10px] font-extrabold uppercase tracking-widest text-red-600"
-                                                    >
-                                                        Дивитись
-                                                    </a>
+                                                    <h3 className="text-lg font-black uppercase tracking-tight text-black transition hover:text-red-600">
+                                                        {section.label}
+                                                    </h3>
+                                                </a>
+
+                                                <p className="mt-3 text-xs leading-6 text-gray-600">
+                                                    {section.description}
+                                                </p>
+
+                                                <div className="mt-4 flex flex-wrap gap-2">
+                                                    {section.subcategories.map((item) => (
+                                                        <a
+                                                            key={item.slug}
+                                                            href={`#catalog/${section.key}/${item.slug}`}
+                                                            className="rounded-full border border-black/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-gray-700 transition hover:border-red-600 hover:text-red-600"
+                                                        >
+                                                            {item.label}
+                                                        </a>
+                                                    ))}
                                                 </div>
                                             </div>
+                                        ))}
+                                    </div>
+
+                                    <div className="flex flex-wrap items-center justify-between gap-4 border-t border-black/10 bg-[#111] px-6 py-4 text-white">
+                                        <div className="flex flex-wrap items-center gap-5 text-[11px] font-bold uppercase tracking-[0.18em] text-white/70">
+                                            <a href="#page/sale" className="transition hover:text-white">
+                                                Складські лоти
+                                            </a>
+                                            <a href="#page/wholesale" className="transition hover:text-white">
+                                                Умови співпраці
+                                            </a>
+                                            <a href="#page/contact" className="transition hover:text-white">
+                                                Написати нам
+                                            </a>
                                         </div>
 
-                                        <div className="relative w-[300px] shrink-0 overflow-hidden bg-gray-100">
-                                            <img
-                                                src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?q=80&w=600&auto=format&fit=crop"
-                                                alt="Жіноча колекція"
-                                                className="absolute inset-0 h-full w-full object-cover"
-                                            />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                                            <div className="absolute bottom-0 left-0 p-6 text-white">
-                                                <p className="mb-1 text-xl font-black">ОНОВЛЕННЯ</p>
-                                                <p className="text-xs font-medium opacity-80">
-                                                    Весняні кольори вже тут.
-                                                </p>
-                                            </div>
-                                        </div>
+                                        <a
+                                            href="#page/wholesale"
+                                            className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] text-red-500 transition hover:text-red-400"
+                                        >
+                                            Перейти до умов співпраці
+                                            <ArrowRight className="h-4 w-4" />
+                                        </a>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="group flex h-full cursor-pointer items-center">
-                <span className="flex items-center gap-1 transition hover:text-gray-500">
-                  Чоловікам
-                  <ChevronDown className="h-4 w-4 transition-transform group-hover:rotate-180" />
-                </span>
-
-                                <div className="invisible absolute left-0 top-20 z-50 w-full translate-y-2 border-t border-gray-100 bg-white opacity-0 shadow-2xl transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
-                                    <div className="mx-auto flex max-w-[1600px] gap-16 px-6 py-10">
-                                        <div className="grid flex-1 grid-cols-3 gap-8">
-                                            <div>
-                                                <p className="mb-4 text-[10px] tracking-widest text-gray-400">
-                                                    ТИП ВЗУТТЯ
-                                                </p>
-                                                <ul className="space-y-3 text-sm font-medium tracking-normal text-gray-800 normal-case">
-                                                    <li>
-                                                        <a
-                                                            href="#catalog/men/rybalski-choboty"
-                                                            className="transition hover:text-red-600"
-                                                        >
-                                                            Рибальські чоботи
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a
-                                                            href="#catalog/men/taktychni-kaloshi"
-                                                            className="transition hover:text-red-600"
-                                                        >
-                                                            Тактичні калоші
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a
-                                                            href="#catalog/men/domashni-tapochky"
-                                                            className="transition hover:text-red-600"
-                                                        >
-                                                            Домашні тапочки
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a
-                                                            href="#catalog/men/vietnamky"
-                                                            className="transition hover:text-red-600"
-                                                        >
-                                                            В'єтнамки
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a
-                                                            href="#catalog/men/utepleni-modeli"
-                                                            className="transition hover:text-red-600"
-                                                        >
-                                                            Утеплені моделі
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-
-                                            <div>
-                                                <p className="mb-4 text-[10px] tracking-widest text-gray-400">
-                                                    ПРИЗНАЧЕННЯ
-                                                </p>
-                                                <ul className="space-y-3 text-sm font-medium tracking-normal text-gray-800 normal-case">
-                                                    <li>
-                                                        <a
-                                                            href="#catalog/men/rybalski-choboty"
-                                                            className="transition hover:text-red-600"
-                                                        >
-                                                            Риболовля та Полювання
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a
-                                                            href="#catalog/men/taktychni-kaloshi"
-                                                            className="transition hover:text-red-600"
-                                                        >
-                                                            Для міста та двору
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a
-                                                            href="#catalog/men/vietnamky"
-                                                            className="transition hover:text-red-600"
-                                                        >
-                                                            Басейн / Тренування
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-
-                                            <div>
-                                                <p className="mb-4 text-[10px] tracking-widest text-gray-400">
-                                                    ПОПУЛЯРНЕ
-                                                </p>
-                                                <div className="border border-gray-100 bg-gray-50 p-4">
-                                                    <p className="mb-2 text-xs font-bold">PRO-ANGLER</p>
-                                                    <p className="mb-3 text-xs font-normal text-gray-500">
-                                                        Нові заброди для екстриму.
-                                                    </p>
-                                                    <a
-                                                        href="#product/pro-angler-500"
-                                                        className="border-b border-red-600 pb-0.5 text-[10px] font-extrabold uppercase tracking-widest text-red-600"
-                                                    >
-                                                        Дивитись
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="relative w-[300px] shrink-0 overflow-hidden bg-gray-100">
-                                            <img
-                                                src="https://images.unsplash.com/photo-1608231387042-66d1773070a5?q=80&w=600&auto=format&fit=crop"
-                                                alt="Чоловіча колекція"
-                                                className="absolute inset-0 h-full w-full object-cover"
-                                            />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                                            <div className="absolute bottom-0 left-0 p-6 text-white">
-                                                <p className="mb-1 text-xl font-black">PRO-ANGLER</p>
-                                                <p className="text-xs font-medium opacity-80">
-                                                    Нові заброди для екстриму.
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <a href="#page/kids" className="transition hover:text-gray-500">
-                                Дітям
+                            <a href="#page/wholesale" className="transition hover:text-red-600">
+                                Умови
                             </a>
-
-                            <a
-                                href="#page/accessories"
-                                className="transition hover:text-gray-500"
-                            >
-                                Устілки & Аксесуари
+                            <a href="#page/faq" className="transition hover:text-red-600">
+                                FAQ
                             </a>
-
-                            <a href="#page/work" className="flex items-center gap-1">
-                                ВЗУВАЧКА
-                                <span className="relative -top-1 rounded-sm bg-[#222222] px-1.5 py-0.5 text-[9px] text-white">
-                  PRO™
-                </span>
+                            <a href="#page/contact" className="transition hover:text-red-600">
+                                Контакти
                             </a>
                         </nav>
 
-                        <div className="flex shrink-0 items-center gap-4 text-black sm:gap-6">
-                            <button className="hidden transition hover:text-red-600 sm:inline-flex">
-                                <MapPin className="h-6 w-6 stroke-[1.5]" />
-                            </button>
+                        <div className="flex items-center gap-3 text-black">
+                            {isAdmin && (
+                                <div className="group relative hidden lg:flex">
+                                    <button
+                                        type="button"
+                                        className="inline-flex items-center gap-2 rounded-full border border-black/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] transition hover:border-red-600 hover:text-red-600"
+                                    >
+                                        <Shield className="h-4 w-4" />
+                                        Backoffice
+                                        <ChevronDown className="h-4 w-4 transition-transform group-hover:rotate-180" />
+                                    </button>
 
-                            <a href="#search" className="transition hover:text-red-600">
-                                <Search className="h-6 w-6 stroke-[1.5]" />
+                                    <div className="invisible absolute right-0 top-14 z-50 w-72 translate-y-2 rounded-[24px] border border-black/10 bg-white p-3 opacity-0 shadow-2xl transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+                                        <p className="px-3 py-2 text-[10px] font-black uppercase tracking-[0.24em] text-gray-500">
+                                            Адмін-панелі
+                                        </p>
+                                        <div className="space-y-2">
+                                            {adminLinks.map((item) => (
+                                                <a
+                                                    key={item.href}
+                                                    href={item.href}
+                                                    className="flex items-center justify-between rounded-2xl border border-black/10 px-4 py-3 text-xs font-black uppercase tracking-[0.16em] text-black transition hover:border-red-600 hover:text-red-600"
+                                                >
+                                                    <span className="inline-flex items-center gap-2">
+                                                        <Shield className="h-4 w-4" />
+                                                        {item.label}
+                                                    </span>
+                                                    <ArrowRight className="h-4 w-4" />
+                                                </a>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {!user ? (
+                                <div className="hidden items-center gap-2 lg:flex">
+                                    <a
+                                        href="#page/login"
+                                        className="inline-flex items-center gap-2 rounded-full border border-black/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] transition hover:border-red-600 hover:text-red-600"
+                                        title="Вхід"
+                                    >
+                                        <LogIn className="h-4 w-4" />
+                                        Вхід
+                                    </a>
+                                    <a
+                                        href="#page/register"
+                                        className="inline-flex items-center gap-2 rounded-full border border-black/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] transition hover:border-red-600 hover:text-red-600"
+                                        title="Реєстрація"
+                                    >
+                                        <UserPlus className="h-4 w-4" />
+                                        Реєстрація
+                                    </a>
+                                </div>
+                            ) : (
+                                <div className="hidden items-center gap-2 lg:flex">
+                                    <div className="inline-flex items-center rounded-full border border-black/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.16em] text-gray-600">
+                                        {user.email || "Мій акаунт"}
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={handleLogout}
+                                        className="inline-flex items-center gap-2 rounded-full border border-black/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] transition hover:border-red-600 hover:text-red-600"
+                                        title="Вийти"
+                                    >
+                                        <LogOut className="h-4 w-4" />
+                                        Вийти
+                                    </button>
+                                </div>
+                            )}
+
+                            <a
+                                href="#search"
+                                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-black/10 transition hover:border-red-600 hover:text-red-600"
+                                title="Пошук товарів"
+                            >
+                                <Search className="h-5 w-5" />
                             </a>
 
-                            <a href="#wishlist" className="relative transition hover:text-red-600">
-                                <Heart className="h-6 w-6 stroke-[1.5]" />
+                            <a
+                                href="#wishlist"
+                                className="relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-black/10 transition hover:border-red-600 hover:text-red-600"
+                                title="Обране"
+                            >
+                                <Heart className="h-5 w-5" />
                                 {wishlistCount > 0 && (
-                                    <span className="absolute -right-2 -top-2 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-bold text-white">
-                    {wishlistCount}
-                  </span>
+                                    <span className="absolute -right-1 -top-1 inline-flex min-w-5 items-center justify-center rounded-full bg-red-600 px-1.5 py-0.5 text-[10px] font-black text-white">
+                                        {wishlistCount}
+                                    </span>
                                 )}
                             </a>
 
                             <a
                                 href="#cart"
-                                className="relative flex items-center gap-2 transition hover:text-red-600"
+                                className="relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-black/10 transition hover:border-red-600 hover:text-red-600"
+                                title="Заявка"
                             >
-                                <ShoppingBag className="h-6 w-6 stroke-[1.5]" />
-                                <span className="hidden font-mono text-[13px] font-bold sm:inline">
-                  ({cartCount})
-                </span>
+                                <ShoppingBag className="h-5 w-5" />
+                                {cartCount > 0 && (
+                                    <span className="absolute -right-1 -top-1 inline-flex min-w-5 items-center justify-center rounded-full bg-black px-1.5 py-0.5 text-[10px] font-black text-white">
+                                        {cartCount}
+                                    </span>
+                                )}
+                            </a>
+
+                            <a
+                                href={infoLinks[0].href}
+                                className="hidden items-center gap-2 rounded-full bg-red-600 px-5 py-3 text-[11px] font-black uppercase tracking-[0.2em] text-white transition hover:bg-red-500 xl:inline-flex"
+                            >
+                                <BriefcaseBusiness className="h-4 w-4" />
+                                Дізнатися умови
                             </a>
                         </div>
                     </div>
