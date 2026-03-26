@@ -15,7 +15,7 @@ export function WholesalePage() {
             title="Умови співпраці"
             subtitle="Ціни, наявність, доставка і допомога з вашим замовленням."
         >
-            <div className="flex w-full flex-col">
+            <div className="flex w-full min-w-0 flex-col overflow-hidden">
                 <WholesaleHero />
                 <WholesaleBenefits />
                 <WholesaleOrderTable />

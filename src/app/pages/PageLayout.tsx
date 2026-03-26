@@ -46,8 +46,8 @@ export function PageLayout({
                 </header>
 
                 <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_300px]">
-                    <div className="rounded-[24px] border border-white/10 bg-white/[0.03] p-5 shadow-[0_24px_80px_rgba(0,0,0,0.35)] backdrop-blur-sm sm:p-6 md:rounded-[28px] md:p-8">
-                        <div className="space-y-8 text-sm leading-7 text-gray-300 md:text-base [&_a]:border-b [&_a]:border-red-500/30 [&_a]:text-red-500 [&_a]:transition-colors hover:[&_a]:border-red-500 hover:[&_a]:text-red-400 [&_h2]:text-2xl [&_h2]:font-black [&_h2]:uppercase [&_h2]:tracking-[-0.03em] [&_h2]:text-white [&_h3]:text-lg [&_h3]:font-bold [&_h3]:text-white [&_li]:text-gray-300 [&_p]:text-gray-300 [&_section]:space-y-4 [&_ul]:space-y-3 [&_ul]:pl-5 [&_ul]:marker:text-red-600">
+                    <div className="min-w-0 overflow-hidden rounded-[24px] border border-white/10 bg-white/[0.03] p-5 shadow-[0_24px_80px_rgba(0,0,0,0.35)] backdrop-blur-sm sm:p-6 md:rounded-[28px] md:p-8">
+                        <div className="min-w-0 space-y-8 text-sm leading-7 text-gray-300 md:text-base [&_a]:border-b [&_a]:border-red-500/30 [&_a]:text-red-500 [&_a]:transition-colors hover:[&_a]:border-red-500 hover:[&_a]:text-red-400 [&_h2]:text-2xl [&_h2]:font-black [&_h2]:uppercase [&_h2]:tracking-[-0.03em] [&_h2]:text-white [&_h3]:text-lg [&_h3]:font-bold [&_h3]:text-white [&_li]:text-gray-300 [&_p]:text-gray-300 [&_section]:space-y-4 [&_ul]:space-y-3 [&_ul]:pl-5 [&_ul]:marker:text-red-600">
                             {children}
                         </div>
                     </div>
