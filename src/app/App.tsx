@@ -11,7 +11,8 @@ import { Reviews } from "./components/Reviews";
 import { SubscribeSection } from "./components/SubscribeSection";
 import { Footer } from "./components/Footer";
 import { AdminRouteGuard } from "./components/AdminRouteGuard";
-
+import { FloatingMessengers } from "./components/FloatingMessengers";
+import { MobileBottomNav } from "./components/MobileBottomNav";
 // Сторінки
 import { About } from "./pages/About";
 import { Careers } from "./pages/Careers";
@@ -552,12 +553,15 @@ export default function App() {
     return (
         <div
             id="home"
-            className="min-h-screen bg-black text-white selection:bg-red-600 selection:text-white"
+            className="min-h-screen bg-black text-white selection:bg-red-600 selection:text-white pb-16 md:pb-0"
         >
             <Toaster richColors position="top-right" />
             <Header />
             <main>{renderPage()}</main>
             <Footer />
+
+            <FloatingMessengers />
+            <MobileBottomNav />
         </div>
     );
 }

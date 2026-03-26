@@ -1,290 +1,90 @@
 import * as React from "react";
-import { useMemo, useState } from "react";
-import { toast } from "sonner";
-import { createOrder } from "../../lib/api/orders";
-import { formatPrice, getProductBySlug } from "../data/products";
 import { useShop } from "../store/useShop";
 import { PageLayout } from "./PageLayout";
+import { toast } from "sonner";
+import { formatPrice } from "../data/products";
 
 export function CheckoutPage() {
     const { cart, clearCart } = useShop();
+    const [loading, setLoading] = React.useState(false);
 
-    const [form, setForm] = useState({
-        company: "",
-        contactPerson: "",
+    // Тільки 4 найважливіші поля
+    const [form, setForm] = React.useState({
+        name: "",
         phone: "",
-        email: "",
         city: "",
-        branch: "",
-        channel: "",
-        website: "",
-        comment: "",
+        branch: ""
     });
 
-    const [isSubmitting, setIsSubmitting] = useState(false);
-
-    const cartItems = useMemo(
-        () =>
-            cart
-                .map((item) => {
-                    const product = getProductBySlug(item.slug);
-                    if (!product) return null;
-
-                    return {
-                        ...item,
-                        product,
-                        total: item.packPrice * item.quantity,
-                        totalUnits: item.unitsPerPack * item.quantity,
-                        listTotal: product.price * item.unitsPerPack * item.quantity,
-                    };
-                })
-                .filter((item): item is NonNullable<typeof item> => Boolean(item)),
-        [cart]
-    );
-
-    const totalPrice = cartItems.reduce((sum, item) => sum + (item?.total ?? 0), 0);
-    const totalPacks = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-    const totalUnits = cartItems.reduce((sum, item) => sum + item.totalUnits, 0);
-    const totalSavings = cartItems.reduce(
-        (sum, item) => sum + Math.max(0, item.listTotal - item.total),
-        0
-    );
-
-    const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-    ) => {
-        setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setLoading(true);
 
-        if (!form.company.trim() || !form.phone.trim() || !form.city.trim() || !form.branch.trim()) {
-            toast.error("Заповніть компанію, телефон, місто та адресу доставки");
-            return;
-        }
-
-        if (cartItems.length === 0) {
-            toast.error("Заявка порожня");
-            return;
-        }
-
-        const extraContext = [
-            form.contactPerson.trim() ? `Контактна особа: ${form.contactPerson.trim()}` : "",
-            form.channel.trim() ? `Канал продажу: ${form.channel.trim()}` : "",
-            form.website.trim() ? `Сайт / сторінка: ${form.website.trim()}` : "",
-            `SKU у запиті: ${cartItems.length}`,
-            `Упаковок: ${totalPacks}`,
-            `Одиниць / пар: ${totalUnits}`,
-            `Орієнтовна база: ${formatPrice(totalPrice)}`,
-            totalSavings > 0 ? `Потенційна економія: ${formatPrice(totalSavings)}` : "",
-            form.comment.trim() ? `Коментар: ${form.comment.trim()}` : "",
-        ]
-            .filter(Boolean)
-            .join("\n");
-
-        try {
-            setIsSubmitting(true);
-
-            const order = await createOrder({
-                customer: {
-                    customerName: form.contactPerson.trim()
-                        ? `${form.company.trim()} (${form.contactPerson.trim()})`
-                        : form.company.trim(),
-                    phone: form.phone.trim(),
-                    email: form.email.trim() || undefined,
-                    city: form.city.trim(),
-                    branch: form.branch.trim(),
-                    comment: extraContext || undefined,
-                },
-                items: cartItems.map((item) => ({
-                    productId: item.product.id,
-                    productSlug: item.product.slug,
-                    productName: item.product.name,
-                    price: item.packPrice,
-                    selectedSize: `${item.packLabel} • ${item.packSizeLabel} • ${item.unitsPerPack} ${item.unitLabel}/уп. • ${item.tierLabel}`,
-                    selectedColor: item.color,
-                    quantity: item.quantity,
-                })),
-            });
-
-            localStorage.setItem(
-                "vzuvachka-last-order",
-                JSON.stringify({
-                    orderNumber: order.order_number,
-                    customerName: form.company.trim(),
-                    total: totalPrice,
-                    packs: totalPacks,
-                    units: totalUnits,
-                })
-            );
-
+        // Тут згодом підключите відправку в Telegram або CRM
+        setTimeout(() => {
+            setLoading(false);
+            toast.success("Замовлення успішно оформлено! Ми вам зателефонуємо.");
             clearCart();
-            toast.success(`B2B-запит відправлено: ${order.order_number}`);
-            window.location.hash = "#order-success";
-        } catch (error) {
-            console.error(error);
-            toast.error("Не вдалося відправити заявку");
-        } finally {
-            setIsSubmitting(false);
-        }
+            window.location.hash = "#page/order-success";
+        }, 1000);
     };
 
+    const totalPrice = cart.reduce((sum, item) => sum + (item.packPrice * item.quantity), 0);
+    const totalPacks = cart.reduce((sum, item) => sum + item.quantity, 0);
+
     return (
-        <PageLayout
-            title="Відправка B2B-запиту"
-            subtitle="Залиште контакти компанії, і менеджер підтвердить матрицю, ціну та умови поставки."
-        >
-            <section className="grid gap-8 lg:grid-cols-[1fr_360px]">
-                <form onSubmit={handleSubmit} className="space-y-5">
-                    <div className="grid gap-4 md:grid-cols-2">
-                        <input
-                            name="company"
-                            value={form.company}
-                            onChange={handleChange}
-                            placeholder="Назва компанії / ФОП *"
-                            className="border border-white/10 bg-[#111] px-4 py-4 text-white outline-none placeholder:text-gray-500"
-                        />
-                        <input
-                            name="contactPerson"
-                            value={form.contactPerson}
-                            onChange={handleChange}
-                            placeholder="Контактна особа"
-                            className="border border-white/10 bg-[#111] px-4 py-4 text-white outline-none placeholder:text-gray-500"
-                        />
+        <PageLayout title="Оформлення замовлення" subtitle="Залиште дані для доставки, і ми зателефонуємо для підтвердження.">
+            <div className="grid gap-8 lg:grid-cols-[1fr_400px]">
+
+                {/* Форма */}
+                <form onSubmit={handleSubmit} className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
+                    <h2 className="mb-6 text-xl font-black uppercase text-gray-900">Ваші контакти</h2>
+                    <div className="space-y-5">
+                        <div>
+                            <label className="mb-2 block text-xs font-bold uppercase text-gray-500">Ім'я / Назва магазину *</label>
+                            <input required name="name" value={form.name} onChange={handleChange} className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-4 text-gray-900 outline-none focus:border-red-600 focus:bg-white transition" placeholder="Наприклад: ФОП Іванов" />
+                        </div>
+                        <div>
+                            <label className="mb-2 block text-xs font-bold uppercase text-gray-500">Телефон *</label>
+                            <input required name="phone" type="tel" value={form.phone} onChange={handleChange} className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-4 text-gray-900 outline-none focus:border-red-600 focus:bg-white transition" placeholder="+380" />
+                        </div>
+                        <div className="grid gap-5 sm:grid-cols-2">
+                            <div>
+                                <label className="mb-2 block text-xs font-bold uppercase text-gray-500">Місто *</label>
+                                <input required name="city" value={form.city} onChange={handleChange} className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-4 text-gray-900 outline-none focus:border-red-600 focus:bg-white transition" placeholder="Київ" />
+                            </div>
+                            <div>
+                                <label className="mb-2 block text-xs font-bold uppercase text-gray-500">Відділення Нової Пошти *</label>
+                                <input required name="branch" value={form.branch} onChange={handleChange} className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-4 text-gray-900 outline-none focus:border-red-600 focus:bg-white transition" placeholder="№1" />
+                            </div>
+                        </div>
+                        <button type="submit" disabled={loading || cart.length === 0} className="mt-4 w-full rounded-xl bg-red-600 px-6 py-5 text-sm font-black uppercase tracking-widest text-white shadow-lg transition hover:bg-red-700 disabled:opacity-50">
+                            {loading ? "Відправка..." : "Підтвердити замовлення"}
+                        </button>
                     </div>
-
-                    <div className="grid gap-4 md:grid-cols-2">
-                        <input
-                            name="phone"
-                            value={form.phone}
-                            onChange={handleChange}
-                            placeholder="Телефон *"
-                            className="border border-white/10 bg-[#111] px-4 py-4 text-white outline-none placeholder:text-gray-500"
-                        />
-                        <input
-                            name="email"
-                            type="email"
-                            value={form.email}
-                            onChange={handleChange}
-                            placeholder="Email"
-                            className="border border-white/10 bg-[#111] px-4 py-4 text-white outline-none placeholder:text-gray-500"
-                        />
-                    </div>
-
-                    <div className="grid gap-4 md:grid-cols-2">
-                        <input
-                            name="city"
-                            value={form.city}
-                            onChange={handleChange}
-                            placeholder="Місто *"
-                            className="border border-white/10 bg-[#111] px-4 py-4 text-white outline-none placeholder:text-gray-500"
-                        />
-                        <input
-                            name="branch"
-                            value={form.branch}
-                            onChange={handleChange}
-                            placeholder="Склад / відділення / адреса *"
-                            className="border border-white/10 bg-[#111] px-4 py-4 text-white outline-none placeholder:text-gray-500"
-                        />
-                    </div>
-
-                    <div className="grid gap-4 md:grid-cols-2">
-                        <input
-                            name="channel"
-                            value={form.channel}
-                            onChange={handleChange}
-                            placeholder="Формат продажу: офлайн / online / маркетплейс"
-                            className="border border-white/10 bg-[#111] px-4 py-4 text-white outline-none placeholder:text-gray-500"
-                        />
-                        <input
-                            name="website"
-                            value={form.website}
-                            onChange={handleChange}
-                            placeholder="Сайт або сторінка магазину"
-                            className="border border-white/10 bg-[#111] px-4 py-4 text-white outline-none placeholder:text-gray-500"
-                        />
-                    </div>
-
-                    <textarea
-                        name="comment"
-                        value={form.comment}
-                        onChange={handleChange}
-                        placeholder="Коментар: бажаний обсяг, сезон, ціновий сегмент, вимоги до брендування"
-                        rows={5}
-                        className="w-full border border-white/10 bg-[#111] px-4 py-4 text-white outline-none placeholder:text-gray-500"
-                    />
-
-                    <button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="inline-flex w-full items-center justify-center bg-red-600 px-6 py-4 text-sm font-black uppercase tracking-[0.2em] text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
-                    >
-                        {isSubmitting ? "Відправка..." : "Надіслати B2B-запит"}
-                    </button>
                 </form>
 
-                <aside className="h-fit rounded-2xl border border-white/10 bg-black/20 p-6">
-                    <p className="mb-4 text-xs font-bold uppercase tracking-[0.2em] text-gray-400">
-                        Ваша матриця
-                    </p>
-
-                    <div className="space-y-3">
-                        {cartItems.length === 0 ? (
-                            <p className="text-sm text-gray-400">Заявка порожня</p>
-                        ) : (
-                            cartItems.map((item) => {
-                                return (
-                                    <div
-                                        key={`${item.slug}-${item.packId}-${item.color ?? "no-color"}`}
-                                        className="border-b border-white/10 pb-3 text-sm text-gray-300"
-                                    >
-                                        <p className="font-bold text-white">{item.product.name}</p>
-                                        <p>Пакування: {item.packLabel}</p>
-                                        <p>Матриця: {item.packSizeLabel}</p>
-                                        <p>Колір: {item.color || "—"}</p>
-                                        <p>Упаковок: {item.quantity}</p>
-                                        <p>
-                                            Разом: {item.totalUnits} {item.unitLabel} • {formatPrice(item.total)}
-                                        </p>
-                                    </div>
-                                );
-                            })
-                        )}
+                {/* Підсумок */}
+                <div className="h-fit rounded-2xl border border-gray-200 bg-gray-50 p-6 sm:p-8">
+                    <h2 className="mb-6 text-xl font-black uppercase text-gray-900">Ваша заявка</h2>
+                    <div className="space-y-4 mb-6">
+                        {cart.map((item, i) => (
+                            <div key={i} className="flex justify-between border-b border-gray-200 pb-3 text-sm">
+                                <span className="font-medium text-gray-700">Товар #{item.slug} <span className="text-gray-400 block mt-1">({item.quantity} ящ.)</span></span>
+                                <span className="font-bold text-gray-900">{formatPrice(item.packPrice * item.quantity)}</span>
+                            </div>
+                        ))}
                     </div>
-
-                    <div className="mt-6 flex flex-col gap-2 text-white sm:flex-row sm:items-center sm:justify-between">
-                        <span>Орієнтовна база</span>
-                        <span className="text-xl font-black">{formatPrice(totalPrice)}</span>
+                    <div className="flex justify-between border-t border-gray-300 pt-4">
+                        <span className="text-sm font-bold uppercase text-gray-500">Разом ({totalPacks} ящ.):</span>
+                        <span className="text-2xl font-black text-red-600">{formatPrice(totalPrice)}</span>
                     </div>
-
-                    <div className="mt-4 grid gap-3 text-sm text-gray-300 md:grid-cols-2">
-                        <div className="rounded-2xl border border-white/10 bg-white/[0.02] px-4 py-3">
-                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">
-                                Упаковок
-                            </p>
-                            <p className="mt-2 text-lg font-bold text-white">{totalPacks}</p>
-                        </div>
-                        <div className="rounded-2xl border border-white/10 bg-white/[0.02] px-4 py-3">
-                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">
-                                Одиниць / пар
-                            </p>
-                            <p className="mt-2 text-lg font-bold text-white">{totalUnits}</p>
-                        </div>
-                    </div>
-
-                    {totalSavings > 0 && (
-                        <p className="mt-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">
-                            Потенційна економія від обсягу: {formatPrice(totalSavings)}
-                        </p>
-                    )}
-
-                    <p className="mt-4 text-sm leading-6 text-gray-400">
-                        Після відправки запиту менеджер уточнить оптові ціни, залишки, строки та
-                        можливі догрузки.
-                    </p>
-                </aside>
-            </section>
+                </div>
+            </div>
         </PageLayout>
     );
 }
