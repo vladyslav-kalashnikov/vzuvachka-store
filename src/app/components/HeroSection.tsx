@@ -9,29 +9,35 @@ export function HeroSection() {
         settings.hero_image ||
         "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?q=80&w=2000&auto=format&fit=crop";
 
-    const badge = settings.hero_badge || "Просто замовити, легко продавати";
-    const titleLine1 = settings.hero_title_line_1 || "Взуття";
-    const titleLine2 = settings.hero_title_line_2 || "для вашого магазину.";
+    // ОНОВЛЕНІ ТЕКСТИ ДЛЯ ОПТУ
+    const badge = settings.hero_badge || "B2B Платформа / Оптовий склад";
+    const titleLine1 = settings.hero_title_line_1 || "Взуття оптом";
+    const titleLine2 = settings.hero_title_line_2 || "від виробника.";
     const description =
         settings.hero_description ||
-        "Ми допоможемо вибрати товари, підкажемо по наявності, узгодимо умови і швидко підготуємо замовлення.";
+        "Прямі поставки взуття без посередників. Мінімальне замовлення — 1 ящик (ростовка). Відправка в день оформлення заявки.";
+
+    // ОНОВЛЕНІ МЕТРИКИ ДЛЯ ОПТУ
     const metrics = [
-        { value: "48h", label: "щоб підготувати першу пропозицію" },
-        { value: "5", label: "основних категорій товарів" },
-        { value: "1", label: "менеджер для ваших замовлень" },
+        { value: "1 ящ", label: "Мінімальне замовлення" },
+        { value: "24h", label: "Відправка після оплати" },
+        { value: "100%", label: "Актуальна наявність" },
     ];
+
+    // ОНОВЛЕНИЙ РЯДОК, ЩО БІЖИТЬ
     const capabilityLine = [
-        "Наявність",
-        "Ціни",
-        "Каталог",
+        "Опт",
+        "Ростовки",
+        "Дропшипінг",
         "Швидка відправка",
-        "Допомога з вибором",
-        "Аксесуари",
+        "Прямі поставки",
+        "B2B",
     ];
+
     const stackedBadges = [
         "Для магазинів",
+        "Для ринків",
         "Для онлайн-продажів",
-        "Для великих замовлень",
     ];
 
     return (
@@ -45,11 +51,13 @@ export function HeroSection() {
             <div className="absolute left-6 top-28 hidden text-[10px] font-mono tracking-widest text-white/55 md:block">
                 <p>Швидкий старт</p>
                 <p>Зрозумілі умови</p>
-                <p>Підтримка на кожному етапі</p>
+                <p>Постійна наявність</p>
             </div>
 
             <div className="relative z-10 mx-auto max-w-[1600px]">
                 <div className="grid items-end gap-10 sm:gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(420px,0.95fr)]">
+
+                    {/* ЛІВА ЧАСТИНА (ТЕКСТ) */}
                     <div className="fade-up pb-2">
                         <div className="tech-clip mb-5 inline-flex max-w-full items-center gap-3 border border-white/10 bg-white/8 px-4 py-2 text-[9px] font-bold uppercase tracking-[0.18em] text-white backdrop-blur-md sm:text-[10px] sm:tracking-[0.32em]">
                             <span className="h-2 w-2 rounded-full bg-red-500" />
@@ -68,10 +76,10 @@ export function HeroSection() {
 
                         <div className="mb-10 flex flex-col items-stretch gap-4 sm:flex-row sm:items-center">
                             <a
-                                href="#page/wholesale"
+                                href="#page/delivery"
                                 className="tech-clip flex w-full items-center justify-center gap-3 bg-white px-6 py-4 text-[11px] font-extrabold uppercase tracking-[0.14em] text-black transition-colors hover:bg-red-600 hover:text-white sm:w-auto sm:px-10 sm:py-5 sm:text-xs sm:tracking-widest"
                             >
-                                Дізнатися умови
+                                Умови співпраці
                                 <ArrowRight className="h-4 w-4" />
                             </a>
 
@@ -79,7 +87,7 @@ export function HeroSection() {
                                 href="#categories"
                                 className="tech-clip flex w-full items-center justify-center gap-3 border border-white/20 bg-black/20 px-6 py-4 text-[11px] font-extrabold uppercase tracking-[0.14em] text-white transition-colors hover:border-red-600 hover:text-red-400 sm:w-auto sm:px-10 sm:py-5 sm:text-xs sm:tracking-widest"
                             >
-                                Переглянути категорії
+                                Перейти в каталог
                             </a>
                         </div>
 
@@ -89,7 +97,7 @@ export function HeroSection() {
                                     <p className="mb-2 text-3xl font-black uppercase text-white md:text-4xl">
                                         {item.value}
                                     </p>
-                                    <p className="text-[11px] uppercase tracking-[0.18em] text-gray-300">
+                                    <p className="text-[10px] uppercase tracking-[0.18em] text-gray-400 font-bold">
                                         {item.label}
                                     </p>
                                 </div>
@@ -108,55 +116,56 @@ export function HeroSection() {
                         </div>
                     </div>
 
+                    {/* ПРАВА ЧАСТИНА (ФОТО + КАРТКИ) */}
                     <div className="relative fade-up lg:pl-6" style={{ animationDelay: "0.15s" }}>
                         <div className="tech-clip premium-panel relative min-h-[460px] overflow-hidden border border-white/10 p-3 sm:min-h-[600px]">
                             <div
                                 className="absolute inset-0 bg-cover bg-center"
                                 style={{ backgroundImage: `url('${heroImage}')` }}
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/15 to-black/0" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-black/0" />
 
                             <div className="relative flex min-h-[430px] flex-col justify-between p-4 sm:min-h-[570px] sm:p-5">
                                 <div className="flex justify-start sm:justify-end">
-                                    <div className="tech-clip border border-white/15 bg-black/35 px-4 py-3 backdrop-blur-xl">
-                                        <p className="text-[10px] font-black uppercase tracking-[0.28em] text-red-400">
-                                            Launch Kit
+                                    <div className="tech-clip border border-white/15 bg-black/40 px-4 py-3 backdrop-blur-xl max-w-[250px]">
+                                        <p className="text-[10px] font-black uppercase tracking-[0.28em] text-red-500">
+                                            Умови опту
                                         </p>
-                                        <p className="mt-2 text-sm leading-6 text-white/80">
-                                            Прайс, матриця, рекомендовані SKU та стартовий план продажу.
+                                        <p className="mt-2 text-xs font-medium leading-5 text-white/90">
+                                            Відвантаження від 1 ящика. Регулярні оновлення асортименту.
                                         </p>
                                     </div>
                                 </div>
 
                                 <div className="grid gap-4 md:grid-cols-[1.1fr_0.9fr]">
-                                    <div className="tech-clip border border-white/12 bg-black/55 px-5 py-5 backdrop-blur-xl">
-                                        <p className="mb-3 text-[10px] font-black uppercase tracking-[0.28em] text-red-400">
-                                            Що важливо
+                                    <div className="tech-clip border border-white/12 bg-black/60 px-5 py-5 backdrop-blur-xl">
+                                        <p className="mb-3 text-[10px] font-black uppercase tracking-[0.28em] text-red-500">
+                                            Для партнерів
                                         </p>
-                                        <div className="grid gap-3 text-sm text-white/85">
+                                        <div className="grid gap-3 text-sm text-white/90">
                                             <div className="flex flex-col gap-1 border-b border-white/10 pb-2 sm:flex-row sm:items-center sm:justify-between">
-                                                <span>Популярні товари</span>
-                                                <span className="font-black text-white">актуальна наявність</span>
+                                                <span className="text-gray-400">Ціноутворення</span>
+                                                <span className="font-black text-white">Прямі ціни</span>
                                             </div>
                                             <div className="flex flex-col gap-1 border-b border-white/10 pb-2 sm:flex-row sm:items-center sm:justify-between">
-                                                <span>Повторне замовлення</span>
-                                                <span className="font-black text-white">швидке погодження</span>
+                                                <span className="text-gray-400">Способи оплати</span>
+                                                <span className="font-black text-white">ФОП / Накладка</span>
                                             </div>
                                             <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-                                                <span>Категорії</span>
-                                                <span className="font-black text-white">5 напрямів</span>
+                                                <span className="text-gray-400">Доставка</span>
+                                                <span className="font-black text-white">Нова Пошта</span>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="tech-clip border border-white/12 bg-[#f5efe7] px-5 py-5 text-black shadow-[0_24px_70px_rgba(0,0,0,0.28)]">
+                                    <div className="tech-clip border border-white/12 bg-[#f5efe7] px-5 py-5 text-black shadow-[0_24px_70px_rgba(220,38,38,0.15)]">
                                         <p className="mb-3 text-[10px] font-black uppercase tracking-[0.28em] text-red-600">
                                             Як це працює
                                         </p>
-                                        <p className="text-2xl font-black uppercase leading-none sm:text-3xl">заявка</p>
-                                        <p className="text-2xl font-black uppercase leading-none text-red-600 sm:text-3xl">відправка</p>
-                                        <p className="mt-4 text-sm leading-6 text-black/70">
-                                            Короткий і зрозумілий шлях від першого звернення до готового замовлення.
+                                        <p className="text-2xl font-black uppercase leading-none sm:text-3xl">Заявка</p>
+                                        <p className="text-2xl font-black uppercase leading-none text-red-600 sm:text-3xl">Відправка</p>
+                                        <p className="mt-4 text-xs font-bold leading-5 text-black/70">
+                                            Обираєте товар, залишаєте контакт — ми телефонуємо і пакуємо ящики.
                                         </p>
                                     </div>
                                 </div>
@@ -165,14 +174,15 @@ export function HeroSection() {
                     </div>
                 </div>
 
+                {/* РЯДОК, ЩО БІЖИТЬ */}
                 <div className="mt-12 overflow-hidden border-y border-white/10 bg-white/[0.03] py-4 sm:mt-16">
                     <div className="marquee-track flex items-center gap-4">
-                        {[...capabilityLine, ...capabilityLine, ...capabilityLine].map((item, index) => (
+                        {[...capabilityLine, ...capabilityLine, ...capabilityLine, ...capabilityLine].map((item, index) => (
                             <React.Fragment key={`${item}-${index}`}>
-                                <span className="rounded-full border border-white/10 px-3 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-white/75 sm:px-4 sm:text-[11px] sm:tracking-[0.24em]">
+                                <span className="rounded-full border border-white/10 bg-black/20 px-3 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-white/75 sm:px-4 sm:text-[11px] sm:tracking-[0.24em]">
                                     {item}
                                 </span>
-                                <span className="text-red-500">/</span>
+                                <span className="text-red-500 font-black">/</span>
                             </React.Fragment>
                         ))}
                     </div>
