@@ -84,7 +84,7 @@ export function SubcategoryCatalogPage({ category, subcategory }: Props) {
                         <p>У цій добірці поки немає товарів. Напишіть нам, якщо потрібна допомога з вибором.</p>
                     </div>
                 ) : (
-                    <div className="grid gap-5 sm:grid-cols-2 sm:gap-6 xl:grid-cols-3">
+                    <div className="grid grid-cols-2 gap-3 sm:gap-6 xl:grid-cols-3">
                         {filteredItems.map((product) => (
                             <ProductCard
                                 key={product.slug}
