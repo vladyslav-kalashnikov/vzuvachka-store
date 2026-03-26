@@ -44,6 +44,7 @@ import { UpdatePasswordPage } from "./pages/UpdatePasswordPage";
 import { AdminProductsPage } from "./pages/AdminProductsPage";
 import { AdminSiteSettingsPage } from "./pages/AdminSiteSettingsPage";
 import { WholesalePage } from "./pages/WholesalePage";
+import { DeliveryPage } from "./pages/DeliveryPage";
 
 type RouteState =
     | { type: "home"; anchor?: string | null }
@@ -501,6 +502,7 @@ export default function App() {
                 case "about": return <About />;
                 case "careers": return <Careers />;
                 case "shipping": return <Shipping />;
+                case "delivery": return <DeliveryPage />;
                 case "returns": return <Returns />;
                 case "faq": return <Faq />;
                 case "contact": return <Contact />;

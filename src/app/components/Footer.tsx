@@ -1,185 +1,283 @@
 import * as React from "react";
-import { categorySections, infoLinks, partnerContact } from "../data/b2bContent";
+import {
+    ArrowRight,
+    ChevronDown,
+    Mail,
+    MapPin,
+    Phone,
+    ShoppingBag,
+} from "lucide-react";
+import { categorySections, partnerContact } from "../data/b2bContent";
 
-function cx(...cls: Array<string | false | null | undefined>) {
-    return cls.filter(Boolean).join(" ");
+type FooterSection = {
+    title: string;
+    links: Array<{
+        label: string;
+        href: string;
+    }>;
+};
+
+const footerSections: FooterSection[] = [
+    {
+        title: "Каталог",
+        links: [
+            ...categorySections.map((section) => ({
+                label: section.shortLabel,
+                href: section.href,
+            })),
+            { label: "Складські лоти", href: "#page/sale" },
+        ],
+    },
+    {
+        title: "Партнерам",
+        links: [
+            { label: "Оптовий портал", href: "#page/wholesale" },
+            { label: "Доставка та оплата", href: "#page/delivery" },
+            { label: "Умови поставки", href: "#page/shipping" },
+            { label: "Повернення", href: "#page/returns" },
+            { label: "FAQ", href: "#page/faq" },
+        ],
+    },
+    {
+        title: "Компанія",
+        links: [
+            { label: "Про нас", href: "#page/about" },
+            { label: "Вакансії", href: "#page/careers" },
+            { label: "Контакти B2B", href: "#page/contact" },
+            { label: "Мапа сайту", href: "#page/sitemap" },
+            { label: "Політика даних", href: "#page/privacy" },
+        ],
+    },
+];
+
+const highlightTags = ["Опт", "Швидкий старт", "Повторні замовлення"];
+
+function cx(...values: Array<string | false | null | undefined>) {
+    return values.filter(Boolean).join(" ");
+}
+
+function FooterAccordion({
+    section,
+    defaultOpen = false,
+}: {
+    section: FooterSection;
+    defaultOpen?: boolean;
+}) {
+    const [isOpen, setIsOpen] = React.useState(defaultOpen);
+
+    return (
+        <div className="border-b border-white/8 md:border-none">
+            <button
+                type="button"
+                aria-expanded={isOpen}
+                onClick={() => setIsOpen((prev) => !prev)}
+                className="flex w-full items-center justify-between gap-4 py-4 text-left md:pointer-events-none md:py-0"
+            >
+                <span className="text-[11px] font-black uppercase tracking-[0.22em] text-white/85">
+                    {section.title}
+                </span>
+                <ChevronDown
+                    className={cx(
+                        "h-4 w-4 shrink-0 text-white/60 transition-transform md:hidden",
+                        isOpen && "rotate-180"
+                    )}
+                />
+            </button>
+
+            <div
+                className={cx(
+                    "grid overflow-hidden transition-[grid-template-rows,opacity] duration-300 md:grid-rows-[1fr] md:opacity-100",
+                    isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-70"
+                )}
+            >
+                <div className="min-h-0 overflow-hidden">
+                    <ul className="space-y-3 pb-5 md:pt-5 md:pb-0">
+                        {section.links.map((link) => (
+                            <li key={link.label}>
+                                <a
+                                    href={link.href}
+                                    className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.16em] text-gray-400 transition-colors hover:text-white"
+                                >
+                                    <span className="h-1.5 w-1.5 rounded-full bg-red-500/80" />
+                                    {link.label}
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function SupportItem({
+    icon,
+    href,
+    children,
+    accent = false,
+}: {
+    icon: React.ReactNode;
+    href?: string;
+    children: React.ReactNode;
+    accent?: boolean;
+}) {
+    const content = (
+        <div
+            className={cx(
+                "flex items-start gap-3 rounded-2xl border border-white/8 bg-white/[0.03] px-4 py-4 transition-colors",
+                accent
+                    ? "text-white hover:border-red-500/60 hover:bg-red-500/10"
+                    : "text-gray-300 hover:border-white/15 hover:text-white"
+            )}
+        >
+            <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/10 bg-black/40 text-red-500">
+                {icon}
+            </div>
+            <div className="min-w-0 text-sm font-medium leading-6">{children}</div>
+        </div>
+    );
+
+    if (!href) {
+        return content;
+    }
+
+    return <a href={href}>{content}</a>;
 }
 
 export function Footer() {
     return (
-        <footer className="mt-20 border-t border-white/10 bg-[#0a0a0a] font-sans text-white">
-            <div className="mx-auto max-w-[1600px] px-4 py-16 sm:px-6 sm:py-24">
-                <div className="grid gap-16 lg:grid-cols-12">
-                    <div className="lg:col-span-4">
-                        <div className="mb-8 flex items-center gap-3">
-                            <div className="tech-clip flex h-10 w-10 items-center justify-center bg-red-600 text-sm font-black text-white">
-                                В/Ч
-                            </div>
-                            <div>
-                                <div className="text-xl font-black uppercase tracking-tight text-white sm:text-2xl sm:tracking-tighter">
-                                    ВЗУВАЧКА
-                                </div>
-                                <div className="mt-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-gray-500 sm:tracking-[0.3em]">
-                                    взуття для магазинів і замовлень
-                                </div>
-                            </div>
-                        </div>
+        <footer className="relative mt-20 overflow-hidden border-t border-white/10 bg-[#080808] text-white">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_10%_20%,rgba(220,38,38,0.10),transparent_24%),radial-gradient(circle_at_85%_10%,rgba(249,115,22,0.10),transparent_22%),linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:auto,auto,44px_44px,44px_44px]" />
 
-                        <p className="max-w-md text-sm leading-7 text-gray-400">
-                            Допомагаємо магазинам і компаніям замовляти взуття без зайвих
-                            складнощів: підказуємо по товарах, наявності, доставці та повторних
-                            замовленнях.
+            <div className="relative mx-auto max-w-[1600px] px-4 py-16 sm:px-6 sm:py-20">
+                <div className="grid gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1.35fr)_minmax(300px,0.95fr)] lg:gap-14">
+                    <div className="min-w-0 space-y-8">
+                        <a href="#home" className="inline-flex items-center gap-3">
+                            <span className="tech-clip flex h-11 w-11 items-center justify-center bg-red-600 text-sm font-black text-white">
+                                В/Ч
+                            </span>
+                            <span className="min-w-0">
+                                <span className="block text-2xl font-black uppercase tracking-tight text-white">
+                                    ВЗУВАЧКА
+                                </span>
+                                <span className="block text-[10px] font-bold uppercase tracking-[0.24em] text-gray-500">
+                                    B2B supply platform
+                                </span>
+                            </span>
+                        </a>
+
+                        <p className="max-w-md text-sm leading-7 text-gray-300">
+                            Платформа для wholesale-замовлень без зайвої плутанини: актуальний
+                            каталог, швидкий зв&apos;язок, підбір товарів і підтримка повторних
+                            закупівель.
                         </p>
 
-                        <div className="mt-10 space-y-3 text-[13px] font-bold uppercase tracking-widest text-gray-400">
-                            <div>
-                                Телефон:
-                                <a
-                                    className="ml-2 text-white transition-colors hover:text-red-500"
-                                    href={partnerContact.phoneHref}
+                        <div className="flex flex-wrap gap-2">
+                            {highlightTags.map((tag) => (
+                                <span
+                                    key={tag}
+                                    className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] text-white/75"
                                 >
+                                    {tag}
+                                </span>
+                            ))}
+                        </div>
+
+                        <div className="grid gap-3 sm:grid-cols-2">
+                            <a
+                                href="#page/wholesale"
+                                className="tech-clip inline-flex items-center justify-between gap-3 bg-white px-5 py-4 text-[11px] font-black uppercase tracking-[0.16em] text-black transition-colors hover:bg-red-600 hover:text-white"
+                            >
+                                Оптовий портал
+                                <ArrowRight className="h-4 w-4" />
+                            </a>
+                            <a
+                                href="#page/contact"
+                                className="tech-clip inline-flex items-center justify-between gap-3 border border-white/10 bg-white/[0.03] px-5 py-4 text-[11px] font-black uppercase tracking-[0.16em] text-white transition-colors hover:border-red-500 hover:text-red-400"
+                            >
+                                Написати менеджеру
+                                <Mail className="h-4 w-4" />
+                            </a>
+                        </div>
+                    </div>
+
+                    <div className="grid gap-2 md:grid-cols-3 md:gap-8">
+                        {footerSections.map((section, index) => (
+                            <FooterAccordion
+                                key={section.title}
+                                section={section}
+                                defaultOpen={index === 0}
+                            />
+                        ))}
+                    </div>
+
+                    <div className="tech-clip border border-white/10 bg-white/[0.03] p-5 shadow-[0_24px_80px_rgba(0,0,0,0.35)] sm:p-6">
+                        <p className="mb-4 text-[10px] font-black uppercase tracking-[0.28em] text-red-500">
+                            B2B Підтримка
+                        </p>
+
+                        <div className="space-y-3">
+                            <SupportItem icon={<Phone className="h-4 w-4" />} href={partnerContact.phoneHref} accent>
+                                <span className="block text-[10px] font-black uppercase tracking-[0.16em] text-gray-500">
+                                    Телефон
+                                </span>
+                                <span className="block break-words text-base font-black text-white">
                                     {partnerContact.phone}
-                                </a>
-                            </div>
-                            <div>
-                                Email:
-                                <a
-                                    className="ml-2 break-all text-white transition-colors hover:text-red-500"
-                                    href={partnerContact.emailHref}
-                                >
+                                </span>
+                            </SupportItem>
+
+                            <SupportItem icon={<Mail className="h-4 w-4" />} href={partnerContact.emailHref}>
+                                <span className="block text-[10px] font-black uppercase tracking-[0.16em] text-gray-500">
+                                    Email
+                                </span>
+                                <span className="block break-all text-sm font-bold text-white">
                                     {partnerContact.email}
-                                </a>
+                                </span>
+                            </SupportItem>
+
+                            <SupportItem icon={<MapPin className="h-4 w-4" />}>
+                                <span className="block text-[10px] font-black uppercase tracking-[0.16em] text-gray-500">
+                                    Відправка
+                                </span>
+                                <span className="block text-sm font-bold text-white">
+                                    {partnerContact.address}
+                                </span>
+                            </SupportItem>
+                        </div>
+
+                        <div className="mt-5 rounded-2xl border border-white/8 bg-black/30 px-4 py-4">
+                            <div className="mb-2 flex items-center gap-2 text-white">
+                                <ShoppingBag className="h-4 w-4 text-red-500" />
+                                <span className="text-[10px] font-black uppercase tracking-[0.18em]">
+                                    Графік роботи
+                                </span>
                             </div>
-                        </div>
-
-                        <div className="mt-8 space-y-2 border-t border-white/10 pt-6 text-[10px] font-bold uppercase tracking-widest text-gray-500">
-                            <p className="mb-3 text-red-600">Контакти</p>
-                            <p>Команда продажів: ВЗУВАЧКА</p>
-                            <p>Реквізити надаємо після узгодження замовлення</p>
-                            <p className="leading-relaxed">{partnerContact.address}</p>
-                            <p>{partnerContact.hours}</p>
-                        </div>
-                    </div>
-
-                    <div className="lg:col-span-5">
-                        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
-                            <FooterCol title="Каталоги">
-                                {categorySections.map((section) => (
-                                    <FooterLink key={section.key} to={section.href}>
-                                        {section.shortLabel}
-                                    </FooterLink>
-                                ))}
-                                <FooterLink to="#page/sale">Складські лоти</FooterLink>
-                            </FooterCol>
-
-                            <FooterCol title="Корисне">
-                                <FooterLink to="#page/wholesale">Умови співпраці</FooterLink>
-                                <FooterLink to="#wishlist">Обране</FooterLink>
-                                <FooterLink to="#cart">Заявка</FooterLink>
-                                <FooterLink to="#search">Пошук товарів</FooterLink>
-                                <FooterLink to="#page/register">Мій акаунт</FooterLink>
-                            </FooterCol>
-
-                            <FooterCol title="Інформація">
-                                {infoLinks.map((item) => (
-                                    <FooterLink key={item.href} to={item.href}>
-                                        {item.label}
-                                    </FooterLink>
-                                ))}
-                                <FooterLink to="#page/privacy">Політика даних</FooterLink>
-                                <FooterLink to="#page/terms">Умови платформи</FooterLink>
-                            </FooterCol>
-                        </div>
-                    </div>
-
-                    <div className="lg:col-span-3">
-                        <div className="tech-clip border border-white/10 bg-[#111] p-6 sm:p-8">
-                            <p className="mb-3 text-[10px] font-black uppercase tracking-[0.3em] text-red-500">
-                                Допомога
+                            <p className="text-sm font-medium leading-6 text-gray-300">
+                                {partnerContact.hours}. Після заявки менеджер підтвердить наявність,
+                                матрицю та умови відправки.
                             </p>
-                            <h3 className="mb-4 text-2xl font-black uppercase tracking-tight text-white">
-                                Маєте питання?
-                            </h3>
-                            <p className="mb-8 text-[12px] font-medium uppercase leading-relaxed tracking-[0.1em] text-gray-400 sm:tracking-[0.16em]">
-                                Пояснимо умови, підкажемо по товарах і допоможемо з першим
-                                замовленням.
-                            </p>
-
-                            <div className="grid gap-3">
-                                <a
-                                    href="#page/wholesale"
-                                    className="tech-clip w-full bg-white px-6 py-4 text-center text-[11px] font-black uppercase tracking-widest text-black transition-colors hover:bg-red-600 hover:text-white"
-                                >
-                                    Дізнатися умови
-                                </a>
-                                <a
-                                    href="#page/contact"
-                                    className="tech-clip w-full border border-white/10 px-6 py-4 text-center text-[11px] font-black uppercase tracking-widest text-white transition-colors hover:border-red-600 hover:text-red-500"
-                                >
-                                    Написати менеджеру
-                                </a>
-                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="mt-16 flex flex-col gap-6 border-t border-white/10 pt-8 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-500 sm:mt-20 sm:flex-row sm:items-center sm:justify-between sm:tracking-[0.2em]">
-                    <div>© 2026 ВЗУВАЧКА. Всі права захищено.</div>
+                <div className="mt-12 flex flex-col gap-5 border-t border-white/8 pt-8 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-500 sm:mt-16 md:flex-row md:items-center md:justify-between">
+                    <div>
+                        © {new Date().getFullYear()} ВЗУВАЧКА B2B. Всі права захищено.
+                    </div>
 
-                    <div className="flex flex-wrap gap-x-8 gap-y-4">
-                        <a className="transition-colors hover:text-white" href="#page/terms">
-                            Умови співпраці
-                        </a>
+                    <div className="flex flex-wrap gap-x-6 gap-y-3">
                         <a className="transition-colors hover:text-white" href="#page/privacy">
                             Політика приватності
                         </a>
-                        <a className="transition-colors hover:text-white" href="#page/size-guide">
-                            Розмірні матриці
+                        <a className="transition-colors hover:text-white" href="#page/terms">
+                            Умови платформи
+                        </a>
+                        <a className="transition-colors hover:text-white" href="#page/sitemap">
+                            Мапа сайту
                         </a>
                     </div>
                 </div>
             </div>
         </footer>
-    );
-}
-
-function FooterCol({
-    title,
-    children,
-    className,
-}: {
-    title: string;
-    children: React.ReactNode;
-    className?: string;
-}) {
-    return (
-        <div className={cx("min-w-0", className)}>
-            <div className="mb-6 inline-block border-b border-white/10 pb-2 text-[11px] font-black uppercase tracking-widest text-white">
-                {title}
-            </div>
-            <div className="space-y-4">{children}</div>
-        </div>
-    );
-}
-
-function FooterLink({
-    to,
-    children,
-    className,
-}: {
-    to: string;
-    children: React.ReactNode;
-    className?: string;
-}) {
-    return (
-        <a
-            href={to}
-            className={cx(
-                "block text-[11px] font-bold uppercase tracking-[0.14em] text-gray-400 transition-colors hover:text-white sm:tracking-widest",
-                className
-            )}
-        >
-            {children}
-        </a>
     );
 }

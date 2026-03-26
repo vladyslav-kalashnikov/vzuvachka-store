@@ -1,6 +1,7 @@
 import * as React from "react";
 import { formatPrice } from "../data/products";
 import { PageLayout } from "./PageLayout";
+import { CheckCircle, PackageOpen, ArrowRight } from "lucide-react";
 
 type LastOrder = {
     orderNumber: string;
@@ -27,60 +28,72 @@ export function OrderSuccessPage() {
 
     return (
         <PageLayout
-            title="B2B-запит отримано"
-            subtitle="Команда продажів уже бачить вашу заявку й повернеться з підтвердженням по SKU."
+            title="Заявка успішно прийнята"
+            subtitle="Ваш B2B-запит вже у нашого менеджера. Ми зв'яжемося з вами найближчим часом."
         >
-            <section className="space-y-5">
+            <div className="mx-auto max-w-3xl space-y-8">
                 {lastOrder ? (
-                    <div className="rounded-2xl border border-white/10 bg-black/20 p-6 text-gray-300">
-                        <p className="mb-2 text-white">
-                            Номер запиту:{" "}
-                            <span className="font-black text-red-500">{lastOrder.orderNumber}</span>
-                        </p>
+                    <div className="tech-clip premium-panel relative overflow-hidden border border-white/10 bg-[#111] p-8 sm:p-10">
+                        {/* Декоративний фон */}
+                        <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-red-600/10 blur-3xl" />
 
-                        {lastOrder.customerName && <p className="mb-2">Компанія: {lastOrder.customerName}</p>}
+                        <div className="relative z-10 flex flex-col items-center text-center sm:items-start sm:text-left">
+                            <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full border border-red-500/30 bg-red-500/10 text-red-500">
+                                <CheckCircle className="h-8 w-8" />
+                            </div>
 
-                        {typeof lastOrder.total === "number" && (
-                            <p>Орієнтовна база: {formatPrice(lastOrder.total)}</p>
-                        )}
+                            <h2 className="mb-2 text-2xl font-black uppercase text-white">
+                                Замовлення <span className="text-red-500">{lastOrder.orderNumber}</span>
+                            </h2>
+                            <p className="mb-8 text-sm font-bold tracking-widest text-gray-400 uppercase">
+                                Клієнт: {lastOrder.customerName || "Партнер"}
+                            </p>
 
-                        {typeof lastOrder.packs === "number" && (
-                            <p>Упаковок у запиті: {lastOrder.packs}</p>
-                        )}
-
-                        {typeof lastOrder.units === "number" && (
-                            <p>Одиниць / пар у запиті: {lastOrder.units}</p>
-                        )}
+                            <div className="grid w-full gap-4 border-t border-white/10 pt-6 sm:grid-cols-3">
+                                <div>
+                                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">До сплати</p>
+                                    <p className="mt-1 text-xl font-black copper-text text-[#b87333]">{formatPrice(lastOrder.total || 0)}</p>
+                                </div>
+                                <div>
+                                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">Об'єм</p>
+                                    <p className="mt-1 text-xl font-black text-white">{lastOrder.packs} ящ.</p>
+                                </div>
+                                <div>
+                                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">Кількість</p>
+                                    <p className="mt-1 text-xl font-black text-white">{lastOrder.units} пар</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 ) : (
-                    <p>Ваш запит прийнято в обробку.</p>
+                    <div className="tech-clip border border-white/10 bg-[#111] p-8 text-center">
+                        <PackageOpen className="mx-auto mb-4 h-12 w-12 text-red-500" />
+                        <h2 className="text-xl font-black uppercase text-white">Ваш запит в обробці</h2>
+                        <p className="mt-2 text-sm text-gray-400">Ми вже отримали інформацію і готуємо накладну.</p>
+                    </div>
                 )}
 
-                <div className="rounded-2xl border border-white/10 bg-black/20 p-6">
-                    <h2>Що далі</h2>
-                    <ul>
-                        <li>Менеджер перевірить наявність і підготує підтверджений прайс.</li>
-                        <li>За потреби ми запропонуємо корекцію матриці під ваш канал продажу.</li>
-                        <li>Після погодження узгодимо відвантаження й наступні догрузки.</li>
-                    </ul>
-                </div>
+                <div className="grid gap-6 sm:grid-cols-2">
+                    <div className="border border-white/5 bg-black/40 p-6 backdrop-blur-sm">
+                        <h3 className="mb-4 text-[11px] font-black uppercase tracking-[0.2em] text-red-500">Що далі?</h3>
+                        <ul className="space-y-3 text-xs font-bold leading-relaxed text-gray-400">
+                            <li className="flex gap-2"><span className="text-red-500">1.</span> Менеджер перевіряє наявність на складі.</li>
+                            <li className="flex gap-2"><span className="text-red-500">2.</span> Ми телефонуємо вам для підтвердження.</li>
+                            <li className="flex gap-2"><span className="text-red-500">3.</span> Пакуємо та відправляємо Новою Поштою.</li>
+                        </ul>
+                    </div>
 
-                <div className="flex flex-wrap gap-4">
-                    <a
-                        href="#home"
-                        className="inline-flex border border-white/10 px-5 py-3 text-xs font-black uppercase tracking-[0.2em] text-white transition hover:border-red-500 hover:text-red-500"
-                    >
-                        На головну
-                    </a>
-
-                    <a
-                        href="#page/wholesale"
-                        className="inline-flex bg-red-600 px-5 py-3 text-xs font-black uppercase tracking-[0.2em] text-white transition hover:bg-red-500"
-                    >
-                        Перейти до B2B-порталу
-                    </a>
+                    <div className="flex flex-col justify-center gap-4">
+                        <a href="#categories" className="group tech-clip flex items-center justify-center gap-3 bg-red-600 px-6 py-5 text-xs font-black uppercase tracking-[0.2em] text-white transition hover:bg-red-500">
+                            Повернутися в каталог
+                            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                        </a>
+                        <a href="#home" className="tech-clip flex items-center justify-center border border-white/10 bg-[#111] px-6 py-5 text-xs font-black uppercase tracking-[0.2em] text-white transition hover:border-white/30 hover:bg-white/5">
+                            На головну
+                        </a>
+                    </div>
                 </div>
-            </section>
+            </div>
         </PageLayout>
     );
 }

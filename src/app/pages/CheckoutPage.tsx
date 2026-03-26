@@ -23,14 +23,15 @@ export function CheckoutPage() {
         e.preventDefault();
         setLoading(true);
 
-        // ВАШІ РЕАЛЬНІ ДАНІ TELEGRAM
         const BOT_TOKEN = "8635169212:AAGk4TKYozyYES5p_fGeydJ7D50oRYitN5s";
         const CHAT_ID = "763564754";
 
         let orderDetails = cart.map(item => `📦 ${item.slug} - ${item.quantity} уп.`).join("%0A");
         const totalPrice = cart.reduce((sum, item) => sum + (item.packPrice * item.quantity), 0);
+        const totalPacks = cart.reduce((sum, item) => sum + item.quantity, 0);
+        // Рахуємо загальну кількість пар
+        const totalUnits = cart.reduce((sum, item) => sum + ((item.unitsPerPack || 8) * item.quantity), 0);
 
-        // Повідомлення з жирним шрифтом (HTML теги <b>) для гарного вигляду в Телеграмі
         const message = `🔥 <b>НОВЕ ЗАМОВЛЕННЯ (ОПТ)</b>%0A%0A👤 <b>Клієнт:</b> ${form.name}%0A📞 <b>Телефон:</b> ${form.phone}%0A🏙 <b>Місто:</b> ${form.city}%0A📮 <b>Відділення:</b> ${form.branch}%0A%0A🛒 <b>Товари:</b>%0A${orderDetails}%0A%0A💰 <b>Сума:</b> ${formatPrice(totalPrice)}`;
 
         try {
@@ -38,9 +39,23 @@ export function CheckoutPage() {
             const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${message}&parse_mode=HTML`);
 
             if (response.ok) {
+                // ЗБЕРІГАЄМО ДАНІ ДЛЯ СТОРІНКИ ПОДЯКИ
+                localStorage.setItem(
+                    "vzuvachka-last-order",
+                    JSON.stringify({
+                        orderNumber: `OPT-${Math.floor(1000 + Math.random() * 9000)}`, // Генеруємо номер
+                        customerName: form.name,
+                        total: totalPrice,
+                        packs: totalPacks,
+                        units: totalUnits
+                    })
+                );
+
                 toast.success("Замовлення успішно оформлено! Ми вам зателефонуємо.");
                 clearCart();
-                window.location.hash = "#page/order-success";
+
+                // ВАЖЛИВО: Виправлене посилання без "page/"
+                window.location.hash = "#order-success";
             } else {
                 toast.error("Помилка відправки. Спробуйте ще раз.");
             }
