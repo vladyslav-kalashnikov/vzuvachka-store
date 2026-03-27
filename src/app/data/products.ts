@@ -198,7 +198,7 @@ export const products: Product[] = [
         price: 780,
         badge: "KIDS",
         image:
-            "https://images.unsplash.com/photo-1514090259040-e221375dcb01?q=80&w=1200",
+            "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=1200&auto=format&fit=crop",
         category: ["kids"],
         subcategory: ["dytiachi-cherevyky", "doshchovi-modeli"],
         description:

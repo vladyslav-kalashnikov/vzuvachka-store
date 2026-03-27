@@ -14,6 +14,51 @@ type AuthUserState = {
     isAdmin: boolean;
 };
 
+type ResolvedAuthUserState = Omit<AuthUserState, "isLoading">;
+
+let pendingAuthStateRequest: Promise<ResolvedAuthUserState> | null = null;
+
+async function loadSharedAuthState(): Promise<ResolvedAuthUserState> {
+    if (!pendingAuthStateRequest) {
+        pendingAuthStateRequest = (async () => {
+            try {
+                const {
+                    data: { user },
+                } = await supabase.auth.getUser();
+
+                if (!user) {
+                    return {
+                        user: null,
+                        profile: null,
+                        isAdmin: false,
+                    };
+                }
+
+                const profile = await getMyProfile();
+
+                return {
+                    user: {
+                        id: user.id,
+                        email: user.email,
+                    },
+                    profile,
+                    isAdmin: resolveAuthRole(user, profile?.role) === "admin",
+                };
+            } catch {
+                return {
+                    user: null,
+                    profile: null,
+                    isAdmin: false,
+                };
+            } finally {
+                pendingAuthStateRequest = null;
+            }
+        })();
+    }
+
+    return pendingAuthStateRequest;
+}
+
 export function useAuthUser(): AuthUserState {
     const [state, setState] = React.useState<AuthUserState>({
         isLoading: true,
@@ -26,46 +71,14 @@ export function useAuthUser(): AuthUserState {
         let mounted = true;
 
         const load = async () => {
-            try {
-                const {
-                    data: { user },
-                } = await supabase.auth.getUser();
+            const nextState = await loadSharedAuthState();
 
-                if (!mounted) return;
+            if (!mounted) return;
 
-                if (!user) {
-                    setState({
-                        isLoading: false,
-                        user: null,
-                        profile: null,
-                        isAdmin: false,
-                    });
-                    return;
-                }
-
-                const profile = await getMyProfile();
-
-                if (!mounted) return;
-
-                setState({
-                    isLoading: false,
-                    user: {
-                        id: user.id,
-                        email: user.email,
-                    },
-                    profile,
-                    isAdmin: resolveAuthRole(user, profile?.role) === "admin",
-                });
-            } catch {
-                if (!mounted) return;
-
-                setState({
-                    isLoading: false,
-                    user: null,
-                    profile: null,
-                    isAdmin: false,
-                });
-            }
+            setState({
+                isLoading: false,
+                ...nextState,
+            });
         };
 
         load();

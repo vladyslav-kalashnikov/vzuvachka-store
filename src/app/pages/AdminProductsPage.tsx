@@ -10,10 +10,9 @@ import {
     type AdminProduct, type AdminProductInput,
 } from "../../lib/api/adminProducts";
 import { AdminWorkspace } from "../components/AdminWorkspace";
+import { imageUploadLimits, prepareImageForUpload } from "../lib/imageUpload";
 
 const BUCKET = "product-images";
-const MAX_IMAGE_MB = 4;
-const MAX_IMAGE_BYTES = MAX_IMAGE_MB * 1024 * 1024;
 
 type TabKey = "form" | "list";
 
@@ -172,22 +171,32 @@ export function AdminProductsPage() {
     const handleUploadFiles = async (files: FileList | File[]) => {
         const arr = Array.from(files || []);
         if (!arr.length) return;
-        const valid = arr.filter((f) => f.size <= MAX_IMAGE_BYTES);
-        if (arr.length > valid.length) toast.error(`Деякі фото більші за ${MAX_IMAGE_MB}MB`);
-        if (!valid.length) return;
 
         try {
             setUploading(true);
             const uploaded: string[] = [];
-            for (const file of valid) { uploaded.push(await uploadOneImage(file)); }
+            let compressedCount = 0;
+
+            for (const file of arr) {
+                const preparedFile = await prepareImageForUpload(file);
+                if (preparedFile.size < file.size) {
+                    compressedCount += 1;
+                }
+                uploaded.push(await uploadOneImage(preparedFile));
+            }
+
             setForm((prev) => ({
                 ...prev,
                 image: prev.image || uploaded[0] || "",
                 gallery: Array.from(new Set([...parseCommaList(prev.gallery), ...uploaded])).join(", "),
             }));
-            toast.success("Фото завантажено");
+            if (compressedCount > 0) {
+                toast.success(`Фото завантажено. Стиснуто: ${compressedCount}`);
+            } else {
+                toast.success("Фото завантажено");
+            }
         } catch (error) {
-            toast.error("Помилка завантаження фото");
+            toast.error(error instanceof Error ? error.message : `Помилка завантаження фото. Максимум ${imageUploadLimits.maxSourceMb} MB`);
         } finally {
             setUploading(false); setIsDragging(false);
         }

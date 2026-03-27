@@ -15,7 +15,7 @@ export function Categories() {
     const sections = [
         { ...categorySections[0], image: settings.category_women_image || "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=1000&auto=format&fit=crop", colSpan: "md:col-span-3" },
         { ...categorySections[1], image: settings.category_men_image || "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=1000&auto=format&fit=crop", colSpan: "md:col-span-3" },
-        { ...categorySections[2], image: settings.category_kids_image || "https://images.unsplash.com/photo-1514090259040-e221375dcb01?q=80&w=900&auto=format&fit=crop", colSpan: "md:col-span-2" },
+        { ...categorySections[2], image: settings.category_kids_image || "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=900&auto=format&fit=crop", colSpan: "md:col-span-2" },
         { ...categorySections[3], image: settings.category_work_image || "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=1000&auto=format&fit=crop", colSpan: "md:col-span-2" },
         { ...categorySections[4], image: settings.menu_accessories_image || "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1000&auto=format&fit=crop", colSpan: "md:col-span-2" },
     ];

@@ -5,10 +5,9 @@ import { toast } from "sonner";
 import { supabase } from "../../lib/supabase";
 import { AdminWorkspace } from "../components/AdminWorkspace";
 import { fetchSiteSettings, upsertSiteSetting, type SiteSettingKey } from "../../lib/api/siteSettings";
+import { imageUploadLimits, prepareImageForUpload } from "../lib/imageUpload";
 
 const BUCKET = "product-images";
-const MAX_IMAGE_MB = 4;
-const MAX_IMAGE_BYTES = MAX_IMAGE_MB * 1024 * 1024;
 
 // Ті самі налаштування полів, що й у вас, але коротко (залишено всі ваші поля)
 type SettingField = { type: "image" | "text" | "textarea"; keyName: SiteSettingKey; title: string; description?: string; placeholder?: string; rows?: number; };
@@ -76,13 +75,19 @@ export function AdminSiteSettingsPage() {
 
     const handleUpload = async (keyName: SiteSettingKey, file?: File | null) => {
         if (!file) return;
-        if (file.size > MAX_IMAGE_BYTES) return toast.error("Файл занадто великий");
         try {
             setUploadingKey(keyName);
-            const url = await uploadOneImage(file);
+            const preparedFile = await prepareImageForUpload(file);
+            const url = await uploadOneImage(preparedFile);
             setValues(p => ({ ...p, [keyName]: url }));
-            toast.success("Фото завантажено");
-        } catch (error) { toast.error("Помилка завантаження"); } finally { setUploadingKey(null); }
+            if (preparedFile.size < file.size) {
+                toast.success("Фото стиснуто і завантажено");
+            } else {
+                toast.success("Фото завантажено");
+            }
+        } catch (error) {
+            toast.error(error instanceof Error ? error.message : `Помилка завантаження. Спробуйте файл до ${imageUploadLimits.maxSourceMb} MB`);
+        } finally { setUploadingKey(null); }
     };
 
     const handleSaveAll = async () => {
@@ -129,6 +134,9 @@ export function AdminSiteSettingsPage() {
                                                 {uploadingKey === field.keyName ? "Завантаження..." : "Обрати фото"}
                                                 <input type="file" accept="image/*" className="hidden" onChange={(e) => handleUpload(field.keyName, e.target.files?.[0])} />
                                             </label>
+                                            <p className="mt-3 text-[10px] font-bold uppercase tracking-[0.18em] text-gray-500">
+                                                Можна завантажувати файли до {imageUploadLimits.maxSourceMb} MB. Великі фото стискаються автоматично.
+                                            </p>
                                         </div>
                                     );
                                 }
