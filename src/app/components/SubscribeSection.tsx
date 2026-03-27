@@ -52,8 +52,8 @@ export function SubscribeSection() {
             if (insertError) throw insertError;
 
             // 3. ВІДПРАВЛЯЄМО СПОВІЩЕННЯ МЕНЕДЖЕРУ В ТЕЛЕГРАМ
-            const BOT_TOKEN = "8635169212:AAGk4TKYozyYES5p_fGeydJ7D50oRYitN5s";
-            const CHAT_ID = "763564754";
+            const BOT_TOKEN = import.meta.env.VITE_TG_BOT_TOKEN;
+            const CHAT_ID = import.meta.env.VITE_TG_CHAT_ID;
             const message = `📬 <b>НОВИЙ ПІДПИСНИК (B2B Розсилка)</b>%0A%0A📧 <b>Контакт:</b> ${cleanEmail}`;
 
             const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${message}&parse_mode=HTML`);

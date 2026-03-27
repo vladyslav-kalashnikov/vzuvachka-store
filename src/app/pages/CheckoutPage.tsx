@@ -60,8 +60,8 @@ export function CheckoutPage() {
             if (itemsError) throw itemsError;
 
             // 3. ВІДПРАВЛЯЄМО В TELEGRAM
-            const BOT_TOKEN = "8635169212:AAGk4TKYozyYES5p_fGeydJ7D50oRYitN5s";
-            const CHAT_ID = "763564754";
+            const BOT_TOKEN = import.meta.env.VITE_TG_BOT_TOKEN;
+            const CHAT_ID = import.meta.env.VITE_TG_CHAT_ID;
             let orderDetails = cart.map(item => `📦 ${item.slug} - ${item.quantity} уп.`).join("%0A");
 
             const message = `🔥 <b>НОВЕ ЗАМОВЛЕННЯ (ОПТ) #${orderData.order_number || orderData.id}</b>%0A%0A👤 <b>Клієнт:</b> ${form.name}%0A📞 <b>Телефон:</b> ${form.phone}%0A🏙 <b>Місто:</b> ${form.city}%0A📮 <b>Відділення:</b> ${form.branch}%0A%0A🛒 <b>Товари:</b>%0A${orderDetails}%0A%0A💰 <b>Сума:</b> ${formatPrice(totalPrice)}`;
