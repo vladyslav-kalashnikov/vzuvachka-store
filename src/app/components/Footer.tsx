@@ -7,7 +7,13 @@ import {
     Phone,
     ShoppingBag,
 } from "lucide-react";
-import { categorySections, partnerContact } from "../data/b2bContent";
+import { useSiteSettings } from "../hooks/useSiteSettings";
+import {
+    getManagedCategorySections,
+    getPartnerContactInfo,
+    getSetting,
+    getSettingList,
+} from "../lib/siteContent";
 
 type FooterSection = {
     title: string;
@@ -16,41 +22,6 @@ type FooterSection = {
         href: string;
     }>;
 };
-
-const footerSections: FooterSection[] = [
-    {
-        title: "Каталог",
-        links: [
-            ...categorySections.map((section) => ({
-                label: section.shortLabel,
-                href: section.href,
-            })),
-            { label: "Складські лоти", href: "#page/sale" },
-        ],
-    },
-    {
-        title: "Партнерам",
-        links: [
-            { label: "Оптовий портал", href: "#page/wholesale" },
-            { label: "Доставка та оплата", href: "#page/delivery" },
-            { label: "Умови поставки", href: "#page/shipping" },
-            { label: "Повернення", href: "#page/returns" },
-            { label: "FAQ", href: "#page/faq" },
-        ],
-    },
-    {
-        title: "Компанія",
-        links: [
-            { label: "Про нас", href: "#page/about" },
-            { label: "Вакансії", href: "#page/careers" },
-            { label: "Контакти B2B", href: "#page/contact" },
-            { label: "Мапа сайту", href: "#page/sitemap" },
-            { label: "Політика даних", href: "#page/privacy" },
-        ],
-    },
-];
-
-const highlightTags = ["Опт", "Швидкий старт", "Повторні замовлення"];
 
 function cx(...values: Array<string | false | null | undefined>) {
     return values.filter(Boolean).join(" ");
@@ -145,6 +116,72 @@ function SupportItem({
 }
 
 export function Footer() {
+    const { settings } = useSiteSettings();
+    const partnerContact = getPartnerContactInfo(settings);
+    const categorySections = getManagedCategorySections(settings);
+    const footerSections: FooterSection[] = [
+        {
+            title: "Каталог",
+            links: [
+                ...categorySections.map((section) => ({
+                    label: section.shortLabel,
+                    href: section.href,
+                })),
+                { label: "Складські лоти", href: getSetting(settings, "category_sale_link", "#page/sale") },
+            ],
+        },
+        {
+            title: "Партнерам",
+            links: [
+                { label: "Оптовий портал", href: "#page/wholesale" },
+                { label: "Доставка та оплата", href: "#page/delivery" },
+                { label: "Умови поставки", href: "#page/shipping" },
+                { label: "Повернення", href: "#page/returns" },
+                { label: "FAQ", href: "#page/faq" },
+            ],
+        },
+        {
+            title: "Компанія",
+            links: [
+                { label: "Про нас", href: "#page/about" },
+                { label: "Вакансії", href: "#page/careers" },
+                { label: "Контакти B2B", href: "#page/contact" },
+                { label: "Мапа сайту", href: "#page/sitemap" },
+                { label: "Політика даних", href: "#page/privacy" },
+            ],
+        },
+    ];
+    const highlightTags = getSettingList(settings, "footer_tags", [
+        "Опт",
+        "Швидкий старт",
+        "Повторні замовлення",
+    ]);
+    const brandSubtitle = getSetting(settings, "footer_brand_subtitle", "B2B supply platform");
+    const description = getSetting(
+        settings,
+        "footer_description",
+        "Платформа для wholesale-замовлень без зайвої плутанини: актуальний каталог, швидкий зв'язок, підбір товарів і підтримка повторних закупівель."
+    );
+    const primaryButtonText = getSetting(settings, "footer_primary_button_text", "Оптовий портал");
+    const primaryButtonLink = getSetting(settings, "footer_primary_button_link", "#page/wholesale");
+    const secondaryButtonText = getSetting(settings, "footer_secondary_button_text", "Написати менеджеру");
+    const secondaryButtonLink = getSetting(settings, "footer_secondary_button_link", "#page/contact");
+    const supportTitle = getSetting(settings, "footer_support_title", "B2B Підтримка");
+    const phoneLabel = getSetting(settings, "footer_phone_label", "Телефон");
+    const emailLabel = getSetting(settings, "footer_email_label", "Email");
+    const addressLabel = getSetting(settings, "footer_address_label", "Відправка");
+    const hoursTitle = getSetting(settings, "footer_hours_title", "Графік роботи");
+    const hoursText = getSetting(
+        settings,
+        "footer_hours_text",
+        `${partnerContact.hours}. Після заявки менеджер підтвердить наявність, матрицю та умови відправки.`
+    );
+    const legalText = getSetting(
+        settings,
+        "footer_legal_text",
+        `© ${new Date().getFullYear()} ВЗУВАЧКА B2B. Всі права захищено.`
+    );
+
     return (
         <footer className="relative mt-20 overflow-hidden border-t border-white/10 bg-[#080808] text-white">
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_10%_20%,rgba(220,38,38,0.10),transparent_24%),radial-gradient(circle_at_85%_10%,rgba(249,115,22,0.10),transparent_22%),linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:auto,auto,44px_44px,44px_44px]" />
@@ -161,15 +198,13 @@ export function Footer() {
                                     ВЗУВАЧКА
                                 </span>
                                 <span className="block text-[10px] font-bold uppercase tracking-[0.24em] text-gray-500">
-                                    B2B supply platform
+                                    {brandSubtitle}
                                 </span>
                             </span>
                         </a>
 
                         <p className="max-w-md text-sm leading-7 text-gray-300">
-                            Платформа для wholesale-замовлень без зайвої плутанини: актуальний
-                            каталог, швидкий зв&apos;язок, підбір товарів і підтримка повторних
-                            закупівель.
+                            {description}
                         </p>
 
                         <div className="flex flex-wrap gap-2">
@@ -185,17 +220,17 @@ export function Footer() {
 
                         <div className="grid gap-3 sm:grid-cols-2">
                             <a
-                                href="#page/wholesale"
+                                href={primaryButtonLink}
                                 className="tech-clip inline-flex items-center justify-between gap-3 bg-white px-5 py-4 text-[11px] font-black uppercase tracking-[0.16em] text-black transition-colors hover:bg-red-600 hover:text-white"
                             >
-                                Оптовий портал
+                                {primaryButtonText}
                                 <ArrowRight className="h-4 w-4" />
                             </a>
                             <a
-                                href="#page/contact"
+                                href={secondaryButtonLink}
                                 className="tech-clip inline-flex items-center justify-between gap-3 border border-white/10 bg-white/[0.03] px-5 py-4 text-[11px] font-black uppercase tracking-[0.16em] text-white transition-colors hover:border-red-500 hover:text-red-400"
                             >
-                                Написати менеджеру
+                                {secondaryButtonText}
                                 <Mail className="h-4 w-4" />
                             </a>
                         </div>
@@ -213,13 +248,13 @@ export function Footer() {
 
                     <div className="tech-clip border border-white/10 bg-white/[0.03] p-5 shadow-[0_24px_80px_rgba(0,0,0,0.35)] sm:p-6">
                         <p className="mb-4 text-[10px] font-black uppercase tracking-[0.28em] text-red-500">
-                            B2B Підтримка
+                            {supportTitle}
                         </p>
 
                         <div className="space-y-3">
                             <SupportItem icon={<Phone className="h-4 w-4" />} href={partnerContact.phoneHref} accent>
                                 <span className="block text-[10px] font-black uppercase tracking-[0.16em] text-gray-500">
-                                    Телефон
+                                    {phoneLabel}
                                 </span>
                                 <span className="block break-words text-base font-black text-white">
                                     {partnerContact.phone}
@@ -228,7 +263,7 @@ export function Footer() {
 
                             <SupportItem icon={<Mail className="h-4 w-4" />} href={partnerContact.emailHref}>
                                 <span className="block text-[10px] font-black uppercase tracking-[0.16em] text-gray-500">
-                                    Email
+                                    {emailLabel}
                                 </span>
                                 <span className="block break-all text-sm font-bold text-white">
                                     {partnerContact.email}
@@ -237,7 +272,7 @@ export function Footer() {
 
                             <SupportItem icon={<MapPin className="h-4 w-4" />}>
                                 <span className="block text-[10px] font-black uppercase tracking-[0.16em] text-gray-500">
-                                    Відправка
+                                    {addressLabel}
                                 </span>
                                 <span className="block text-sm font-bold text-white">
                                     {partnerContact.address}
@@ -249,12 +284,11 @@ export function Footer() {
                             <div className="mb-2 flex items-center gap-2 text-white">
                                 <ShoppingBag className="h-4 w-4 text-red-500" />
                                 <span className="text-[10px] font-black uppercase tracking-[0.18em]">
-                                    Графік роботи
+                                    {hoursTitle}
                                 </span>
                             </div>
                             <p className="text-sm font-medium leading-6 text-gray-300">
-                                {partnerContact.hours}. Після заявки менеджер підтвердить наявність,
-                                матрицю та умови відправки.
+                                {hoursText}
                             </p>
                         </div>
                     </div>
@@ -262,7 +296,7 @@ export function Footer() {
 
                 <div className="mt-12 flex flex-col gap-5 border-t border-white/8 pt-8 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-500 sm:mt-16 md:flex-row md:items-center md:justify-between">
                     <div>
-                        © {new Date().getFullYear()} ВЗУВАЧКА B2B. Всі права захищено.
+                        {legalText}
                     </div>
 
                     <div className="flex flex-wrap gap-x-6 gap-y-3">

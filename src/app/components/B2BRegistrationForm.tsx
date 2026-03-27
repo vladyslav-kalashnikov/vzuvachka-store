@@ -1,12 +1,21 @@
 import * as React from "react";
 import { toast } from "sonner";
+import { useSiteSettings } from "../hooks/useSiteSettings";
+import { getSetting, getSettingList } from "../lib/siteContent";
 
 export function B2BRegistrationForm() {
+    const { settings } = useSiteSettings();
     const highlights = [
-        "Підкажемо по товарах і цінах",
-        "Допоможемо з першим замовленням",
-        "Пояснимо доставку і подальші кроки",
+        getSetting(settings, "wholesale_form_highlight_1", "Підкажемо по товарах і цінах"),
+        getSetting(settings, "wholesale_form_highlight_2", "Допоможемо з першим замовленням"),
+        getSetting(settings, "wholesale_form_highlight_3", "Пояснимо доставку і подальші кроки"),
     ];
+    const formatOptions = getSettingList(settings, "wholesale_form_format_options", [
+        "Офлайн магазин",
+        "Інтернет-магазин",
+        "Маркетплейси",
+        "Корпоративні закупівлі",
+    ]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -23,14 +32,20 @@ export function B2BRegistrationForm() {
                 <div className="premium-panel-light tech-clip grid gap-8 border border-black/10 bg-[rgba(255,252,247,0.95)] p-6 sm:gap-10 sm:p-8 md:grid-cols-[0.88fr_1.12fr] md:p-12">
                     <div>
                         <p className="mb-3 text-[10px] font-black uppercase tracking-[0.3em] text-[#7b818c]">
-                            Форма зв'язку
+                            {getSetting(settings, "wholesale_form_badge", "Форма зв'язку")}
                         </p>
                         <h2 className="text-3xl font-black uppercase tracking-tight text-[#111111] md:text-5xl">
-                            Залиште <span className="text-red-600">свій запит</span>
+                            {getSetting(settings, "wholesale_form_title", "Залиште")}{" "}
+                            <span className="text-red-600">
+                                {getSetting(settings, "wholesale_form_title_accent", "свій запит")}
+                            </span>
                         </h2>
                         <p className="mt-4 max-w-md text-sm leading-7 text-[#5f6672]">
-                            Напишіть, що саме вас цікавить, і ми допоможемо підібрати товари та
-                            пояснимо умови.
+                            {getSetting(
+                                settings,
+                                "wholesale_form_description",
+                                "Напишіть, що саме вас цікавить, і ми допоможемо підібрати товари та пояснимо умови."
+                            )}
                         </p>
 
                         <div className="mt-8 grid gap-3">
@@ -51,13 +66,15 @@ export function B2BRegistrationForm() {
                     <form onSubmit={handleSubmit} className="tech-clip bg-[#0b0b0b] p-5 text-white sm:p-6 md:p-8">
                         <div className="mb-6">
                             <p className="text-[10px] font-black uppercase tracking-[0.28em] text-[#d5d8df]">
-                                Fast qualification
+                                {getSetting(settings, "wholesale_form_panel_badge", "Fast qualification")}
                             </p>
                         </div>
 
                         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-[#c0c5cf]">Компанія / ФОП</label>
+                                <label className="text-[10px] font-black uppercase tracking-widest text-[#c0c5cf]">
+                                    {getSetting(settings, "wholesale_form_label_company", "Компанія / ФОП")}
+                                </label>
                                 <input
                                     type="text"
                                     className="tech-clip w-full border border-white/12 bg-[#151515] px-4 py-3 text-sm text-white placeholder:text-[#7a7f88] outline-none focus:border-red-600"
@@ -65,7 +82,9 @@ export function B2BRegistrationForm() {
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-[#c0c5cf]">Контактна особа</label>
+                                <label className="text-[10px] font-black uppercase tracking-widest text-[#c0c5cf]">
+                                    {getSetting(settings, "wholesale_form_label_contact", "Контактна особа")}
+                                </label>
                                 <input
                                     type="text"
                                     className="tech-clip w-full border border-white/12 bg-[#151515] px-4 py-3 text-sm text-white placeholder:text-[#7a7f88] outline-none focus:border-red-600"
@@ -75,16 +94,20 @@ export function B2BRegistrationForm() {
 
                         <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-[#c0c5cf]">Телефон</label>
+                                <label className="text-[10px] font-black uppercase tracking-widest text-[#c0c5cf]">
+                                    {getSetting(settings, "wholesale_form_label_phone", "Телефон")}
+                                </label>
                                 <input
                                     type="tel"
-                                    placeholder="+380"
+                                    placeholder={getSetting(settings, "wholesale_form_placeholder_phone", "+380")}
                                     className="tech-clip w-full border border-white/12 bg-[#151515] px-4 py-3 text-sm text-white placeholder:text-[#7a7f88] outline-none focus:border-red-600"
                                     required
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-[#c0c5cf]">Email</label>
+                                <label className="text-[10px] font-black uppercase tracking-widest text-[#c0c5cf]">
+                                    {getSetting(settings, "wholesale_form_label_email", "Email")}
+                                </label>
                                 <input
                                     type="email"
                                     className="tech-clip w-full border border-white/12 bg-[#151515] px-4 py-3 text-sm text-white placeholder:text-[#7a7f88] outline-none focus:border-red-600"
@@ -94,20 +117,29 @@ export function B2BRegistrationForm() {
                         </div>
 
                         <div className="mt-6 space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-[#c0c5cf]">Формат продажу</label>
+                            <label className="text-[10px] font-black uppercase tracking-widest text-[#c0c5cf]">
+                                {getSetting(settings, "wholesale_form_label_format", "Формат продажу")}
+                            </label>
                             <select className="tech-clip w-full border border-white/12 bg-[#151515] px-4 py-3 text-sm text-white outline-none focus:border-red-600">
-                                <option value="offline">Офлайн магазин</option>
-                                <option value="online">Інтернет-магазин</option>
-                                <option value="marketplace">Маркетплейси</option>
-                                <option value="corporate">Корпоративні закупівлі</option>
+                                {formatOptions.map((option) => (
+                                    <option key={option} value={option}>
+                                        {option}
+                                    </option>
+                                ))}
                             </select>
                         </div>
 
                         <div className="mt-6 space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-[#c0c5cf]">Що цікавить</label>
+                            <label className="text-[10px] font-black uppercase tracking-widest text-[#c0c5cf]">
+                                {getSetting(settings, "wholesale_form_label_interest", "Що цікавить")}
+                            </label>
                             <textarea
                                 rows={4}
-                                placeholder="Наприклад: які товари потрібні, приблизний обсяг, місто або формат магазину"
+                                placeholder={getSetting(
+                                    settings,
+                                    "wholesale_form_placeholder_interest",
+                                    "Наприклад: які товари потрібні, приблизний обсяг, місто або формат магазину"
+                                )}
                                 className="tech-clip w-full border border-white/12 bg-[#151515] px-4 py-3 text-sm text-white placeholder:text-[#7a7f88] outline-none focus:border-red-600"
                             />
                         </div>
@@ -116,7 +148,7 @@ export function B2BRegistrationForm() {
                             type="submit"
                             className="tech-clip mt-8 w-full bg-white px-6 py-5 text-sm font-black uppercase tracking-widest text-black transition-colors hover:bg-red-600 hover:text-white"
                         >
-                            Надіслати запит
+                            {getSetting(settings, "wholesale_form_submit_text", "Надіслати запит")}
                         </button>
                     </form>
                 </div>

@@ -1,13 +1,23 @@
 import * as React from "react";
 import { Boxes, ShieldCheck, TrendingUp } from "lucide-react";
 import { useSiteSettings } from "../hooks/useSiteSettings";
+import { getSetting } from "../lib/siteContent";
 
 export function WhyChoose() {
     const { settings } = useSiteSettings();
     const stats = [
-        { value: "1", label: "контакт для всіх питань" },
-        { value: "5", label: "основних категорій товарів" },
-        { value: "Швидко", label: "відповідаємо і готуємо замовлення" },
+        {
+            value: getSetting(settings, "whychoose_stat_1_value", "1"),
+            label: getSetting(settings, "whychoose_stat_1_label", "контакт для всіх питань"),
+        },
+        {
+            value: getSetting(settings, "whychoose_stat_2_value", "5"),
+            label: getSetting(settings, "whychoose_stat_2_label", "основних категорій товарів"),
+        },
+        {
+            value: getSetting(settings, "whychoose_stat_3_value", "Швидко"),
+            label: getSetting(settings, "whychoose_stat_3_label", "відповідаємо і готуємо замовлення"),
+        },
     ];
 
     const features = [
@@ -41,12 +51,12 @@ export function WhyChoose() {
             <div className="relative z-10 mx-auto max-w-[1600px] px-4 sm:px-6">
                 <div className="mb-10 flex flex-col items-center text-center fade-up">
                     <span className="mb-4 inline-block border border-red-500/20 bg-red-600/10 px-4 py-2 text-[10px] font-black uppercase tracking-[0.3em] text-red-500 shadow-[0_0_15px_rgba(220,38,38,0.2)]">
-                        {settings.whychoose_badge || "Чому з нами зручно"}
+                        {getSetting(settings, "whychoose_badge", "Чому з нами зручно")}
                     </span>
                     <h2 className="text-3xl font-black uppercase tracking-tight text-white md:text-5xl">
-                        {settings.whychoose_title || "Проста"}{" "}
+                        {getSetting(settings, "whychoose_title", "Проста")}{" "}
                         <span className="copper-text text-[#e39c5e] copper-shadow-lg">
-                            {settings.whychoose_title_outline || "співпраця"}
+                            {getSetting(settings, "whychoose_title_outline", "співпраця")}
                         </span>
                     </h2>
                 </div>

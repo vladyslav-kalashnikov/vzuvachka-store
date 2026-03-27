@@ -1,27 +1,48 @@
 import * as React from "react";
 import { useSiteSettings } from "../hooks/useSiteSettings";
-
-const onboardingSteps = [
-    "З'ясовуємо, які товари вам потрібні і для кого ви продаєте",
-    "Допомагаємо вибрати моделі, розміри, кольори й супутні товари",
-    "Погоджуємо умови, оплату, доставку і наступні замовлення",
-];
+import { getSetting, getSettingList } from "../lib/siteContent";
 
 export function CollabSection() {
     const { settings } = useSiteSettings();
-    const tags = ["Магазин", "Онлайн", "Маркетплейс", "Компанія", "Опт"];
-
-    const badge = settings.collab_badge || "Як почати співпрацю";
-    const title1 = settings.collab_title_line_1 || "ПОЯСНЮЄМО";
-    const title2 = settings.collab_title_line_2 || "ВСЕ ПРОСТО.";
-    const description =
-        settings.collab_description ||
-        "Ми не ускладнюємо процес. Спочатку розуміємо ваш запит, потім пропонуємо товари і далі супроводжуємо замовлення.";
-    const buttonText = settings.collab_button_text || "Зв'язатися з нами";
-    const buttonLink = settings.collab_button_link || "#page/contact";
-    const image =
-        settings.collab_image ||
-        "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=1200&auto=format&fit=crop";
+    const tags = getSettingList(settings, "collab_tags", [
+        "Магазин",
+        "Онлайн",
+        "Маркетплейс",
+        "Компанія",
+        "Опт",
+    ]);
+    const onboardingSteps = getSettingList(settings, "collab_steps", [
+        "З'ясовуємо, які товари вам потрібні і для кого ви продаєте",
+        "Допомагаємо вибрати моделі, розміри, кольори й супутні товари",
+        "Погоджуємо умови, оплату, доставку і наступні замовлення",
+    ]);
+    const badge = getSetting(settings, "collab_badge", "Як почати співпрацю");
+    const title1 = getSetting(settings, "collab_title_line_1", "ПОЯСНЮЄМО");
+    const title2 = getSetting(settings, "collab_title_line_2", "ВСЕ ПРОСТО.");
+    const description = getSetting(
+        settings,
+        "collab_description",
+        "Ми не ускладнюємо процес. Спочатку розуміємо ваш запит, потім пропонуємо товари і далі супроводжуємо замовлення."
+    );
+    const buttonText = getSetting(settings, "collab_button_text", "Зв'язатися з нами");
+    const buttonLink = getSetting(settings, "collab_button_link", "#page/contact");
+    const image = getSetting(
+        settings,
+        "collab_image",
+        "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=1200&auto=format&fit=crop"
+    );
+    const card1Badge = getSetting(settings, "collab_card_1_badge", "Простий старт");
+    const card1Title = getSetting(
+        settings,
+        "collab_card_1_title",
+        "Від першого повідомлення до першого замовлення без зайвих кроків."
+    );
+    const card2Badge = getSetting(settings, "collab_card_2_badge", "Зрозуміло");
+    const card2Text = getSetting(
+        settings,
+        "collab_card_2_text",
+        "Ми допомагаємо не лише купити товар, а й спокійно почати роботу з ним."
+    );
 
     return (
         <section id="collab" className="relative overflow-hidden bg-[#120d0b] py-16 text-white sm:py-24">
@@ -86,18 +107,18 @@ export function CollabSection() {
                             />
                             <div className="tech-clip premium-panel relative max-w-full px-5 py-5 md:absolute md:-bottom-6 md:left-0 md:max-w-[270px]">
                                 <p className="text-[10px] font-black uppercase tracking-[0.3em] text-red-400">
-                                    Простий старт
+                                    {card1Badge}
                                 </p>
                                 <p className="mt-3 text-base font-black uppercase text-white sm:text-lg">
-                                    Від першого повідомлення до першого замовлення без зайвих кроків.
+                                    {card1Title}
                                 </p>
                             </div>
                             <div className="tech-clip border border-white/10 bg-[#f4ece2] px-5 py-4 text-black shadow-[0_24px_70px_rgba(0,0,0,0.28)] md:absolute md:-right-2 md:top-10 md:w-[220px]">
                                 <p className="text-[10px] font-black uppercase tracking-[0.24em] text-red-600">
-                                    Зрозуміло
+                                    {card2Badge}
                                 </p>
                                 <p className="mt-2 text-sm leading-6 text-black/70">
-                                    Ми допомагаємо не лише купити товар, а й спокійно почати роботу з ним.
+                                    {card2Text}
                                 </p>
                             </div>
                         </div>

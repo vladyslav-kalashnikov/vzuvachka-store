@@ -1,49 +1,14 @@
 import * as React from "react";
 import { PageLayout } from "./PageLayout";
-import { UploadCloud, Save, Image as ImageIcon, Settings } from "lucide-react";
+import { Save } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "../../lib/supabase";
 import { AdminWorkspace } from "../components/AdminWorkspace";
 import { fetchSiteSettings, upsertSiteSetting, type SiteSettingKey } from "../../lib/api/siteSettings";
 import { imageUploadLimits, prepareImageForUpload } from "../lib/imageUpload";
+import { siteSettingsSections } from "../lib/siteSettingsSchema";
 
 const BUCKET = "product-images";
-
-// Ті самі налаштування полів, що й у вас, але коротко (залишено всі ваші поля)
-type SettingField = { type: "image" | "text" | "textarea"; keyName: SiteSettingKey; title: string; description?: string; placeholder?: string; rows?: number; };
-type SettingSection = { title: string; description?: string; fields: SettingField[]; };
-
-const sections: SettingSection[] = [
-    {
-        title: "Навігаційні візуали", description: "Фото для меню сегментів.",
-        fields: [
-            { type: "image", keyName: "menu_women_image", title: "Жіночий сегмент" },
-            { type: "image", keyName: "menu_men_image", title: "Чоловічий сегмент" },
-            { type: "image", keyName: "menu_accessories_image", title: "Аксесуари" },
-        ],
-    },
-    {
-        title: "Hero B2B-порталу", description: "Перший екран сайту.",
-        fields: [
-            { type: "image", keyName: "hero_image", title: "Hero фото" },
-            { type: "text", keyName: "hero_badge", title: "Hero badge", placeholder: "Wholesale platform" },
-            { type: "text", keyName: "hero_title_line_1", title: "Рядок 1", placeholder: "Взуття оптом" },
-            { type: "text", keyName: "hero_title_line_2", title: "Рядок 2", placeholder: "від виробника" },
-            { type: "textarea", keyName: "hero_description", title: "Опис", rows: 3 },
-            { type: "text", keyName: "hero_button_text", title: "Кнопка", placeholder: "Каталог" },
-        ],
-    },
-    {
-        title: "Сегменти каталогу", description: "Категорії на головній.",
-        fields: [
-            { type: "text", keyName: "categories_title_line_1", title: "Заголовок 1" },
-            { type: "text", keyName: "categories_title_line_2", title: "Заголовок 2" },
-            { type: "image", keyName: "category_women_image", title: "Фото Women" },
-            { type: "image", keyName: "category_men_image", title: "Фото Men" },
-            { type: "image", keyName: "category_kids_image", title: "Фото Kids" },
-        ],
-    }
-];
 
 function resolveStorageUrl(raw: string) {
     if (!raw) return "";
@@ -93,7 +58,7 @@ export function AdminSiteSettingsPage() {
     const handleSaveAll = async () => {
         try {
             setSaving(true);
-            for (const section of sections) {
+            for (const section of siteSettingsSections) {
                 for (const field of section.fields) {
                     await upsertSiteSetting(field.keyName, values[field.keyName] || "");
                 }
@@ -115,7 +80,7 @@ export function AdminSiteSettingsPage() {
                     }
                 />
 
-                {loading ? <p className="text-gray-500">Завантаження...</p> : sections.map((section) => (
+                {loading ? <p className="text-gray-500">Завантаження...</p> : siteSettingsSections.map((section) => (
                     <div key={section.title} className="tech-clip premium-panel border border-white/10 bg-[#111] p-6 md:p-8">
                         <div className="mb-6 border-b border-white/10 pb-4">
                             <h2 className="text-xl font-black uppercase text-white copper-text">{section.title}</h2>
@@ -129,11 +94,20 @@ export function AdminSiteSettingsPage() {
                                     return (
                                         <div key={field.keyName} className="border border-white/10 bg-black/40 p-5">
                                             <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-4">{field.title}</p>
+                                            {field.description && (
+                                                <p className="mb-4 text-xs leading-6 text-gray-500">{field.description}</p>
+                                            )}
                                             {value ? <img src={resolveStorageUrl(value)} alt="" className="h-40 w-full object-cover border border-white/10 mb-4" /> : <div className="h-40 border border-dashed border-white/10 mb-4 flex items-center justify-center text-gray-600">Немає фото</div>}
                                             <label className="flex cursor-pointer items-center justify-center border border-white/20 bg-black py-3 text-[10px] font-black uppercase tracking-widest text-white hover:border-red-500 hover:text-red-500 transition">
                                                 {uploadingKey === field.keyName ? "Завантаження..." : "Обрати фото"}
                                                 <input type="file" accept="image/*" className="hidden" onChange={(e) => handleUpload(field.keyName, e.target.files?.[0])} />
                                             </label>
+                                            <input
+                                                value={value}
+                                                onChange={(e) => handleChange(field.keyName, e.target.value)}
+                                                placeholder="або вставте прямий URL картинки"
+                                                className="mt-4 w-full border border-white/10 bg-black px-4 py-3 text-sm text-white outline-none focus:border-red-500"
+                                            />
                                             <p className="mt-3 text-[10px] font-bold uppercase tracking-[0.18em] text-gray-500">
                                                 Можна завантажувати файли до {imageUploadLimits.maxSourceMb} MB. Великі фото стискаються автоматично.
                                             </p>
@@ -143,6 +117,9 @@ export function AdminSiteSettingsPage() {
                                 return (
                                     <div key={field.keyName} className="border border-white/10 bg-black/40 p-5">
                                         <label className="mb-3 block text-[10px] font-black uppercase tracking-widest text-gray-500">{field.title}</label>
+                                        {field.description && (
+                                            <p className="mb-3 text-xs leading-6 text-gray-500">{field.description}</p>
+                                        )}
                                         {field.type === "textarea" ? (
                                             <textarea rows={field.rows ?? 3} value={value} onChange={(e) => handleChange(field.keyName, e.target.value)} placeholder={field.placeholder} className="w-full border border-white/10 bg-black px-4 py-3 text-white outline-none focus:border-red-500" />
                                         ) : (

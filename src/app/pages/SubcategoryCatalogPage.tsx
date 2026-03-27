@@ -2,9 +2,11 @@ import * as React from "react";
 import { useMemo, useState } from "react";
 import { CatalogFilters } from "../components/CatalogFilters";
 import { ProductCard } from "../components/ProductCard";
-import { categoryMeta, subcategoryTitles } from "../data/b2bContent";
+import { subcategoryTitles } from "../data/b2bContent";
 import { getProductsByCategoryAndSubcategory } from "../data/products";
 import type { ProductCategory, ProductSubcategory } from "../data/products";
+import { useSiteSettings } from "../hooks/useSiteSettings";
+import { getManagedCategoryMeta } from "../lib/siteContent";
 import { useShop } from "../store/useShop";
 import { PageLayout } from "./PageLayout";
 
@@ -15,8 +17,9 @@ type Props = {
 
 export function SubcategoryCatalogPage({ category, subcategory }: Props) {
     const { isInWishlist, toggleWishlist } = useShop();
+    const { settings } = useSiteSettings();
     const items = getProductsByCategoryAndSubcategory(category, subcategory);
-    const categoryInfo = categoryMeta[category];
+    const categoryInfo = getManagedCategoryMeta(settings, category);
 
     const [selectedSize, setSelectedSize] = useState("");
     const [selectedColor, setSelectedColor] = useState("");

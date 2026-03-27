@@ -13,14 +13,18 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { signOut } from "../../lib/api/auth";
-import { adminLinks, categorySections, infoLinks } from "../data/b2bContent";
+import { adminLinks, infoLinks } from "../data/b2bContent";
 import { useAuthUser } from "../hooks/useAuthUser";
+import { useSiteSettings } from "../hooks/useSiteSettings";
+import { getManagedCategorySections, getSetting } from "../lib/siteContent";
 import { useShop } from "../store/useShop";
 import { MobileMenu } from "./MobileMenu";
 
 export function Header() {
     const { cartCount, wishlistCount } = useShop();
     const { user, isAdmin } = useAuthUser();
+    const { settings } = useSiteSettings();
+    const categorySections = getManagedCategorySections(settings);
 
     const handleLogout = async () => {
         try {
@@ -39,7 +43,11 @@ export function Header() {
             <div className="bg-red-600 px-3 py-2 text-center text-white sm:px-4">
                 <span className="text-[10px] font-black uppercase tracking-[0.14em] sm:text-[11px] sm:tracking-[0.22em] shadow-sm">
                     <span className="mr-2 text-black bg-white px-2 py-0.5 rounded-sm">B2B ПЛАТФОРМА</span>
-                    зрозумілі умови, актуальна наявність і швидке замовлення
+                    {getSetting(
+                        settings,
+                        "header_topbar_text",
+                        "зрозумілі умови, актуальна наявність і швидке замовлення"
+                    )}
                 </span>
             </div>
 

@@ -1,27 +1,39 @@
 import * as React from "react";
 import { Boxes, Handshake, Truck } from "lucide-react";
+import { useSiteSettings } from "../hooks/useSiteSettings";
+import { getSetting } from "../lib/siteContent";
 
 export function WholesaleBenefits() {
+    const { settings } = useSiteSettings();
     const meta = [
-        { value: "Швидко", label: "відповідаємо на запит" },
-        { value: "Чітко", label: "пояснюємо умови" },
-        { value: "Зручно", label: "працювати повторно" },
+        {
+            value: getSetting(settings, "wholesale_benefits_meta_1_value", "Швидко"),
+            label: getSetting(settings, "wholesale_benefits_meta_1_label", "відповідаємо на запит"),
+        },
+        {
+            value: getSetting(settings, "wholesale_benefits_meta_2_value", "Чітко"),
+            label: getSetting(settings, "wholesale_benefits_meta_2_label", "пояснюємо умови"),
+        },
+        {
+            value: getSetting(settings, "wholesale_benefits_meta_3_value", "Зручно"),
+            label: getSetting(settings, "wholesale_benefits_meta_3_label", "працювати повторно"),
+        },
     ];
 
     const benefits = [
         {
-            title: "ДОПОМАГАЄМО З ВИБОРОМ",
-            desc: "Підкажемо, які товари краще підійдуть саме для вашого магазину або формату продажу.",
+            title: getSetting(settings, "wholesale_benefit_1_title", "ДОПОМАГАЄМО З ВИБОРОМ"),
+            desc: getSetting(settings, "wholesale_benefit_1_desc", "Підкажемо, які товари краще підійдуть саме для вашого магазину або формату продажу."),
             icon: Boxes,
         },
         {
-            title: "ПРОСТІ УМОВИ",
-            desc: "Без зайвих складнощів пояснюємо оплату, відправку, мінімальне замовлення і повторні покупки.",
+            title: getSetting(settings, "wholesale_benefit_2_title", "ПРОСТІ УМОВИ"),
+            desc: getSetting(settings, "wholesale_benefit_2_desc", "Без зайвих складнощів пояснюємо оплату, відправку, мінімальне замовлення і повторні покупки."),
             icon: Handshake,
         },
         {
-            title: "ШВИДКА ВІДПРАВКА",
-            desc: "Тримаємо зв'язок по наявності і швидко готуємо товари до відправки.",
+            title: getSetting(settings, "wholesale_benefit_3_title", "ШВИДКА ВІДПРАВКА"),
+            desc: getSetting(settings, "wholesale_benefit_3_desc", "Тримаємо зв'язок по наявності і швидко готуємо товари до відправки."),
             icon: Truck,
         },
     ];
@@ -31,10 +43,13 @@ export function WholesaleBenefits() {
             <div className="mx-auto max-w-[1600px] px-4 sm:px-6">
                 <div className="mb-16 text-center fade-up">
                     <span className="mb-4 block text-[10px] font-bold uppercase tracking-[0.4em] text-red-600">
-                        Чому це зручно
+                        {getSetting(settings, "wholesale_benefits_badge", "Чому це зручно")}
                     </span>
                     <h2 className="text-3xl font-black uppercase tracking-tighter text-white md:text-5xl">
-                        Наші <span className="text-red-600">переваги</span>
+                        {getSetting(settings, "wholesale_benefits_title", "Наші")}{" "}
+                        <span className="text-red-600">
+                            {getSetting(settings, "wholesale_benefits_title_accent", "переваги")}
+                        </span>
                     </h2>
                 </div>
 

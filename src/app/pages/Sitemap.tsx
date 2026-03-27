@@ -1,5 +1,7 @@
 import * as React from "react";
-import { categorySections, infoLinks } from "../data/b2bContent";
+import { infoLinks } from "../data/b2bContent";
+import { useSiteSettings } from "../hooks/useSiteSettings";
+import { getManagedCategorySections } from "../lib/siteContent";
 import { PageLayout } from "./PageLayout";
 
 const mainLinks = [
@@ -11,6 +13,9 @@ const mainLinks = [
 ];
 
 export function Sitemap() {
+    const { settings } = useSiteSettings();
+    const categorySections = getManagedCategorySections(settings);
+
     return (
         <PageLayout title="Мапа сайту" subtitle="Усі основні сторінки сайту в одному місці.">
             <section className="grid gap-6 lg:grid-cols-3">

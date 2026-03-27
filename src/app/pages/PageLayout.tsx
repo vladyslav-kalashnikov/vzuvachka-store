@@ -1,6 +1,7 @@
 import * as React from "react";
 import { ArrowLeft, BriefcaseBusiness, Mail, Phone } from "lucide-react";
-import { partnerContact } from "../data/b2bContent";
+import { useSiteSettings } from "../hooks/useSiteSettings";
+import { getPartnerContactInfo } from "../lib/siteContent";
 
 type PageLayoutProps = {
     title: string;
@@ -13,6 +14,9 @@ export function PageLayout({
     subtitle,
     children,
 }: PageLayoutProps) {
+    const { settings } = useSiteSettings();
+    const partnerContact = getPartnerContactInfo(settings);
+
     return (
         <section className="relative min-h-screen overflow-hidden border-t border-white/5 bg-[#0a0a0a] pb-16 pt-20 font-sans sm:pb-24 sm:pt-24">
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(220,38,38,0.12),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(220,38,38,0.08),transparent_24%)]" />

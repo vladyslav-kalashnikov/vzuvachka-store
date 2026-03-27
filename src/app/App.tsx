@@ -34,8 +34,10 @@ import { SearchPage } from "./pages/SearchPage";
 import { SizeGuide } from "./pages/SizeGuide";
 import { OrderSuccessPage } from "./pages/OrderSuccessPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
-import { categoryMeta, partnerContact, subcategoryTitles } from "./data/b2bContent";
+import { subcategoryTitles } from "./data/b2bContent";
 import { getProductBySlug, type ProductCategory, type ProductSubcategory } from "./data/products";
+import { useSiteSettings } from "./hooks/useSiteSettings";
+import { getManagedCategoryMeta, getPartnerContactInfo } from "./lib/siteContent";
 import { AdminOrdersPage } from "./pages/AdminOrdersPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { LoginPage } from "./pages/LoginPage";
@@ -108,7 +110,8 @@ function withSiteName(title: string) {
     return title === SITE_NAME ? title : `${title} | ${SITE_NAME}`;
 }
 
-function createHomeStructuredData() {
+function createHomeStructuredData(settings: Record<string, string>) {
+    const partnerContact = getPartnerContactInfo(settings);
     const organization: Record<string, unknown> = {
         "@type": "Organization",
         name: SITE_NAME,
@@ -142,7 +145,7 @@ function createHomeStructuredData() {
     };
 }
 
-function getPageMeta(route: RouteState): PageMeta {
+function getPageMeta(route: RouteState, settings: Record<string, string>): PageMeta {
     const indexable = "index, follow";
     const noindex = "noindex, nofollow";
 
@@ -153,7 +156,7 @@ function getPageMeta(route: RouteState): PageMeta {
                 "Оптова B2B-вітрина ВЗУВАЧКА для каталогу SKU, заявок, прайсів і роботи з партнерськими закупівлями.",
             robots: indexable,
             openGraphType: "website",
-            structuredData: createHomeStructuredData(),
+            structuredData: createHomeStructuredData(settings),
         };
     }
 
@@ -223,7 +226,7 @@ function getPageMeta(route: RouteState): PageMeta {
     }
 
     if (route.type === "catalog") {
-        const category = categoryMeta[route.category];
+        const category = getManagedCategoryMeta(settings, route.category);
         const subcategory = subcategoryTitles[route.subcategory];
 
         return {
@@ -235,8 +238,8 @@ function getPageMeta(route: RouteState): PageMeta {
     }
 
     if (route.type === "page") {
-        if (route.slug in categoryMeta) {
-            const category = categoryMeta[route.slug as ProductCategory];
+        if (["women", "men", "kids", "work", "accessories", "sale"].includes(route.slug)) {
+            const category = getManagedCategoryMeta(settings, route.slug as ProductCategory);
 
             return {
                 title: withSiteName(category.title),
@@ -411,6 +414,7 @@ function setStructuredData(data?: Record<string, unknown>) {
 }
 
 export default function App() {
+    const { settings } = useSiteSettings();
     const [route, setRoute] = useState<RouteState>({ type: "home", anchor: "home" });
 
     useEffect(() => {
@@ -443,7 +447,7 @@ export default function App() {
         return () => window.removeEventListener("hashchange", syncRoute);
     }, []);
 
-    const pageMeta = React.useMemo(() => getPageMeta(route), [route]);
+    const pageMeta = React.useMemo(() => getPageMeta(route, settings), [route, settings]);
 
     useEffect(() => {
         if (typeof document === "undefined") return;

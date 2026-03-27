@@ -1,6 +1,8 @@
 import * as React from "react";
 import { ArrowRight } from "lucide-react";
 import { products, formatPrice } from "../data/products";
+import { useSiteSettings } from "../hooks/useSiteSettings";
+import { getSetting } from "../lib/siteContent";
 import {
     getB2BProductProfile,
     getB2BQuote,
@@ -8,11 +10,21 @@ import {
 } from "../lib/b2b";
 
 export function WholesaleOrderTable() {
+    const { settings } = useSiteSettings();
     const wholesaleProducts = products.slice(0, 5);
     const matrixMeta = [
-        { value: "Старт", label: "товари для першого замовлення" },
-        { value: "Вибір", label: "різні категорії в одному місці" },
-        { value: "Повтор", label: "зручно замовляти ще раз" },
+        {
+            value: getSetting(settings, "wholesale_matrix_meta_1_value", "Старт"),
+            label: getSetting(settings, "wholesale_matrix_meta_1_label", "товари для першого замовлення"),
+        },
+        {
+            value: getSetting(settings, "wholesale_matrix_meta_2_value", "Вибір"),
+            label: getSetting(settings, "wholesale_matrix_meta_2_label", "різні категорії в одному місці"),
+        },
+        {
+            value: getSetting(settings, "wholesale_matrix_meta_3_value", "Повтор"),
+            label: getSetting(settings, "wholesale_matrix_meta_3_label", "зручно замовляти ще раз"),
+        },
     ];
 
     return (
@@ -22,19 +34,25 @@ export function WholesaleOrderTable() {
                 <div className="mb-12 flex flex-col gap-4 border-b border-white/10 pb-6 md:flex-row md:items-end md:justify-between">
                     <div>
                         <h2 className="text-3xl font-black uppercase tracking-tighter text-white md:text-5xl">
-                            Приклад <span className="text-red-600">замовлення</span>
+                            {getSetting(settings, "wholesale_matrix_title", "Приклад")}{" "}
+                            <span className="text-red-600">
+                                {getSetting(settings, "wholesale_matrix_title_accent", "замовлення")}
+                            </span>
                         </h2>
                         <p className="mt-3 max-w-3xl text-sm leading-7 text-gray-400">
-                            Це приклад того, як може виглядати перше замовлення. Остаточний список
-                            товарів ми допоможемо підібрати під ваш магазин.
+                            {getSetting(
+                                settings,
+                                "wholesale_matrix_description",
+                                "Це приклад того, як може виглядати перше замовлення. Остаточний список товарів ми допоможемо підібрати під ваш магазин."
+                            )}
                         </p>
                     </div>
 
                     <a
-                        href="#cart"
+                        href={getSetting(settings, "wholesale_matrix_cta_link", "#cart")}
                         className="tech-clip inline-flex w-full items-center justify-center gap-2 bg-red-600 px-6 py-4 text-[11px] font-black uppercase tracking-[0.16em] text-white transition hover:bg-red-500 md:w-auto md:px-8 md:tracking-widest"
                     >
-                        Залишити запит
+                        {getSetting(settings, "wholesale_matrix_cta_text", "Залишити запит")}
                         <ArrowRight className="h-4 w-4" />
                     </a>
                 </div>

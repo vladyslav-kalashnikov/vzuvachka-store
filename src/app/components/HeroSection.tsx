@@ -1,44 +1,88 @@
 import * as React from "react";
 import { ArrowRight } from "lucide-react";
 import { useSiteSettings } from "../hooks/useSiteSettings";
+import { getSetting, getSettingList } from "../lib/siteContent";
 
 export function HeroSection() {
     const { settings } = useSiteSettings();
 
-    const heroImage =
-        settings.hero_image ||
-        "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?q=80&w=2000&auto=format&fit=crop";
-
-    // ОНОВЛЕНІ ТЕКСТИ ДЛЯ ОПТУ
-    const badge = settings.hero_badge || "B2B Платформа / Оптовий склад";
-    const titleLine1 = settings.hero_title_line_1 || "Взуття оптом";
-    const titleLine2 = settings.hero_title_line_2 || "від виробника.";
-    const description =
-        settings.hero_description ||
-        "Прямі поставки взуття без посередників. Мінімальне замовлення — 1 ящик (ростовка). Відправка в день оформлення заявки.";
-
-    // ОНОВЛЕНІ МЕТРИКИ ДЛЯ ОПТУ
+    const heroImage = getSetting(
+        settings,
+        "hero_image",
+        "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?q=80&w=2000&auto=format&fit=crop"
+    );
+    const badge = getSetting(settings, "hero_badge", "B2B Платформа / Оптовий склад");
+    const titleLine1 = getSetting(settings, "hero_title_line_1", "Взуття оптом");
+    const titleLine2 = getSetting(settings, "hero_title_line_2", "від виробника.");
+    const description = getSetting(
+        settings,
+        "hero_description",
+        "Прямі поставки взуття без посередників. Мінімальне замовлення — 1 ящик (ростовка). Відправка в день оформлення заявки."
+    );
+    const primaryButtonText = getSetting(settings, "hero_primary_button_text", "Умови співпраці");
+    const primaryButtonLink = getSetting(settings, "hero_primary_button_link", "#page/wholesale");
+    const secondaryButtonText = getSetting(settings, "hero_secondary_button_text", "Перейти в каталог");
+    const secondaryButtonLink = getSetting(settings, "hero_secondary_button_link", "#categories");
     const metrics = [
-        { value: "1 ящ", label: "Мінімальне замовлення" },
-        { value: "24h", label: "Відправка після оплати" },
-        { value: "100%", label: "Актуальна наявність" },
+        {
+            value: getSetting(settings, "hero_metric_1_value", "1 ящ"),
+            label: getSetting(settings, "hero_metric_1_label", "Мінімальне замовлення"),
+        },
+        {
+            value: getSetting(settings, "hero_metric_2_value", "24h"),
+            label: getSetting(settings, "hero_metric_2_label", "Відправка після оплати"),
+        },
+        {
+            value: getSetting(settings, "hero_metric_3_value", "100%"),
+            label: getSetting(settings, "hero_metric_3_label", "Актуальна наявність"),
+        },
     ];
-
-    // ОНОВЛЕНИЙ РЯДОК, ЩО БІЖИТЬ
-    const capabilityLine = [
+    const capabilityLine = getSettingList(settings, "hero_capability_list", [
         "Опт",
         "Ростовки",
         "Дропшипінг",
         "Швидка відправка",
         "Прямі поставки",
         "B2B",
-    ];
-
-    const stackedBadges = [
+    ]);
+    const stackedBadges = getSettingList(settings, "hero_badges_list", [
         "Для магазинів",
         "Для ринків",
         "Для онлайн-продажів",
+    ]);
+    const sideNotes = getSettingList(settings, "hero_side_notes", [
+        "Швидкий старт",
+        "Зрозумілі умови",
+        "Постійна наявність",
+    ]);
+    const partnerBadge = getSetting(settings, "hero_partner_badge", "Умови опту");
+    const partnerText = getSetting(
+        settings,
+        "hero_partner_text",
+        "Відвантаження від 1 ящика. Регулярні оновлення асортименту."
+    );
+    const partnerRows = [
+        {
+            label: getSetting(settings, "hero_partner_label_1", "Ціноутворення"),
+            value: getSetting(settings, "hero_partner_value_1", "Прямі ціни"),
+        },
+        {
+            label: getSetting(settings, "hero_partner_label_2", "Способи оплати"),
+            value: getSetting(settings, "hero_partner_value_2", "ФОП / Накладка"),
+        },
+        {
+            label: getSetting(settings, "hero_partner_label_3", "Доставка"),
+            value: getSetting(settings, "hero_partner_value_3", "Нова Пошта"),
+        },
     ];
+    const processBadge = getSetting(settings, "hero_process_badge", "Як це працює");
+    const processTitleLine1 = getSetting(settings, "hero_process_title_line_1", "Заявка");
+    const processTitleLine2 = getSetting(settings, "hero_process_title_line_2", "Відправка");
+    const processDescription = getSetting(
+        settings,
+        "hero_process_description",
+        "Обираєте товар, залишаєте контакт — ми телефонуємо і пакуємо ящики."
+    );
 
     return (
         <section
@@ -49,9 +93,9 @@ export function HeroSection() {
             <div className="pointer-events-none absolute inset-y-0 left-1/2 hidden w-px bg-gradient-to-b from-transparent via-white/15 to-transparent lg:block" />
 
             <div className="absolute left-6 top-28 hidden text-[10px] font-mono tracking-widest text-white/55 md:block">
-                <p>Швидкий старт</p>
-                <p>Зрозумілі умови</p>
-                <p>Постійна наявність</p>
+                {sideNotes.map((item) => (
+                    <p key={item}>{item}</p>
+                ))}
             </div>
 
             <div className="relative z-10 mx-auto max-w-[1600px]">
@@ -76,18 +120,18 @@ export function HeroSection() {
 
                         <div className="mb-10 flex flex-col items-stretch gap-4 sm:flex-row sm:items-center">
                             <a
-                                href="#page/delivery"
+                                href={primaryButtonLink}
                                 className="tech-clip flex w-full items-center justify-center gap-3 bg-white px-6 py-4 text-[11px] font-extrabold uppercase tracking-[0.14em] text-black transition-colors hover:bg-red-600 hover:text-white sm:w-auto sm:px-10 sm:py-5 sm:text-xs sm:tracking-widest"
                             >
-                                Умови співпраці
+                                {primaryButtonText}
                                 <ArrowRight className="h-4 w-4" />
                             </a>
 
                             <a
-                                href="#categories"
+                                href={secondaryButtonLink}
                                 className="tech-clip flex w-full items-center justify-center gap-3 border border-white/20 bg-black/20 px-6 py-4 text-[11px] font-extrabold uppercase tracking-[0.14em] text-white transition-colors hover:border-red-600 hover:text-red-400 sm:w-auto sm:px-10 sm:py-5 sm:text-xs sm:tracking-widest"
                             >
-                                Перейти в каталог
+                                {secondaryButtonText}
                             </a>
                         </div>
 
@@ -129,10 +173,10 @@ export function HeroSection() {
                                 <div className="flex justify-start sm:justify-end">
                                     <div className="tech-clip border border-white/15 bg-black/40 px-4 py-3 backdrop-blur-xl max-w-[250px]">
                                         <p className="text-[10px] font-black uppercase tracking-[0.28em] text-red-500">
-                                            Умови опту
+                                            {partnerBadge}
                                         </p>
                                         <p className="mt-2 text-xs font-medium leading-5 text-white/90">
-                                            Відвантаження від 1 ящика. Регулярні оновлення асортименту.
+                                            {partnerText}
                                         </p>
                                     </div>
                                 </div>
@@ -140,32 +184,33 @@ export function HeroSection() {
                                 <div className="grid gap-4 md:grid-cols-[1.1fr_0.9fr]">
                                     <div className="tech-clip border border-white/12 bg-black/60 px-5 py-5 backdrop-blur-xl">
                                         <p className="mb-3 text-[10px] font-black uppercase tracking-[0.28em] text-red-500">
-                                            Для партнерів
+                                            {getSetting(settings, "hero_partner_badge", "Для партнерів")}
                                         </p>
                                         <div className="grid gap-3 text-sm text-white/90">
-                                            <div className="flex flex-col gap-1 border-b border-white/10 pb-2 sm:flex-row sm:items-center sm:justify-between">
-                                                <span className="text-gray-400">Ціноутворення</span>
-                                                <span className="font-black text-white">Прямі ціни</span>
-                                            </div>
-                                            <div className="flex flex-col gap-1 border-b border-white/10 pb-2 sm:flex-row sm:items-center sm:justify-between">
-                                                <span className="text-gray-400">Способи оплати</span>
-                                                <span className="font-black text-white">ФОП / Накладка</span>
-                                            </div>
-                                            <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-                                                <span className="text-gray-400">Доставка</span>
-                                                <span className="font-black text-white">Нова Пошта</span>
-                                            </div>
+                                            {partnerRows.map((item, index) => (
+                                                <div
+                                                    key={item.label}
+                                                    className={`flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between ${
+                                                        index < partnerRows.length - 1
+                                                            ? "border-b border-white/10 pb-2"
+                                                            : ""
+                                                    }`}
+                                                >
+                                                    <span className="text-gray-400">{item.label}</span>
+                                                    <span className="font-black text-white">{item.value}</span>
+                                                </div>
+                                            ))}
                                         </div>
                                     </div>
 
                                     <div className="tech-clip border border-white/12 bg-[#f5efe7] px-5 py-5 text-black shadow-[0_24px_70px_rgba(220,38,38,0.15)]">
                                         <p className="mb-3 text-[10px] font-black uppercase tracking-[0.28em] text-red-600">
-                                            Як це працює
+                                            {processBadge}
                                         </p>
-                                        <p className="text-2xl font-black uppercase leading-none sm:text-3xl">Заявка</p>
-                                        <p className="text-2xl font-black uppercase leading-none text-red-600 sm:text-3xl">Відправка</p>
+                                        <p className="text-2xl font-black uppercase leading-none sm:text-3xl">{processTitleLine1}</p>
+                                        <p className="text-2xl font-black uppercase leading-none text-red-600 sm:text-3xl">{processTitleLine2}</p>
                                         <p className="mt-4 text-xs font-bold leading-5 text-black/70">
-                                            Обираєте товар, залишаєте контакт — ми телефонуємо і пакуємо ящики.
+                                            {processDescription}
                                         </p>
                                     </div>
                                 </div>

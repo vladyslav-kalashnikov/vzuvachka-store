@@ -2,6 +2,7 @@ import * as React from "react";
 import { ArrowRight, Mail } from "lucide-react";
 import { toast } from "sonner";
 import { useSiteSettings } from "../hooks/useSiteSettings";
+import { getSetting } from "../lib/siteContent";
 import { supabase } from "../../lib/supabase"; // Підключаємо нашу базу даних
 
 export function SubscribeSection() {
@@ -9,12 +10,19 @@ export function SubscribeSection() {
     const [email, setEmail] = React.useState("");
     const [loading, setLoading] = React.useState(false);
 
-    const badge = settings.subscribe_badge || "B2B РОЗСИЛКА";
-    const title = settings.subscribe_title || "ЗАКРИТІ ПРАЙСИ ТА ЛОТИ";
-    const description =
-        settings.subscribe_description ||
-        "Залиште email, щоб першими отримувати інформацію про нові надходження, складські залишки та спеціальні пропозиції для оптових партнерів.";
-    const buttonText = settings.subscribe_button_text || "ПІДПИСАТИСЯ";
+    const badge = getSetting(settings, "subscribe_badge", "B2B РОЗСИЛКА");
+    const title = getSetting(settings, "subscribe_title", "ЗАКРИТІ ПРАЙСИ ТА ЛОТИ");
+    const description = getSetting(
+        settings,
+        "subscribe_description",
+        "Залиште email, щоб першими отримувати інформацію про нові надходження, складські залишки та спеціальні пропозиції для оптових партнерів."
+    );
+    const buttonText = getSetting(settings, "subscribe_button_text", "ПІДПИСАТИСЯ");
+    const note = getSetting(
+        settings,
+        "subscribe_note",
+        "Жодного спаму. Тільки оптові пропозиції та складські залишки."
+    );
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -111,7 +119,7 @@ export function SubscribeSection() {
                 </form>
 
                 <p className="mt-6 text-[10px] font-bold uppercase tracking-widest text-gray-600">
-                    Жодного спаму. Тільки оптові пропозиції та складські залишки.
+                    {note}
                 </p>
             </div>
         </section>

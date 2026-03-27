@@ -1,11 +1,18 @@
 import * as React from "react";
 import { useSiteSettings } from "../hooks/useSiteSettings";
+import { getSetting } from "../lib/siteContent";
 
 export function Reviews() {
     const { settings } = useSiteSettings();
     const trustStats = [
-        { value: "3 дні", label: "щоб узгодити перше замовлення" },
-        { value: "Швидко", label: "повторюємо замовлення по популярних товарах" },
+        {
+            value: getSetting(settings, "reviews_stat_1_value", "3 дні"),
+            label: getSetting(settings, "reviews_stat_1_label", "щоб узгодити перше замовлення"),
+        },
+        {
+            value: getSetting(settings, "reviews_stat_2_value", "Швидко"),
+            label: getSetting(settings, "reviews_stat_2_label", "повторюємо замовлення по популярних товарах"),
+        },
     ];
 
     const reviews = [
@@ -32,12 +39,14 @@ export function Reviews() {
                 <div className="mb-14 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
                     <div className="min-w-0 flex-1">
                         <p className="mb-4 inline-block rounded-full border border-red-500/20 bg-red-600/10 px-4 py-2 text-[10px] font-black uppercase tracking-[0.4em] text-red-500">
-                            {settings.reviews_badge || "Відгуки"}
+                            {getSetting(settings, "reviews_badge", "Відгуки")}
                         </p>
                         <h2 className="break-words text-3xl font-black uppercase tracking-tight text-white md:text-5xl">
-                            Люди повертаються,
+                            {getSetting(settings, "reviews_title", "Люди повертаються,")}
                             <br />
-                            <span className="copper-text text-[#e39c5e] copper-shadow-lg">бо з нами просто</span>
+                            <span className="copper-text text-[#e39c5e] copper-shadow-lg">
+                                {getSetting(settings, "reviews_title_accent", "бо з нами просто")}
+                            </span>
                         </h2>
                     </div>
 

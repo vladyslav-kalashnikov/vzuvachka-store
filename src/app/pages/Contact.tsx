@@ -1,38 +1,70 @@
 import * as React from "react";
-import { partnerContact } from "../data/b2bContent";
+import { useSiteSettings } from "../hooks/useSiteSettings";
+import {
+    getPartnerContactInfo,
+    getSetting,
+    getSettingList,
+} from "../lib/siteContent";
 import { PageLayout } from "./PageLayout";
 
-const contactCards = [
-    {
-        title: "Email",
-        value: partnerContact.email,
-        href: partnerContact.emailHref,
-        note: "Пишіть сюди, якщо хочете дізнатися ціни, наявність або умови.",
-    },
-    {
-        title: "Телефон / месенджери",
-        value: partnerContact.phone,
-        href: partnerContact.phoneHref,
-        note: "Швидкий зв'язок із менеджером по замовленнях і доставці.",
-    },
-    {
-        title: "Адреса",
-        value: partnerContact.address,
-        href: "https://maps.google.com/?q=Хмельницький,+Водопровідна+75/1",
-        note: "Контакти для документів, логістики та організаційних питань.",
-    },
-];
-
 export function Contact() {
+    const { settings } = useSiteSettings();
+    const partnerContact = getPartnerContactInfo(settings);
+    const contactCards = [
+        {
+            title: getSetting(settings, "contact_email_card_title", "Email"),
+            value: partnerContact.email,
+            href: partnerContact.emailHref,
+            note: getSetting(
+                settings,
+                "contact_email_card_note",
+                "Пишіть сюди, якщо хочете дізнатися ціни, наявність або умови."
+            ),
+        },
+        {
+            title: getSetting(settings, "contact_phone_card_title", "Телефон / месенджери"),
+            value: partnerContact.phone,
+            href: partnerContact.phoneHref,
+            note: getSetting(
+                settings,
+                "contact_phone_card_note",
+                "Швидкий зв'язок із менеджером по замовленнях і доставці."
+            ),
+        },
+        {
+            title: getSetting(settings, "contact_address_card_title", "Адреса"),
+            value: partnerContact.address,
+            href: partnerContact.mapUrl,
+            note: getSetting(
+                settings,
+                "contact_address_card_note",
+                "Контакти для документів, логістики та організаційних питань."
+            ),
+        },
+    ];
+    const helpItems = getSettingList(settings, "contact_help_list", [
+        "Підібрати товари для вашого магазину",
+        "Підказати ціни і наявність",
+        "Пояснити умови доставки і повторних замовлень",
+        "Рекламації, документи та робота зі складом",
+    ]);
+
     return (
         <PageLayout
-            title="Контакти"
-            subtitle="Напишіть або зателефонуйте нам, якщо хочете дізнатися умови чи зробити замовлення."
+            title={getSetting(settings, "contact_page_title", "Контакти")}
+            subtitle={getSetting(
+                settings,
+                "contact_page_subtitle",
+                "Напишіть або зателефонуйте нам, якщо хочете дізнатися умови чи зробити замовлення."
+            )}
         >
             <section>
                 <p>
-                    Якщо вам потрібні ціни, наявність, допомога з вибором або консультація по
-                    замовленню, звертайтеся напряму. Відповідаємо просто і по суті.
+                    {getSetting(
+                        settings,
+                        "contact_page_intro",
+                        "Якщо вам потрібні ціни, наявність, допомога з вибором або консультація по замовленню, звертайтеся напряму. Відповідаємо просто і по суті."
+                    )}
                 </p>
             </section>
 
@@ -58,20 +90,29 @@ export function Contact() {
 
             <section className="grid gap-6 lg:grid-cols-2">
                 <div>
-                    <h2>Чим можемо допомогти</h2>
+                    <h2>{getSetting(settings, "contact_help_title", "Чим можемо допомогти")}</h2>
                     <ul>
-                        <li>Підібрати товари для вашого магазину</li>
-                        <li>Підказати ціни і наявність</li>
-                        <li>Пояснити умови доставки і повторних замовлень</li>
-                        <li>Рекламації, документи та робота зі складом</li>
+                        {helpItems.map((item) => (
+                            <li key={item}>{item}</li>
+                        ))}
                     </ul>
                 </div>
 
                 <div>
-                    <h2>Режим відповіді</h2>
-                    <p>{partnerContact.hours}</p>
+                    <h2>{getSetting(settings, "contact_response_title", "Режим відповіді")}</h2>
                     <p>
-                        Прямий контакт для заявок:{" "}
+                        {getSetting(
+                            settings,
+                            "contact_response_text",
+                            partnerContact.hours
+                        )}
+                    </p>
+                    <p>
+                        {getSetting(
+                            settings,
+                            "contact_response_direct_label",
+                            "Прямий контакт для заявок:"
+                        )}{" "}
                         <a href={partnerContact.emailHref}>{partnerContact.email}</a>
                     </p>
                 </div>

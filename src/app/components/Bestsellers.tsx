@@ -5,11 +5,14 @@ import { ChevronLeft, ChevronRight, Heart } from "lucide-react";
 import { Product, formatPrice } from "../data/products";
 import { getB2BProductProfile, getDefaultPackOption } from "../lib/b2b";
 import { useShop } from "../store/useShop";
+import { useSiteSettings } from "../hooks/useSiteSettings";
+import { getSetting } from "../lib/siteContent";
 import { supabase } from "../../lib/supabase"; // ПІДКЛЮЧЕНО БАЗУ ДАНИХ
 
 export function Bestsellers() {
     const sliderRef = useRef<Slider>(null);
     const { isInWishlist, toggleWishlist } = useShop();
+    const { settings: siteSettings } = useSiteSettings();
     const [bestsellers, setBestsellers] = useState<Product[]>([]);
 
     useEffect(() => {
@@ -46,9 +49,18 @@ export function Bestsellers() {
     }, []);
 
     const overview = [
-        { value: "6", label: "товарів, з яких зручно почати" },
-        { value: "Популярні", label: "моделі, які часто замовляють" },
-        { value: "Повтор", label: "товари, які легко дозамовити" },
+        {
+            value: getSetting(siteSettings, "bestsellers_stat_1_value", "6"),
+            label: getSetting(siteSettings, "bestsellers_stat_1_label", "товарів, з яких зручно почати"),
+        },
+        {
+            value: getSetting(siteSettings, "bestsellers_stat_2_value", "Популярні"),
+            label: getSetting(siteSettings, "bestsellers_stat_2_label", "моделі, які часто замовляють"),
+        },
+        {
+            value: getSetting(siteSettings, "bestsellers_stat_3_value", "Повтор"),
+            label: getSetting(siteSettings, "bestsellers_stat_3_label", "товари, які легко дозамовити"),
+        },
     ];
 
     const settings = {
@@ -125,13 +137,37 @@ export function Bestsellers() {
             <div className="mx-auto max-w-[1600px] px-4 sm:px-6">
                 <div className="mb-12 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
                     <div>
-                        <p className="mb-3 text-[10px] font-black uppercase tracking-[0.4em] text-red-600">Популярні товари</p>
-                        <h2 className="text-3xl font-black uppercase tracking-tighter text-white md:text-5xl">Що часто <span className="text-transparent" style={{ WebkitTextStroke: "1px white" }}>замовляють</span></h2>
+                        <p className="mb-3 text-[10px] font-black uppercase tracking-[0.4em] text-red-600">
+                            {getSetting(siteSettings, "bestsellers_badge", "Популярні товари")}
+                        </p>
+                        <h2 className="text-3xl font-black uppercase tracking-tighter text-white md:text-5xl">
+                            {getSetting(siteSettings, "bestsellers_title", "Що часто")}{" "}
+                            <span className="text-transparent" style={{ WebkitTextStroke: "1px white" }}>
+                                {getSetting(siteSettings, "bestsellers_title_accent", "замовляють")}
+                            </span>
+                        </h2>
                     </div>
                     <div className="hidden gap-2 self-start md:flex md:self-auto">
                         <button onClick={() => sliderRef.current?.slickPrev()} className="flex h-10 w-10 items-center justify-center bg-zinc-900 text-white transition-colors hover:bg-red-600"><ChevronLeft className="h-5 w-5" /></button>
                         <button onClick={() => sliderRef.current?.slickNext()} className="flex h-10 w-10 items-center justify-center bg-zinc-900 text-white transition-colors hover:bg-red-600"><ChevronRight className="h-5 w-5" /></button>
                     </div>
+                </div>
+
+                <div className="mb-8 grid gap-4 md:grid-cols-3">
+                    {overview.map((item, index) => (
+                        <div
+                            key={item.label}
+                            className="premium-panel tech-clip border border-white/10 bg-[#111] px-5 py-5"
+                            style={{ animationDelay: `${index * 0.08}s` }}
+                        >
+                            <p className="mb-2 text-2xl font-black uppercase text-white sm:text-3xl">
+                                {item.value}
+                            </p>
+                            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-gray-400">
+                                {item.label}
+                            </p>
+                        </div>
+                    ))}
                 </div>
 
                 <div className="md:hidden">

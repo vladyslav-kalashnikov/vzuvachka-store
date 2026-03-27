@@ -1,10 +1,11 @@
 import * as React from "react";
 import { useMemo, useState, useEffect } from "react";
 import { ProductCategory, Product } from "../data/products";
-import { categoryMeta } from "../data/b2bContent";
 import { CatalogFilters } from "../components/CatalogFilters";
 import { ProductCard } from "../components/ProductCard";
 import { PageLayout } from "./PageLayout";
+import { useSiteSettings } from "../hooks/useSiteSettings";
+import { getManagedCategoryMeta } from "../lib/siteContent";
 import { useShop } from "../store/useShop";
 import { supabase } from "../../lib/supabase"; // ПІДКЛЮЧЕНО БАЗУ ДАНИХ
 
@@ -36,7 +37,8 @@ function mapDbToProduct(dbItem: any): Product {
 
 export function CatalogPage({ category }: CatalogPageProps) {
     const { isInWishlist, toggleWishlist } = useShop();
-    const meta = categoryMeta[category];
+    const { settings } = useSiteSettings();
+    const meta = getManagedCategoryMeta(settings, category);
 
     const [items, setItems] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
@@ -100,7 +102,7 @@ export function CatalogPage({ category }: CatalogPageProps) {
                     </p>
                     <div className="flex flex-wrap gap-3 text-sm font-bold uppercase tracking-[0.14em] sm:gap-4 sm:tracking-[0.2em]">
                         <a href="#wishlist" className="text-white">Обране</a>
-                        <a href="#cart" className="text-red-500">Заявка</a>
+                        <a href="#cart" className="text-red-500">{meta.cta}</a>
                     </div>
                 </div>
 

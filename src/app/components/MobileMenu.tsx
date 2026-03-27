@@ -14,8 +14,10 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { signOut } from "../../lib/api/auth";
-import { adminLinks, categorySections, infoLinks } from "../data/b2bContent";
+import { adminLinks, infoLinks } from "../data/b2bContent";
 import { useAuthUser } from "../hooks/useAuthUser";
+import { useSiteSettings } from "../hooks/useSiteSettings";
+import { getManagedCategorySections } from "../lib/siteContent";
 import { useShop } from "../store/useShop";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
@@ -23,11 +25,17 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./ui
 export function MobileMenu() {
     const { cartCount, wishlistCount } = useShop();
     const { user, isAdmin } = useAuthUser();
+    const { settings } = useSiteSettings();
+    const categorySections = getManagedCategorySections(settings);
+
+    // Стейт для керування відкриттям/закриттям меню
+    const [open, setOpen] = React.useState(false);
 
     const handleLogout = async () => {
         try {
             await signOut();
             toast.success("Ви вийшли з акаунта");
+            setOpen(false); // Закриваємо меню після виходу
             window.location.hash = "#home";
         } catch (error) {
             console.error(error);
@@ -35,13 +43,19 @@ export function MobileMenu() {
         }
     };
 
+    // Універсальна функція для закриття меню при кліку на лінк
+    const handleLinkClick = () => {
+        setOpen(false);
+    };
+
     return (
-        <Sheet>
+        <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
+                {/* Видалили lg:hidden, тепер кнопка видима завжди */}
                 <button
                     type="button"
                     aria-label="Відкрити меню"
-                    className="inline-flex h-10 w-10 items-center justify-center text-white transition-all hover:text-red-500 hover:scale-110 lg:hidden"
+                    className="inline-flex h-10 w-10 items-center justify-center text-white transition-all hover:scale-110 hover:text-red-500"
                 >
                     <Menu className="h-6 w-6" />
                 </button>
@@ -50,14 +64,14 @@ export function MobileMenu() {
             {/* Темний фон панелі */}
             <SheetContent
                 side="left"
-                className="w-[92%] max-w-full border-r border-white/10 bg-[#0a0a0a] p-0 text-white sm:max-w-sm shadow-[20px_0_50px_rgba(0,0,0,0.8)]"
+                className="w-[92%] max-w-full border-r border-white/10 bg-[#0a0a0a] p-0 text-white shadow-[20px_0_50px_rgba(0,0,0,0.8)] sm:max-w-sm"
             >
                 <SheetHeader className="border-b border-white/10 bg-[#111] px-5 py-6">
                     <SheetTitle className="flex items-center gap-2 text-xl font-black uppercase tracking-tight text-white sm:text-2xl">
                         <span className="tech-clip flex h-8 w-8 items-center justify-center bg-red-600 text-sm text-white shadow-[0_0_15px_rgba(220,38,38,0.5)]">
                             В/Ч
                         </span>
-                        <span className="copper-text text-[#e39c5e] copper-shadow-lg">ВЗУВАЧКА</span>
+                        <span className="copper-text copper-shadow-lg text-[#e39c5e]">ВЗУВАЧКА</span>
                     </SheetTitle>
                 </SheetHeader>
 
@@ -66,7 +80,8 @@ export function MobileMenu() {
                     <div className="border-b border-white/10 px-5 py-5">
                         <a
                             href="#page/wholesale"
-                            className="tech-clip group flex items-center justify-between bg-red-600 px-5 py-4 text-xs font-black uppercase tracking-[0.2em] text-white transition hover:bg-red-500 shadow-[0_0_20px_rgba(220,38,38,0.2)]"
+                            onClick={handleLinkClick}
+                            className="tech-clip group flex items-center justify-between bg-red-600 px-5 py-4 text-xs font-black uppercase tracking-[0.2em] text-white shadow-[0_0_20px_rgba(220,38,38,0.2)] transition hover:bg-red-500"
                         >
                             Умови співпраці
                             <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -76,18 +91,20 @@ export function MobileMenu() {
                     {/* Швидкі посилання */}
                     <div className="border-b border-white/10 px-5 py-5">
                         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                            <QuickLink href="#search" icon={<Search className="h-5 w-5" />} label="Пошук" />
+                            <QuickLink href="#search" icon={<Search className="h-5 w-5" />} label="Пошук" onClick={handleLinkClick} />
                             <QuickLink
                                 href="#wishlist"
                                 icon={<Heart className="h-5 w-5" />}
                                 label={`Обране (${wishlistCount})`}
                                 highlight={wishlistCount > 0}
+                                onClick={handleLinkClick}
                             />
                             <QuickLink
                                 href="#cart"
                                 icon={<ShoppingBag className="h-5 w-5" />}
                                 label={`Заявка (${cartCount})`}
                                 highlight={cartCount > 0}
+                                onClick={handleLinkClick}
                             />
                         </div>
                     </div>
@@ -99,8 +116,8 @@ export function MobileMenu() {
                         </p>
                         {!user ? (
                             <div className="grid gap-3">
-                                <QuickAction href="#page/login" icon={<LogIn className="h-4 w-4" />} label="Вхід" />
-                                <QuickAction href="#page/register" icon={<UserPlus className="h-4 w-4" />} label="Реєстрація" />
+                                <QuickAction href="#page/login" icon={<LogIn className="h-4 w-4" />} label="Вхід" onClick={handleLinkClick} />
+                                <QuickAction href="#page/register" icon={<UserPlus className="h-4 w-4" />} label="Реєстрація" onClick={handleLinkClick} />
                             </div>
                         ) : (
                             <div className="grid gap-3">
@@ -108,7 +125,7 @@ export function MobileMenu() {
                                     <p className="text-[9px] font-black uppercase tracking-[0.22em] text-gray-500">
                                         Активна сесія
                                     </p>
-                                    <p className="mt-1 text-xs font-bold break-all text-white">
+                                    <p className="mt-1 break-all text-xs font-bold text-white">
                                         {user.email || "Мій акаунт"}
                                     </p>
                                 </div>
@@ -140,6 +157,7 @@ export function MobileMenu() {
                                         icon={<Shield className="h-4 w-4" />}
                                         label={item.label}
                                         isAdminLink
+                                        onClick={handleLinkClick}
                                     />
                                 ))}
                             </div>
@@ -155,9 +173,10 @@ export function MobileMenu() {
                                         {section.shortLabel}
                                     </AccordionTrigger>
                                     <AccordionContent>
-                                        <div className="space-y-4 pb-4 pl-2 border-l border-white/10 ml-2">
+                                        <div className="ml-2 space-y-4 border-l border-white/10 pb-4 pl-2">
                                             <a
                                                 href={section.href}
+                                                onClick={handleLinkClick}
                                                 className="block text-[10px] font-black uppercase tracking-widest text-red-500 hover:text-red-400"
                                             >
                                                 Увесь сегмент
@@ -166,6 +185,7 @@ export function MobileMenu() {
                                                 <a
                                                     key={item.slug}
                                                     href={`#catalog/${section.key}/${item.slug}`}
+                                                    onClick={handleLinkClick}
                                                     className="block text-[11px] font-bold uppercase tracking-widest text-gray-400 hover:text-white"
                                                 >
                                                     {item.label}
@@ -188,6 +208,7 @@ export function MobileMenu() {
                                 <a
                                     key={item.href}
                                     href={item.href}
+                                    onClick={handleLinkClick}
                                     className="tech-clip flex items-center justify-between border border-white/5 bg-black/40 px-4 py-3 text-[11px] font-bold uppercase tracking-widest text-gray-300 transition hover:border-white/20 hover:text-white"
                                 >
                                     {item.label}
@@ -196,6 +217,7 @@ export function MobileMenu() {
                             ))}
                             <a
                                 href="#page/sale"
+                                onClick={handleLinkClick}
                                 className="tech-clip flex items-center justify-between border border-white/5 bg-black/40 px-4 py-3 text-[11px] font-bold uppercase tracking-widest text-gray-300 transition hover:border-red-500/50 hover:text-red-400"
                             >
                                 Складські лоти
@@ -214,16 +236,19 @@ function QuickLink({
                        href,
                        icon,
                        label,
-                       highlight
+                       highlight,
+                       onClick
                    }: {
     href: string;
     icon: React.ReactNode;
     label: string;
     highlight?: boolean;
+    onClick?: () => void;
 }) {
     return (
         <a
             href={href}
+            onClick={onClick}
             className={`tech-clip group flex min-h-[72px] flex-col justify-between border bg-[#111] px-4 py-3 text-left text-[10px] font-black uppercase tracking-[0.15em] transition-all sm:min-h-[84px] sm:text-xs ${
                 highlight
                     ? "border-red-500/50 text-white shadow-[0_0_15px_rgba(220,38,38,0.15)] hover:border-red-500 hover:bg-red-600/10"
@@ -242,16 +267,19 @@ function QuickAction({
                          href,
                          icon,
                          label,
-                         isAdminLink
+                         isAdminLink,
+                         onClick
                      }: {
     href: string;
     icon: React.ReactNode;
     label: string;
     isAdminLink?: boolean;
+    onClick?: () => void;
 }) {
     return (
         <a
             href={href}
+            onClick={onClick}
             className={`tech-clip group flex items-center justify-between gap-3 border px-4 py-3 text-left text-[10px] font-black uppercase tracking-[0.18em] transition-all sm:text-[11px] ${
                 isAdminLink
                     ? "border-red-500/20 bg-red-600/5 text-gray-300 hover:border-red-500 hover:bg-red-600/20 hover:text-white"
