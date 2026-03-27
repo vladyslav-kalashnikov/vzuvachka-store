@@ -24,26 +24,28 @@ export function Reviews() {
     ];
 
     return (
-        <section id="reviews" className="relative overflow-hidden bg-[#0a0a0a] py-20 text-white sm:py-32">
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.06),transparent_18%),radial-gradient(circle_at_bottom_left,rgba(249,115,22,0.12),transparent_22%)]" />
-            <div className="mx-auto max-w-[1400px] px-4 sm:px-6">
-                <div className="mb-14 grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
-                    <div>
-                        <p className="mb-4 text-[10px] font-bold uppercase tracking-[0.4em] text-red-600">
+        <section id="reviews" className="relative overflow-hidden border-t border-white/5 bg-[#0a0a0a] py-20 text-white sm:py-32">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.03),transparent_25%),radial-gradient(circle_at_bottom_left,rgba(220,38,38,0.05),transparent_25%)]" />
+            <div className="relative z-10 mx-auto max-w-[1400px] px-4 sm:px-6">
+
+                {/* ВИПРАВЛЕНИЙ БЛОК: Використовуємо flex + min-w-0 замість grid, щоб текст не ламався */}
+                <div className="mb-14 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+                    <div className="min-w-0 flex-1">
+                        <p className="mb-4 inline-block rounded-full border border-red-500/20 bg-red-600/10 px-4 py-2 text-[10px] font-black uppercase tracking-[0.4em] text-red-500">
                             {settings.reviews_badge || "Відгуки"}
                         </p>
-                        <h2 className="text-3xl font-black uppercase tracking-tight text-white md:text-5xl">
+                        <h2 className="break-words text-3xl font-black uppercase tracking-tight text-white md:text-5xl">
                             Люди повертаються,
                             <br />
-                            <span className="copper-text">бо з нами просто</span>
+                            <span className="copper-text text-[#e39c5e] copper-shadow-lg">бо з нами просто</span>
                         </h2>
                     </div>
 
-                    <div className="grid gap-3 md:grid-cols-2">
+                    <div className="grid w-full shrink-0 gap-3 sm:grid-cols-2 lg:w-auto">
                         {trustStats.map((item) => (
-                            <div key={item.label} className="premium-panel tech-clip px-5 py-4">
-                                <p className="text-2xl font-black uppercase text-white">{item.value}</p>
-                                <p className="mt-1 text-[11px] uppercase tracking-[0.18em] text-gray-400">
+                            <div key={item.label} className="premium-panel tech-clip border border-white/10 bg-[#111] px-6 py-5">
+                                <p className="copper-text text-2xl font-black uppercase text-[#e39c5e]">{item.value}</p>
+                                <p className="mt-1 max-w-[140px] text-[9px] font-bold uppercase tracking-[0.2em] text-gray-500">
                                     {item.label}
                                 </p>
                             </div>
@@ -55,15 +57,14 @@ export function Reviews() {
                     {reviews.map((review, i) => (
                         <div
                             key={review.author}
-                            className="premium-panel tech-clip fade-up p-8"
-                            style={{ animationDelay: `${i * 0.2}s` }}
+                            className="premium-panel tech-clip border border-white/10 bg-black/40 p-8 transition-colors hover:border-white/30"
                         >
-                            <span className="mb-4 block text-6xl leading-none text-white/10">"</span>
-                            <p className="mb-8 text-xl font-black uppercase leading-tight tracking-tight text-white sm:text-2xl md:text-4xl md:tracking-tighter">
+                            <span className="mb-4 block text-6xl leading-none text-red-600/30">"</span>
+                            <p className="mb-8 text-lg font-black uppercase leading-tight tracking-tight text-white sm:text-2xl md:text-3xl">
                                 {review.text}
                             </p>
-                            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-gray-500">
-                                // {review.author}
+                            <p className="text-[10px] font-black uppercase tracking-[0.25em] text-gray-500">
+                                <span className="mr-2 text-red-500">/</span> {review.author}
                             </p>
                         </div>
                     ))}

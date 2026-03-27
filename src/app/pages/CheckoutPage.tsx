@@ -3,6 +3,7 @@ import { useShop } from "../store/useShop";
 import { PageLayout } from "./PageLayout";
 import { toast } from "sonner";
 import { formatPrice } from "../data/products";
+import { supabase } from "../../lib/supabase"; // ПІДКЛЮЧЕНО БАЗУ ДАНИХ
 
 export function CheckoutPage() {
     const { cart, clearCart } = useShop();
@@ -23,44 +24,69 @@ export function CheckoutPage() {
         e.preventDefault();
         setLoading(true);
 
-        const BOT_TOKEN = "8635169212:AAGk4TKYozyYES5p_fGeydJ7D50oRYitN5s";
-        const CHAT_ID = "763564754";
-
-        let orderDetails = cart.map(item => `📦 ${item.slug} - ${item.quantity} уп.`).join("%0A");
         const totalPrice = cart.reduce((sum, item) => sum + (item.packPrice * item.quantity), 0);
         const totalPacks = cart.reduce((sum, item) => sum + item.quantity, 0);
-        // Рахуємо загальну кількість пар
         const totalUnits = cart.reduce((sum, item) => sum + ((item.unitsPerPack || 8) * item.quantity), 0);
 
-        const message = `🔥 <b>НОВЕ ЗАМОВЛЕННЯ (ОПТ)</b>%0A%0A👤 <b>Клієнт:</b> ${form.name}%0A📞 <b>Телефон:</b> ${form.phone}%0A🏙 <b>Місто:</b> ${form.city}%0A📮 <b>Відділення:</b> ${form.branch}%0A%0A🛒 <b>Товари:</b>%0A${orderDetails}%0A%0A💰 <b>Сума:</b> ${formatPrice(totalPrice)}`;
-
         try {
-            // Відправка в Telegram
-            const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${message}&parse_mode=HTML`);
+            // 1. ЗБЕРІГАЄМО ЗАМОВЛЕННЯ В БАЗУ ДАНИХ (SUPABASE)
+            const { data: orderData, error: orderError } = await supabase
+                .from("orders")
+                .insert([{
+                    customer_name: form.name,
+                    phone: form.phone,
+                    city: form.city,
+                    branch: form.branch,
+                    total: totalPrice,
+                    status: 'lead'
+                }])
+                .select()
+                .single();
 
-            if (response.ok) {
-                // ЗБЕРІГАЄМО ДАНІ ДЛЯ СТОРІНКИ ПОДЯКИ
-                localStorage.setItem(
-                    "vzuvachka-last-order",
-                    JSON.stringify({
-                        orderNumber: `OPT-${Math.floor(1000 + Math.random() * 9000)}`, // Генеруємо номер
-                        customerName: form.name,
-                        total: totalPrice,
-                        packs: totalPacks,
-                        units: totalUnits
-                    })
-                );
+            if (orderError) throw orderError;
 
-                toast.success("Замовлення успішно оформлено! Ми вам зателефонуємо.");
-                clearCart();
+            // 2. ЗБЕРІГАЄМО ТОВАРИ ЦЬОГО ЗАМОВЛЕННЯ
+            const orderItems = cart.map(item => ({
+                order_id: orderData.id,
+                product_slug: item.slug,
+                product_name: item.slug.replace(/-/g, ' ').toUpperCase(), // Тимчасова назва з slug
+                pack_id: item.packId,
+                color: item.color || null,
+                quantity: item.quantity,
+                price: item.packPrice
+            }));
 
-                // ВАЖЛИВО: Виправлене посилання без "page/"
-                window.location.hash = "#order-success";
-            } else {
-                toast.error("Помилка відправки. Спробуйте ще раз.");
-            }
+            const { error: itemsError } = await supabase.from("order_items").insert(orderItems);
+            if (itemsError) throw itemsError;
+
+            // 3. ВІДПРАВЛЯЄМО В TELEGRAM
+            const BOT_TOKEN = "8635169212:AAGk4TKYozyYES5p_fGeydJ7D50oRYitN5s";
+            const CHAT_ID = "763564754";
+            let orderDetails = cart.map(item => `📦 ${item.slug} - ${item.quantity} уп.`).join("%0A");
+
+            const message = `🔥 <b>НОВЕ ЗАМОВЛЕННЯ (ОПТ) #${orderData.order_number || orderData.id}</b>%0A%0A👤 <b>Клієнт:</b> ${form.name}%0A📞 <b>Телефон:</b> ${form.phone}%0A🏙 <b>Місто:</b> ${form.city}%0A📮 <b>Відділення:</b> ${form.branch}%0A%0A🛒 <b>Товари:</b>%0A${orderDetails}%0A%0A💰 <b>Сума:</b> ${formatPrice(totalPrice)}`;
+
+            await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${message}&parse_mode=HTML`);
+
+            // 4. ФІНАЛІЗАЦІЯ
+            localStorage.setItem(
+                "vzuvachka-last-order",
+                JSON.stringify({
+                    orderNumber: orderData.order_number || `OPT-${orderData.id}`,
+                    customerName: form.name,
+                    total: totalPrice,
+                    packs: totalPacks,
+                    units: totalUnits
+                })
+            );
+
+            toast.success("Замовлення успішно оформлено! Ми вам зателефонуємо.");
+            clearCart();
+            window.location.hash = "#order-success";
+
         } catch (error) {
-            toast.error("Помилка з'єднання. Перевірте інтернет.");
+            console.error("Помилка чекауту:", error);
+            toast.error("Помилка при оформленні замовлення. Спробуйте ще раз.");
         } finally {
             setLoading(false);
         }

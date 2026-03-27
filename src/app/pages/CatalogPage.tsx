@@ -1,24 +1,66 @@
 import * as React from "react";
-import { useMemo, useState } from "react";
-import { ProductCategory, getProductsByCategory } from "../data/products";
+import { useMemo, useState, useEffect } from "react";
+import { ProductCategory, Product } from "../data/products";
 import { categoryMeta } from "../data/b2bContent";
 import { CatalogFilters } from "../components/CatalogFilters";
 import { ProductCard } from "../components/ProductCard";
 import { PageLayout } from "./PageLayout";
 import { useShop } from "../store/useShop";
+import { supabase } from "../../lib/supabase"; // ПІДКЛЮЧЕНО БАЗУ ДАНИХ
 
 type CatalogPageProps = {
     category: ProductCategory;
 };
 
+// Конвертація з БД в об'єкт сайту
+function mapDbToProduct(dbItem: any): Product {
+    return {
+        id: dbItem.id,
+        slug: dbItem.slug,
+        name: dbItem.name,
+        type: dbItem.type,
+        description: dbItem.description,
+        price: dbItem.price,
+        oldPrice: dbItem.old_price,
+        badge: dbItem.badge,
+        image: dbItem.image,
+        gallery: dbItem.gallery || [],
+        category: dbItem.category || [],
+        subcategory: dbItem.subcategory || [],
+        sizes: dbItem.sizes || [],
+        colors: dbItem.colors || [],
+        details: dbItem.details || [],
+        inStock: dbItem.in_stock,
+    };
+}
+
 export function CatalogPage({ category }: CatalogPageProps) {
     const { isInWishlist, toggleWishlist } = useShop();
     const meta = categoryMeta[category];
-    const items = getProductsByCategory(category);
 
+    const [items, setItems] = useState<Product[]>([]);
+    const [loading, setLoading] = useState(true);
     const [selectedSize, setSelectedSize] = useState("");
     const [selectedColor, setSelectedColor] = useState("");
     const [sortBy, setSortBy] = useState("default");
+
+    // Завантаження товарів з бази
+    useEffect(() => {
+        async function loadProducts() {
+            setLoading(true);
+            const { data, error } = await supabase
+                .from("products")
+                .select("*")
+                .contains("category", [category]) // Шукаємо категорію
+                .eq("in_stock", true);            // Тільки активні
+
+            if (data && !error) {
+                setItems(data.map(mapDbToProduct));
+            }
+            setLoading(false);
+        }
+        loadProducts();
+    }, [category]);
 
     const allSizes = [...new Set(items.flatMap((item) => item.sizes))];
     const allColors = [...new Set(items.flatMap((item) => item.colors ?? []))];
@@ -54,15 +96,11 @@ export function CatalogPage({ category }: CatalogPageProps) {
 
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                     <p className="text-sm uppercase tracking-[0.25em] text-gray-500">
-                        Товарів у розділі: {filteredItems.length}
+                        Товарів у розділі: {loading ? "..." : filteredItems.length}
                     </p>
                     <div className="flex flex-wrap gap-3 text-sm font-bold uppercase tracking-[0.14em] sm:gap-4 sm:tracking-[0.2em]">
-                        <a href="#wishlist" className="text-white">
-                            Обране
-                        </a>
-                        <a href="#cart" className="text-red-500">
-                            Заявка
-                        </a>
+                        <a href="#wishlist" className="text-white">Обране</a>
+                        <a href="#cart" className="text-red-500">Заявка</a>
                     </div>
                 </div>
 
@@ -77,16 +115,22 @@ export function CatalogPage({ category }: CatalogPageProps) {
                     colors={allColors}
                 />
 
-                <div className="grid grid-cols-2 gap-3 sm:gap-6 xl:grid-cols-3">
-                    {filteredItems.map((product) => (
-                        <ProductCard
-                            key={product.slug}
-                            product={product}
-                            isInWishlist={isInWishlist(product.slug)}
-                            onToggleWishlist={toggleWishlist}
-                        />
-                    ))}
-                </div>
+                {loading ? (
+                    <p className="text-gray-500 uppercase font-black text-center mt-10">Завантаження каталогу...</p>
+                ) : filteredItems.length === 0 ? (
+                    <p className="text-gray-500 uppercase font-black text-center mt-10">В цій категорії ще немає товарів.</p>
+                ) : (
+                    <div className="grid grid-cols-2 gap-3 sm:gap-6 xl:grid-cols-3">
+                        {filteredItems.map((product) => (
+                            <ProductCard
+                                key={product.slug}
+                                product={product}
+                                isInWishlist={isInWishlist(product.slug)}
+                                onToggleWishlist={toggleWishlist}
+                            />
+                        ))}
+                    </div>
+                )}
             </section>
         </PageLayout>
     );
