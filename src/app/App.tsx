@@ -420,18 +420,21 @@ export default function App() {
             const nextRoute = parseHash(window.location.hash);
             setRoute(nextRoute);
 
-            if (nextRoute.type === "home" && nextRoute.anchor && nextRoute.anchor !== "home") {
-                requestAnimationFrame(() => {
+            // Даємо React мілісекунду на відмальовку нової сторінки
+            setTimeout(() => {
+                if (nextRoute.type === "home" && nextRoute.anchor && nextRoute.anchor !== "home") {
+                    // Якщо це якірне посилання на головній (наприклад, до секції "Категорії")
                     const element = document.getElementById(nextRoute.anchor as string);
                     if (element) {
                         element.scrollIntoView({ behavior: "smooth", block: "start" });
                     } else {
-                        window.scrollTo({ top: 0, behavior: "smooth" });
+                        window.scrollTo({ top: 0, left: 0, behavior: "instant" });
                     }
-                });
-            } else {
-                window.scrollTo({ top: 0, behavior: "smooth" });
-            }
+                } else {
+                    // Для всіх інших сторінок — миттєвий скрол на самий верх
+                    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+                }
+            }, 10);
         };
 
         syncRoute();
