@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useShop } from "../store/useShop";
+import type { CartItem } from "../store/useShop";
 import { PageLayout } from "./PageLayout";
 import { toast } from "sonner";
 import { formatPrice } from "../data/products";
@@ -18,6 +19,57 @@ function formatCheckoutProductName(slug: string) {
         .join(" ");
 }
 
+type CheckoutOrderRow = {
+    id: number;
+    order_number: string | null;
+};
+
+async function createCheckoutOrder(
+    customer: CheckoutNotificationCustomer,
+    totalPrice: number
+) {
+    const { data, error } = await supabase
+        .from("orders")
+        .insert([{
+            customer_name: customer.name,
+            phone: customer.phone,
+            email: customer.email || null,
+            city: customer.city,
+            branch: customer.branch,
+            total: totalPrice,
+            status: "lead",
+        }])
+        .select("id, order_number")
+        .single();
+
+    if (error || !data) {
+        throw new Error(error?.message || "Не вдалося створити замовлення");
+    }
+
+    return data as CheckoutOrderRow;
+}
+
+async function createCheckoutOrderItems(orderId: number, cart: CartItem[]) {
+    const orderItems = cart.map((item) => ({
+        order_id: orderId,
+        product_id: null,
+        product_slug: item.slug,
+        product_name: formatCheckoutProductName(item.slug),
+        selected_size: [item.packLabel, item.packSizeLabel]
+            .filter(Boolean)
+            .join(" • "),
+        selected_color: item.color || null,
+        quantity: item.quantity,
+        price: item.packPrice,
+    }));
+
+    const { error } = await supabase.from("order_items").insert(orderItems);
+
+    if (error) {
+        throw new Error(error.message);
+    }
+}
+
 export function CheckoutPage() {
     const { cart, clearCart } = useShop();
     const [loading, setLoading] = React.useState(false);
@@ -34,7 +86,7 @@ export function CheckoutPage() {
         setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
 
@@ -50,42 +102,11 @@ export function CheckoutPage() {
         };
 
         try {
-            // 1. ЗБЕРІГАЄМО ЗАМОВЛЕННЯ В БАЗУ ДАНИХ (SUPABASE)
-            const { data: orderData, error: orderError } = await supabase
-                .from("orders")
-                .insert([{
-                    customer_name: customer.name,
-                    phone: customer.phone,
-                    email: customer.email || null,
-                    city: customer.city,
-                    branch: customer.branch,
-                    total: totalPrice,
-                    status: "lead",
-                }])
-                .select()
-                .single();
-
-            if (orderError) throw orderError;
-
-            // 2. ЗБЕРІГАЄМО ТОВАРИ ЦЬОГО ЗАМОВЛЕННЯ
-            const orderItems = cart.map((item) => ({
-                order_id: orderData.id,
-                product_id: null,
-                product_slug: item.slug,
-                product_name: formatCheckoutProductName(item.slug),
-                selected_size: [item.packLabel, item.packSizeLabel]
-                    .filter(Boolean)
-                    .join(" • "),
-                selected_color: item.color || null,
-                quantity: item.quantity,
-                price: item.packPrice,
-            }));
-
-            const { error: itemsError } = await supabase.from("order_items").insert(orderItems);
-            if (itemsError) throw itemsError;
+            const orderData = await createCheckoutOrder(customer, totalPrice);
+            await createCheckoutOrderItems(orderData.id, cart);
 
             const orderNumber = orderData.order_number || `OPT-${orderData.id}`;
-            const notifications = await Promise.allSettled([
+            const [emailNotification, telegramNotification] = await Promise.allSettled([
                 sendWeb3FormsOrderNotification({
                     orderNumber,
                     customer,
@@ -104,15 +125,15 @@ export function CheckoutPage() {
                 }),
             ]);
 
-            const emailFailed = notifications[0].status === "rejected";
-            const telegramFailed = notifications[1].status === "rejected";
+            const emailFailed = emailNotification.status === "rejected";
+            const telegramFailed = telegramNotification.status === "rejected";
 
-            if (emailFailed) {
-                console.error("Web3Forms notification error:", notifications[0].reason);
+            if (emailNotification.status === "rejected") {
+                console.error("Web3Forms notification error:", emailNotification.reason);
             }
 
-            if (telegramFailed) {
-                console.error("Telegram notification error:", notifications[1].reason);
+            if (telegramNotification.status === "rejected") {
+                console.error("Telegram notification error:", telegramNotification.reason);
             }
 
             // 4. ФІНАЛІЗАЦІЯ
